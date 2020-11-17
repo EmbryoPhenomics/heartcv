@@ -30,6 +30,13 @@ def rmse(truth, act):
     '''Compute the root mean square error between truth and actual values. '''
     return np.sqrt(mse(truth, act))
 
+# Image operations ------------------------------------------------------------------
+
+def subset(frames, x, y, w, h):
+    '''Subset a sequence of frames to a particular roi. '''
+    for frame in frames:
+        yield frame[y:y+h, x:x+w, ...]
+
 # Logging utilities -----------------------------------------------------------------
 
 SHOW_PROGRESS = True
