@@ -75,9 +75,9 @@ def activity_gui(frame, diff_img, size=None):
 
     '''
     if not size:
-        size = (diffImg.shape[1]*2, diffImg.shape[0])
+        size = (diff_img.shape[1]*2, diff_img.shape[0])
 
-    gui = cvu.FrameGUI(frame=(frame, diffImg), title='ROI viewer', size=size)
+    gui = cvu.FrameGUI(frame=(frame, diff_img), title='ROI viewer', size=size)
 
     @gui.main_process
     def find(gui):
