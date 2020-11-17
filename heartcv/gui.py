@@ -1,5 +1,6 @@
 import functools
 import cv2
+import numpy as np
 from typing import Callable
 from dataclasses import dataclass
 import cvu
