@@ -6,7 +6,7 @@ import matplotlib.pyplot as plt
 hcv.show_progress(True)
 
 video = cvu.Video('./paleomon/video/test.avi')
-frames = video.read(start=0, stop=len(video))
+frames = video.read(start=0, stop=len(video), grayscale=True)
 
 frame = video.read(0)
 frame_gray = cvu.gray(frame)
