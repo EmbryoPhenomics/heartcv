@@ -17,7 +17,7 @@ def default(img):
     '''
     _, thresh = cv2.threshold(img, 0, 255, cv2.THRESH_BINARY + cv2.THRESH_OTSU)
     median = cv2.medianBlur(thresh, 3)
-    contours, hierarchy = cvu.find_contours(median)
+    contours, hierarchy = cvu.find_contours(medi, cv2.RETR_TREE, cv2.CHAIN_APPROX_NONEan)
 
     return contours, hierarchy
 
@@ -47,7 +47,7 @@ def binary_thresh(img, thresh):
     '''
     _, thresh = cv2.threshold(img, thresh, 255, cv2.THRESH_BINARY)
     median = cv2.medianBlur(thresh, 3)
-    contours, hierarchy = cvu.find_contours(median)
+    contours, hierarchy = cvu.find_contours(medi, cv2.RETR_TREE, cv2.CHAIN_APPROX_NONEan)
 
     return contours, hierarchy
 
@@ -181,7 +181,7 @@ def _roi_filter(diff_img, thresh_val, gauss_kernel):
     _, thresh = cv2.threshold(diff_img, thresh_val, 255, cv2.THRESH_BINARY)
     blur = cv2.GaussianBlur(thresh, (gauss_kernel,gauss_kernel), 0, 0)
 
-    contours, hierarchy = cvu.find_contours(blur)
+    contours, hierarchy = cvu.find_contours(blur, cv2.RETR_TREE, cv2.CHAIN_APPROX_NONE)
 
     bbox = None
     if contours:
