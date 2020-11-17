@@ -93,8 +93,8 @@ def activity_gui(frame, diff_img, size=None):
 
         bbox = location._roi_filter(diffProc, _thresh, _gauss)
         if bbox:
-            gui.bbox = (x,y,w,h) = bbox
-            cvu.draw_rectangles(frameProc, (x,y), (x+w, y+h), (0,255,0), 1)
+            gui.bbox = bbox
+            cvu.draw_rectangles(frameProc, bbox, (0,255,0), 1)
 
         diffProc = cvu.bgr(blur)
         allImg = np.hstack((frameProc, diffProc))

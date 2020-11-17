@@ -186,7 +186,7 @@ def _roi_filter(diff_img, thresh_val, gauss_kernel):
     bbox = None
     if contours:
         contour = cvu.largest(contours)
-        bbox =  cv2.boundingRect(contour)
+        bbox = cv2.boundingRect(contour)
 
     return bbox
 
