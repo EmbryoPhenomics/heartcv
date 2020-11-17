@@ -1,6 +1,7 @@
 import cv2
 import numpy as np
 from more_itertools import pairwise
+import cvu
 
 from heartcv.util import HeartCVError 
 from heartcv import util 
@@ -16,7 +17,7 @@ def default(img):
     '''
     _, thresh = cv2.threshold(img, 0, 255, cv2.THRESH_BINARY + cv2.THRESH_OTSU)
     median = cv2.medianBlur(thresh, 3)
-    contours, hierarchy = util.find_contours(median)
+    contours, hierarchy = cvu.find_contours(median)
 
     return contours, hierarchy
 
@@ -33,7 +34,7 @@ def two_stage(img):
     firstContour = default(img)
 
     bbox = cv2.boundingRect(firstContour)
-    firstRectMask = util.rect_mask(img, bbox)
+    firstRectMask = cvu.rect_mask(img, bbox)
     onlyFirst = cv2.bitwise_and(img, img, mask=firstRectMask)
 
     return default(img)
@@ -46,7 +47,7 @@ def binary_thresh(img, thresh):
     '''
     _, thresh = cv2.threshold(img, thresh, 255, cv2.THRESH_BINARY)
     median = cv2.medianBlur(thresh, 3)
-    contours, hierarchy = util.find_contours(median)
+    contours, hierarchy = cvu.find_contours(median)
 
     return contours, hierarchy
 
@@ -102,10 +103,10 @@ def _abs_diffs(frames, mask):
     used in both individual and sum frame differencing below.
 
     '''
-    first = util.take_first(frames)
+    first = cvu.take_first(frames)
     if mask is None:
         mask = np.ones(first.shape, dtype='uint8')
-    mask_ = util.Mask(mask)
+    mask_ = cvu.Mask(mask)
 
     for prev,next_ in pairwise(map(mask_, frames)):
         yield cv2.absdiff(prev, next_)
@@ -166,7 +167,7 @@ def sum_abs_diff(frames, mask=None, thresh_val=10):
     '''
     hcv_logger.info('Computing sum of the absolute differences for footage...')
 
-    sum_diff = np.zeros_like(util.take_first(frames))
+    sum_diff = np.zeros_like(cvu.take_first(frames))
     with util.pgbar(total=len(frames)-1) as pgbar:
         for diff in _abs_diffs(frames, mask):
             _, thresh = cv2.threshold(diff, thresh_val, 1, cv2.THRESH_BINARY)
@@ -180,11 +181,11 @@ def _roi_filter(diff_img, thresh_val, gauss_kernel):
     _, thresh = cv2.threshold(diff_img, thresh_val, 255, cv2.THRESH_BINARY)
     blur = cv2.GaussianBlur(thresh, (gauss_kernel,gauss_kernel), 0, 0)
 
-    contours, hierarchy = util.find_contours(blur)
+    contours, hierarchy = cvu.find_contours(blur)
 
     bbox = None
     if contours:
-        contour = util.largest(contours)
+        contour = cvu.largest(contours)
         bbox =  cv2.boundingRect(contour)
 
     return bbox
