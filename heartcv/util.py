@@ -39,9 +39,14 @@ def subset(frames, x, y, w, h):
 
 # Logging utilities -----------------------------------------------------------------
 
+class HeartCVError(Exception):
+    ''' Raise for HeartCV specific runtime errors'''
+
+class HeartCVWarning(Warning):
+    ''' Raise for HeartCV specific warnings'''
+
 SHOW_PROGRESS = True
 
-# Logging utilities
 if SHOW_PROGRESS:
     logging.basicConfig(level='INFO')
     hcv_logger = logging.getLogger('HeartCV')
