@@ -35,12 +35,12 @@ def location_gui(video, method, size=None):
     @gui.process
     def locate(gui):
         frame = gui.frame.copy()
-        frameProc = cvu.gray(frame)
+        frame_proc = cvu.gray(frame)
 
         if method.preprocess is location.binary_thresh:
-            gui.embryoOutline = method(frameProc, gui['thresh'])
+            gui.embryoOutline = method(frame_proc, gui['thresh'])
         else:
-            gui.embryoOutline = method(frameProc)
+            gui.embryoOutline = method(frame_proc)
 
         cvu.draw_contours(frame, gui.embryoOutline, -1, (0,255,0), 1)
         return frame
@@ -82,22 +82,22 @@ def activity_gui(frame, diff_img, size=None):
     @gui.process
     def find(gui):
         frame, diff = gui.frame
-        frameProc, diffProc = (frame.copy(), diff.copy())
-        if len(frameProc.shape) == 2:
-            frameProc = cvu.bgr(frame)
+        frame_proc, diff_proc = (frame.copy(), diff.copy())
+        if len(frame_proc.shape) == 2:
+            frame_proc = cvu.bgr(frame)
 
         _thresh = gui['thresh']
         _gauss = gui['gauss']
         if _gauss%2 == 0:
             _gauss = _gauss + 1
 
-        bbox = location._roi_filter(diffProc, _thresh, _gauss)
+        bbox, blur = location._roi_filter(diff_proc, _thresh, _gauss)
         if bbox:
             gui.bbox = bbox
-            cvu.draw_rectangles(frameProc, bbox, (0,255,0), 1)
+            cvu.draw_rectangles(frame_proc, bbox, (0,255,0), 1)
 
-        diffProc = cvu.bgr(blur)
-        allImg = np.hstack((frameProc, diffProc))
+        diff_proc = cvu.bgr(blur)
+        allImg = np.hstack((frame_proc, diff_proc))
 
         return allImg
 

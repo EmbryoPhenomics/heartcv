@@ -188,7 +188,7 @@ def _roi_filter(diff_img, thresh_val, gauss_kernel):
         contour = cvu.largest(contours)
         bbox = cv2.boundingRect(contour)
 
-    return bbox
+    return (bbox, blur)
 
 def roi_search(diff_img, thresh_range, gauss_range):
     '''
@@ -213,7 +213,7 @@ def roi_search(diff_img, thresh_range, gauss_range):
     bboxs = []
     for t in range(*thresh_range):
         for g in range(*gauss_range):
-                bbox = _roi_filter(diff_img, t, g)
+                bbox, _ = _roi_filter(diff_img, t, g)
                 if bbox:
                     bboxs.append(bbox)
 
