@@ -6,13 +6,6 @@ from heartcv.util import HeartCVError
 from heartcv import util 
 from heartcv.util import hcv_logger
 
-# Built-in embryo location methods -------------------------------------------------
-'''
-    These methods are apart of the semi-automated API to be used with HeartCV.location_gui(...).
-    They can be useful in creating a more precise embryo mask to segment to if needed.    
-
-'''
-
 def default(img):
     '''
     Simplest embryo location method. 
@@ -102,14 +95,6 @@ class Location:
             raise
         return filtContours
 
-# Heart location methods ----------------------------------------------------------------------
-'''
-    These are methods used in both semi- and fully automated API's for locating the heart. They are
-    relatively simple in that they use consecutive frame subtraction to locate the activity of the
-    heart. The output of these methods can be used both with HeartCV.activity_gui(...) and 
-    HeartCV.roi_search(...) to locate the heart.
-
-'''
 
 def _abs_diffs(frames, mask):
     '''
