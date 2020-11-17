@@ -1,6 +1,7 @@
-from .util import *
-from .location import *
-from .events import *
-from .gui import *
+'''Top level for aggregating all sub-packages. '''
 
-__version__ = "0.1.8"
+from .core import *
+from .gui import *
+from .util import *
+
+__version__ = '0.1.7'
