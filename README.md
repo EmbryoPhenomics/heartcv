@@ -4,11 +4,11 @@ HeartCV is a library for extracting various proxy traits from the hearts of deve
 
 **Example visual output:**
 
-<img src='https://github.com/EmbryoPhenomics/heartcv/tree/main/assets/output51.gif'>
+<img src='https://github.com/EmbryoPhenomics/heartcv/raw/main/assets/output51.gif'>
 
 And the corresponding proxies:
 
-<img src='https://github.com/EmbryoPhenomics/heartcv/tree/main/assets/output51.jpg'>
+<img src='https://github.com/EmbryoPhenomics/heartcv/raw/main/assets/output51.jpg'>
 
 ## Installation
 
