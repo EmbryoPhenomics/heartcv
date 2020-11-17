@@ -3,8 +3,8 @@ import codecs
 import os.path
 import pathlib
 
-# here = pathlib.Path(__file__).parent.resolve()
-# long_description = (here / 'README.md').read_text(encoding='utf-8')
+here = pathlib.Path(__file__).parent.resolve()
+long_description = (here / 'README.md').read_text(encoding='utf-8')
 
 # For reading in the version string without importing the package
 # Ref: https://packaging.python.org/guides/single-sourcing-package-version/
@@ -24,8 +24,8 @@ def get_version(rel_path):
 setup(name='heartcv',
       version=get_version('heartcv/__init__.py'),
       description='Computer vision utilities.',
-      # long_description=long_description,
-      # long_description_content_type='text/markdown',
+      long_description=long_description,
+      long_description_content_type='text/markdown',
       url='https://github.com/EmbryoPhenomics/heartcv',
       author='Ziad Ibbini, Oliver Tills',
       author_email='ziad.ibbini@students.plymouth.ac.uk, oli.tills@plymouth.ac.uk',
