@@ -32,7 +32,7 @@ def location_gui(video, method, size=None):
 
     gui = cvu.VideoGUI(video=video, title='Embryo location GUI', size=size)
 
-    @gui.main_process
+    @gui.process
     def locate(gui):
         frame = gui.frame.copy()
         frameProc = cvu.gray(frame)
@@ -79,7 +79,7 @@ def activity_gui(frame, diff_img, size=None):
 
     gui = cvu.FrameGUI(frame=(frame, diff_img), title='ROI viewer', size=size)
 
-    @gui.main_process
+    @gui.process
     def find(gui):
         frame, diff = gui.frame
         frameProc, diffProc = (frame.copy(), diff.copy())
