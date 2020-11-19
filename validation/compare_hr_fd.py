@@ -6,7 +6,7 @@ import glob
 from statsmodels.nonparametric.smoothers_lowess import lowess
 from more_itertools import pairwise
 
-from heartcv.core.segmentation import _minmax_scale as scale
+from heartcv import minmax_scale as scale
 
 def mse(truth, act):
     truth, act = map(np.asarray, (truth, act))
@@ -121,8 +121,13 @@ def stats(d_peaks, s_peaks):
 
     hr = len(s_peaks)
 
-    d_time = (s_peaks[:-1] - d_peaks[1:])*-1
-    s_time = s_peaks - d_peaks
+    d_time = []
+    s_time = []
+    for (d,s),(d2,s2) in pairwise(zip(d_peaks, s_peaks)):
+        d_time.append(d2 - s)
+        s_time.append(s - d)
+
+    d_time, s_time = map(np.asarray, (d_time, s_time))
 
     # Times
     min_dt = d_time.min()
