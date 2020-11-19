@@ -98,6 +98,8 @@ Paleomon | 15_15ppt_old_E5_15 | Old | Tom | &#x2611;
 Paleomon | 15_15ppt_old_F4_1 | Old | Tom | &#x2611;
 Paleomon | 15_15ppt_old_F10_21 | Old | Tom | &#x2611;
 Paleomon | 15_15ppt_old_H6 | Old | Tom | &#x2611;
+ - | - | - | - | -
+ Radix | 20deg_A1 | 20 | Ziad | &#x2612;
 
 ## Summary plots - Frame differencing values
 

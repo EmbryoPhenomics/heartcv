@@ -1,6 +1,6 @@
 # heartcv
 
-HeartCV is a library for extracting various proxy traits from the hearts of developing embryos. 
+HeartCV is a library for extracting various cardiac proxy traits from footage of developing embryos. 
 
 **Example visual output:**
 
@@ -18,5 +18,3 @@ To install this library, simply clone or download this repository, and install u
 pip install .
 
 ```
-
-
