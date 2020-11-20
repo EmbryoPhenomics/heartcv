@@ -6,7 +6,7 @@ import glob
 from statsmodels.nonparametric.smoothers_lowess import lowess
 from more_itertools import pairwise
 
-from heartcv.core.segmentation import _minmax_scale as scale
+from heartcv import minmax_scale as scale
 
 def mse(truth, act):
     truth, act = map(np.asarray, (truth, act))
@@ -214,10 +214,21 @@ mds5 = parse_man('./data/paleomon/hr_man_15_15ppt_young_A4_60.csv') # s[1:]
 # mds22 = parse_man('./data/paleomon/hr_man_15_15ppt_old_F10_21.csv') 
 # mds23 = parse_man('./data/paleomon/hr_man_15_15ppt_old_H6.csv') 
 
-d,aad,s,aas = ds5
+msv = []
+(md,ms),(mad,mas) = mds2[0],mds2[1]
+msv.append(np.mean(mad[:6] - mas[:6]))
+(md,ms),(mad,mas) = mds4[0],mds4[1]
+msv.append(np.mean(mad[:6] - mas[:6]))
 (md,ms),(mad,mas) = mds5[0],mds5[1]
+msv.append(np.mean(mad[:6] - mas[:6]))
 
-msv = mad[:6] - mas[:6]
+asv = []
+d,aad,s,aas = ds2
+asv.append(np.mean(aad[:6]))
+d,aad,s,aas = ds4
+asv.append(np.mean(aad[:6]))
+d,aad,s,aas = ds5
+asv.append(np.mean(aad[:6]))
 
-plt.scatter(msv, aad[:6])
+plt.scatter(msv, asv)
 plt.show()
