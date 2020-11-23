@@ -176,7 +176,7 @@ def sum_abs_diff(frames, mask=None, thresh_val=10):
 
     return sum_diff
 
-def _roi_filter(diff_img, thresh_val, gauss_kernel):
+def _roi_filter(diff_img, thresh_val, gauss_kernel, rotate):
     '''Find an roi given a sum difference image. '''
     _, thresh = cv2.threshold(diff_img, thresh_val, 255, cv2.THRESH_BINARY)
     blur = cv2.GaussianBlur(thresh, (gauss_kernel,gauss_kernel), 0, 0)
@@ -186,11 +186,15 @@ def _roi_filter(diff_img, thresh_val, gauss_kernel):
     bbox = None
     if contours:
         contour = cvu.largest(contours)
-        bbox = cv2.boundingRect(contour)
 
-    return (bbox, blur)
+        if rotate:
+            bbox = cv2.minAreaRect(contour)
+        else:
+            bbox = cv2.boundingRect(contour)
 
-def roi_search(diff_img, thresh_range, gauss_range):
+    return (bbox, contour, blur)
+
+def roi_search(diff_img, thresh_range, gauss_range, rotate=True):
     '''
     Find an roi for the heart via grid search across pre-defined binary
     threshold and gaussian blur ranges.
@@ -202,8 +206,10 @@ def roi_search(diff_img, thresh_range, gauss_range):
 
         gauss_range     Tuple.            Gaussian kernel sizes to conduct roi search over (Required).
 
+        rotate          Bool.             Whether to rotate bounding boxes, default is True.
+
     Returns:
-        Tuple.    Bounding box dimensions of the final roi.
+        Tuple.    Bounding box dimensions of the median roi.
 
         List.     List of all bounding box dimensions found.
 
@@ -213,10 +219,15 @@ def roi_search(diff_img, thresh_range, gauss_range):
     bboxs = []
     for t in range(*thresh_range):
         for g in range(*gauss_range):
-                bbox, _ = _roi_filter(diff_img, t, g)
+                bbox, _, _ = _roi_filter(diff_img, t, g, rotate=rotate)
+
+                if rotate:
+                    (x,y),(w,h),a = bbox
+                    bbox = (x,w,y,h,a)
+
                 if bbox:
                     bboxs.append(bbox)
 
-    x,y,w,h = map(np.median, zip(*bboxs))
+    bbox = tuple(map(np.median, zip(*bboxs)))
 
-    return (tuple(map(int, (x,y,w,h))), bboxs)
+    return (tuple(map(int, bbox)), bboxs)

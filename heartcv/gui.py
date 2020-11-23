@@ -9,7 +9,7 @@ from heartcv import location
 
 # Implementations for the semi-automated API ------------------------------------
 
-def location_gui(video, method, size=None):
+def location_gui(video, method):
     '''
     Launch a gui for testing an embryo location method.
 
@@ -18,9 +18,6 @@ def location_gui(video, method, size=None):
 
         method   Callable.        Callable to execute on each frame to
                                   locate the embryo (Required).
-
-        size     Tuple.           Size of GUI window. Default is the size of
-                                  the first image in the video.
 
     Returns:
         Numpy ndarray.   Embryo outline determined by the supplied method.
@@ -54,7 +51,7 @@ def location_gui(video, method, size=None):
 
     return gui.embryo_outline, gui.values()
 
-def activity_gui(frame, diff_img, size=None):
+def activity_gui(frame, diff_img, rotate=True):
     '''
     Launch a gui for finding a bounding box from the output of the activity location methods.
 
@@ -62,10 +59,9 @@ def activity_gui(frame, diff_img, size=None):
         frame     Numpy ndarray.    RGB image from footage to be processed (Required).
 
         diff_img  Numpy ndarray.    Grayscale image produced from HeartCV.sum_abs_diff() (Required).
-    
-        size      Tuple.            Size of the interactive window in pixels, default is the
-                                    shape of the image supplied.
-    
+        
+        rotate    Bool.             Whether to rotate bounding boxes, default is True.
+
     Returns:
         Tuple.    Bounding box dimensions for the heart (x,y,w,h).
 
@@ -86,10 +82,17 @@ def activity_gui(frame, diff_img, size=None):
         if _gauss%2 == 0:
             _gauss = _gauss + 1
 
-        bbox, blur = location._roi_filter(diff_proc, _thresh, _gauss)
-        if bbox:
+        bbox, contour, blur = location._roi_filter(diff_proc, _thresh, _gauss, rotate=rotate)
+        if bbox is not None:
+            cvu.draw_contours(frame_proc, contour, -1, (0,0,255), 1)
+
             gui.bbox = bbox
-            cvu.draw_rectangles(frame_proc, bbox, (0,255,0), 1)
+            gui.contour = contour
+            if not rotate:
+                cvu.draw_rectangles(frame_proc, bbox, (0,255,0), 1)
+            else:
+                bbox = np.int0(cv2.boxPoints(bbox))
+                cvu.draw_contours(frame_proc, bbox, -1, (0,255,0), 1)
 
         diff_proc = cvu.bgr(blur)
         allImg = np.hstack((frame_proc, diff_proc))
@@ -110,5 +113,5 @@ def activity_gui(frame, diff_img, size=None):
 
     gui.run()
 
-    return gui.bbox, gui.values()
+    return (gui.bbox, gui.contour, gui.values())
 
