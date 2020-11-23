@@ -5,7 +5,7 @@ from typing import Callable
 from dataclasses import dataclass
 import cvu
 
-from heartcv import location
+from heartcv import location 
 
 # Implementations for the semi-automated API ------------------------------------
 
@@ -28,10 +28,7 @@ def location_gui(video, method, size=None):
         Dict.            Dict of trackbar names and their current values on exit.               
 
     '''
-    if not size:
-        size = video.resolution
-
-    gui = cvu.VideoGUI(video=video, title='Embryo location GUI', size=size)
+    gui = cvu.VideoGUI(video=video, title='Embryo location GUI')
 
     @gui.process
     def locate(gui):
@@ -39,14 +36,14 @@ def location_gui(video, method, size=None):
         frame_proc = cvu.gray(frame)
 
         if method.preprocess is location.binary_thresh:
-            gui.embryoOutline = method(frame_proc, gui['thresh'])
+            gui.embryo_outline = method(frame_proc, gui['thresh'])
         else:
-            gui.embryoOutline = method(frame_proc)
+            gui.embryo_outline = method(frame_proc)
 
-        cvu.draw_contours(frame, gui.embryoOutline, -1, (0,255,0), 1)
+        cvu.draw_contours(frame, gui.embryo_outline, -1, (0,255,0), 1)
         return frame
 
-    if method.preprocess is binary_thresh:
+    if method.preprocess is location.binary_thresh:
         @gui.trackbar('Threshold', id='thresh', min=0, max=255)
         def on_thresh(gui, val):
             gui['thresh'] = val
@@ -55,7 +52,7 @@ def location_gui(video, method, size=None):
 
     gui.run()
 
-    return gui.embryoOutline, gui.values()
+    return gui.embryo_outline, gui.values()
 
 def activity_gui(frame, diff_img, size=None):
     '''
@@ -75,10 +72,7 @@ def activity_gui(frame, diff_img, size=None):
         Tuple.    Binary threshold and gaussian kernel values (thresh, gauss).
 
     '''
-    if not size:
-        size = (diff_img.shape[1]*2, diff_img.shape[0])
-
-    gui = cvu.FrameGUI(frame=(frame, diff_img), title='ROI viewer', size=size)
+    gui = cvu.FrameGUI(frame=(frame, diff_img), title='ROI viewer')
 
     @gui.process
     def find(gui):
