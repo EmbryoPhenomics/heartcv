@@ -105,6 +105,17 @@ Paleomon | 15_15ppt_old_H6 | Old | Tom | &#x2611;
  Radix | 25deg_A5 | 25 | Ziad | &#x2612;
  Radix | 25deg_A6 | 25 | Ziad | &#x2612;
  Radix | 25deg_A7 | 25 | Ziad | &#x2612;
+ Radix | 30deg_A4 | 30 | Tom | &#x2612;
+ Radix | 30deg_A5 | 30 | Tom | &#x2612;
+ Radix | 30deg_A6 | 30 | Tom | &#x2612;
+ Radix | 30deg_A7 | 30 | Tom | &#x2612;
+ Radix | 20deg_B1 | 20 | Tom | &#x2612;
+ Radix | 20deg_B2 | 20 | Tom | &#x2612;
+ Radix | 20deg_B3 | 20 | Tom | &#x2612;
+ Radix | 25deg_B1 | 25 | Tom | &#x2612;
+ Radix | 30deg_B1 | 30 | Tom | &#x2612;
+ Radix | 30deg_B3 | 30 | Tom | &#x2612;
+ Radix | 30deg_B5 | 30 | Tom | &#x2612;
 
 
 ## Summary plots - Frame differencing values
