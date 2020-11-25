@@ -87,6 +87,36 @@ def parse_auto(file, inv, subset, rem_peak=None, idx=1, plot=False, *args, **kwa
 
     return (d,s)
 
+def parse_auto_radix(file, inv, subset, plot=False, *args, **kwargs):
+    dat = pd.read_csv(file)
+    area = dat['area']
+    if inv:
+        area = np.max(area) - area
+    area = scale(area)[:300] # to 300 as manual is only up to 300
+    t,d,s = hcv.find_events(area, *args, **kwargs)
+    d = d[0]
+    s = s[0]
+    d,s = map(np.asarray, (d,s))
+
+    if subset:
+        d_to = subset.pop('d', None)
+        s_to = subset.pop('s', None)
+
+        if d_to:
+            d = d[:d_to]
+        if s_to:
+            s = s[s_to:]
+
+    if plot:
+        plt.plot(area)
+        plt.plot(d, area[d], 'x')
+        plt.plot(s, area[s], 'x')
+        plt.show()
+
+    print(tuple(map(len, (d,))))
+
+    return d
+
 def parse_man(file, subset=None):
     dat = pd.read_csv(file)
     d_peaks = dat['EndDiastoleFrame']
@@ -103,7 +133,14 @@ def parse_man(file, subset=None):
 
     return tuple(map(np.asarray, (d_peaks, s_peaks)))
 
-def stats(d_peaks, s_peaks):
+def parse_man_radix(file, subset=None):
+    dat = pd.read_csv(file)
+    d_peaks = dat['EndDiastoleFrame']
+    s_peaks = dat['EndSystoleFrame']
+
+    return np.asarray(d_peaks)
+
+def stats(d_peaks, s_peaks=None):
     # HR - bpm
     # Diastole timing
     # Systole timing
@@ -119,28 +156,33 @@ def stats(d_peaks, s_peaks):
     # vi) Standard deviation in timing difference between peaks.
     # vii) Root mean square of successive difference in the timing between peaks
 
-    hr = len(s_peaks)
+    d_peaks = np.asarray(d_peaks)
+    hr = len(d_peaks)
 
-    d_time = []
-    s_time = []
-    for (d,s),(d2,s2) in pairwise(zip(d_peaks, s_peaks)):
-        d_time.append(d2 - s)
-        s_time.append(s - d)
+    if s_peaks is not None:
+        s_peaks = np.asarray(s_peaks)
+        d_time = []
+        s_time = []
+        for (d,s),(d2,s2) in pairwise(zip(d_peaks, s_peaks)):
+            d_time.append(d2 - s)
+            s_time.append(s - d)
 
-    d_time, s_time = map(np.asarray, (d_time, s_time))
+        d_time, s_time = map(np.asarray, (d_time, s_time))
 
-    # Times
-    min_dt = d_time.min()
-    max_dt = d_time.max()
-    mean_dt = d_time.mean()
-    med_dt = np.median(d_time)
-    std_dt = d_time.std()
+        # Times
+        min_dt = d_time.min()
+        max_dt = d_time.max()
+        mean_dt = d_time.mean()
+        med_dt = np.median(d_time)
+        std_dt = d_time.std()
 
-    min_st = s_time.min()
-    max_st = s_time.max()
-    mean_st = s_time.mean()
-    med_st = np.median(s_time)
-    std_st = s_time.std()
+        min_st = s_time.min()
+        max_st = s_time.max()
+        mean_st = s_time.mean()
+        med_st = np.median(s_time)
+        std_st = s_time.std()
+    else:
+        min_dt = max_dt = mean_dt = med_dt = std_dt = min_st = max_st = mean_st = med_st = std_st = None
 
     # Diffs
     d_diffs = d_peaks[1:] - d_peaks[:-1] # only use diastole as more reliablly accurate
@@ -308,6 +350,239 @@ all_m = append_with(all_m, stats(*mds20))
 all_m = append_with(all_m, stats(*mds21))
 all_m = append_with(all_m, stats(*mds22))
 all_m = append_with(all_m, stats(*mds23))
+
+
+# Deconstruct
+[a_hr, a_min_t, a_max_t, a_mean_t, a_med_t, a_std_t, a_rmss, a_min_dt, a_max_dt, a_mean_dt, a_med_dt, a_std_dt, a_min_st, a_max_st, a_mean_st, a_med_st, a_std_st] = all_a
+[m_hr, m_min_t, m_max_t, m_mean_t, m_med_t, m_std_t, m_rmss, m_min_dt, m_max_dt, m_mean_dt, m_med_dt, m_std_dt, m_min_st, m_max_st, m_mean_st, m_med_st, m_std_st] = all_m
+
+# And plot
+plt.scatter(m_hr, a_hr)
+plt.xlabel('Manual HR (for 10s)')
+plt.ylabel('HeartCV HR (for 10s)')
+plt.show()
+
+# Beat to beat stats
+fig, ((ax1,ax2,ax3,),(ax4,ax5,ax6)) = plt.subplots(2, 3)
+ax1.scatter(m_min_t, a_min_t)
+ax1.set_xlabel('Manual min beat to beat timing')
+ax1.set_ylabel('HeartCV min beat to beat timing')
+
+ax2.scatter(m_max_t, a_max_t)
+ax2.set_xlabel('Manual max beat to beat timing')
+ax2.set_ylabel('HeartCV max beat to beat timing')
+
+ax3.scatter(m_mean_t, a_mean_t)
+ax3.set_xlabel('Manual mean beat to beat timing')
+ax3.set_ylabel('HeartCV mean beat to beat timing')
+
+ax4.scatter(m_med_t, a_med_t)
+ax4.set_xlabel('Manual med beat to beat timing')
+ax4.set_ylabel('HeartCV med beat to beat timing')
+
+ax5.scatter(m_std_t, a_std_t)
+ax5.set_xlabel('Manual std beat to beat timing')
+ax5.set_ylabel('HeartCV std beat to beat timing')
+
+ax6.scatter(m_rmss, a_rmss)
+ax6.set_xlabel('Manual rmss beat to beat timing')
+ax6.set_ylabel('HeartCV rmss beat to beat timing')
+plt.show()
+
+# Diastole timing stats
+fig, ((ax1,ax2,ax3,),(ax4,ax5,ax6)) = plt.subplots(2, 3)
+ax1.scatter(m_min_dt, a_min_dt)
+ax1.set_xlabel('Manual min diastole timing')
+ax1.set_ylabel('HeartCV min diastole timing')
+
+ax2.scatter(m_max_dt, a_max_dt)
+ax2.set_xlabel('Manual max diastole timing')
+ax2.set_ylabel('HeartCV max diastole timing')
+
+ax3.scatter(m_mean_dt, a_mean_dt)
+ax3.set_xlabel('Manual mean diastole timing')
+ax3.set_ylabel('HeartCV mean diastole timing')
+
+ax4.scatter(m_med_dt, a_med_dt)
+ax4.set_xlabel('Manual med diastole timing')
+ax4.set_ylabel('HeartCV med diastole timing')
+
+ax5.scatter(m_std_dt, a_std_dt)
+ax5.set_xlabel('Manual std diastole timing')
+ax5.set_ylabel('HeartCV std diastole timing')
+
+plt.show()
+
+# Systole timing stats
+fig, ((ax1,ax2,ax3,),(ax4,ax5,ax6)) = plt.subplots(2, 3)
+ax1.scatter(m_min_st, a_min_st)
+ax1.set_xlabel('Manual min systole timing')
+ax1.set_ylabel('HeartCV min systole timing')
+
+ax2.scatter(m_max_st, a_max_st)
+ax2.set_xlabel('Manual max systole timing')
+ax2.set_ylabel('HeartCV max systole timing')
+
+ax3.scatter(m_mean_st, a_mean_st)
+ax3.set_xlabel('Manual mean systole timing')
+ax3.set_ylabel('HeartCV mean systole timing')
+
+ax4.scatter(m_med_st, a_med_st)
+ax4.set_xlabel('Manual med systole timing')
+ax4.set_ylabel('HeartCV med systole timing')
+
+ax5.scatter(m_std_st, a_std_st)
+ax5.set_xlabel('Manual std systole timing')
+ax5.set_ylabel('HeartCV std systole timing')
+
+plt.show()
+
+
+# Auto
+d = parse_auto_radix('./data/radix/fd_auto_20deg_A1.csv', inv=False, subset=None, height=0.4) 
+# d1 = parse_auto_radix('./data/radix/fd_auto_20deg_A3.csv', inv=False, subset=None, prominence=0.4) # s[1:]
+# d2 = parse_auto_radix('./data/radix/fd_auto_20deg_A4.csv', inv=False, subset=None, prominence=0.3) # d[:-1], s[1:]
+# d3 = parse_auto_radix('./data/radix/fd_auto_20deg_A6.csv', inv=False, subset=None, prominence=0.3, distance=10)
+d4 = parse_auto_radix('./data/radix/fd_auto_20deg_B1.csv', inv=False, subset=None, prominence=0.3, distance=10)
+d5 = parse_auto_radix('./data/radix/fd_auto_20deg_B2.csv', inv=False, subset=None, prominence=0.3, distance=10) # s[1:]
+d6 = parse_auto_radix('./data/radix/fd_auto_20deg_B3.csv', inv=False, subset=None, prominence=0.3, distance=10) # s[1:]
+# d7 = parse_auto_radix('./data/radix/fd_auto_25deg_A1.csv', inv=False, subset=None, prominence=0.3, distance=10) # s[1:]
+d8 = parse_auto_radix('./data/radix/fd_auto_25deg_A4.csv', inv=True, subset=None, prominence=0.2, distance=5) # s[1:]
+d9 = parse_auto_radix('./data/radix/fd_auto_25deg_A5.csv', inv=False, subset=None, prominence=0.2, distance=5) 
+# d10 = parse_auto_radix('./data/radix/fd_auto_25deg_A6.csv', inv=False, subset=None, prominence=0.2, distance=5) 
+# d11 = parse_auto_radix('./data/radix/fd_auto_25deg_A7.csv', inv=False, subset=None, prominence=0.2, distance=5) 
+# d12 = parse_auto_radix('./data/radix/fd_auto_25deg_B1.csv', inv=False, subset=None, prominence=0.1) 
+# d13 = parse_auto_radix('./data/radix/fd_auto_25deg_B3.csv', inv=False, subset=None, prominence=0.15, distance=5) 
+# d14 = parse_auto_radix('./data/radix/fd_auto_30deg_A1.csv', inv=False, subset=dict(d=-1), prominence=0.05, distance=5) 
+# d15 = parse_auto_radix('./data/radix/fd_auto_30deg_A4.csv', inv=False, subset=None, prominence=0.1) 
+d16 = parse_auto_radix('./data/radix/fd_auto_30deg_A5.csv', inv=False, subset=None, prominence=0.07, distance=5) 
+# d17 = parse_auto_radix('./data/radix/fd_auto_30deg_A6.csv', inv=False, subset=None, prominence=0.25, distance=5) 
+d18 = parse_auto_radix('./data/radix/fd_auto_30deg_B1.csv', inv=False, subset=None, prominence=0.1, distance=5) 
+# d19 = parse_auto_radix('./data/radix/fd_auto_20deg_old_D10_42.csv', inv=False, subset=None, prominence=0.1) 
+# d20 = parse_auto_radix('./data/radix/fd_auto_20deg_old_E5_15.csv', inv=False, subset=None, prominence=0.1) 
+# d21 = parse_auto_radix('./data/radix/fd_auto_20deg_old_F4_1.csv', inv=False, subset=None, prominence=0.1) 
+# d22 = parse_auto_radix('./data/radix/fd_auto_20deg_old_F10_21.csv', inv=False, subset=None, prominence=0.1) 
+# d23 = parse_auto_radix('./data/radix/fd_auto_20deg_old_H6.csv', inv=False, subset=None, prominence=0.1) 
+
+# Man
+md = parse_man_radix('./data/radix/hr_man_20deg_A1.csv',) 
+# md1 = parse_man_radix('./data/radix/hr_man_20deg_A3.csv') # s[1:]
+# md2 = parse_man_radix('./data/radix/hr_man_20deg_A4.csv') # d[:-1], s[1:]
+# md3 = parse_man_radix('./data/radix/hr_man_20deg_A6.csv')
+md4 = parse_man_radix('./data/radix/hr_man_20deg_B1.csv')
+md5 = parse_man_radix('./data/radix/hr_man_20deg_B2.csv') # s[1:]
+md6 = parse_man_radix('./data/radix/hr_man_20deg_B3.csv') # s[1:]
+# d7 = parse_man_radix('./data/radix/hr_man_25deg_A1.csv') # s[1:]
+md8 = parse_man_radix('./data/radix/hr_man_25deg_A4.csv') # s[1:]
+md9 = parse_man_radix('./data/radix/hr_man_25deg_A5.csv') 
+# d10 = parse_man_radix('./data/radix/hr_man_25deg_A6.csv') 
+# d11 = parse_man_radix('./data/radix/hr_man_25deg_A7.csv') 
+# d12 = parse_man_radix('./data/radix/hr_man_25deg_B1.csv') 
+# md13 = parse_man_radix('./data/radix/hr_man_25deg_B3.csv') 
+# md14 = parse_man_radix('./data/radix/hr_man_30deg_A1.csv')
+# d15 = parse_man_radix('./data/radix/hr_man_30deg_A4.csv') 
+md16 = parse_man_radix('./data/radix/hr_man_30deg_A5.csv') 
+# md17 = parse_man_radix('./data/radix/hr_man_30deg_A6.csv') 
+md18 = parse_man_radix('./data/radix/hr_man_30deg_B1.csv') 
+# d19 = parse_man_radix('./data/radix/hr_man_20deg_old_D10_42.csv') 
+# d20 = parse_man_radix('./data/radix/hr_man_20deg_old_E5_15.csv') 
+# d21 = parse_man_radix('./data/radix/hr_man_20deg_old_F4_1.csv') 
+# d22 = parse_man_radix('./data/radix/hr_man_20deg_old_F10_21.csv') 
+# d23 = parse_man_radix('./data/radix/hr_man_20deg_old_H6.csv') 
+
+
+# Create containers
+a_hr = []
+m_hr = []
+a_min_t = []
+m_min_t = []
+a_max_t = []
+m_max_t = []
+a_mean_t = []
+m_mean_t = []
+a_med_t = []
+m_med_t = []
+a_std_t = []
+m_std_t = []
+a_rmss = []
+m_rmss = []
+
+a_min_dt = []
+m_min_dt = []
+a_max_dt = []
+m_max_dt = []
+a_mean_dt = []
+m_mean_dt = []
+a_med_dt = []
+m_med_dt = []
+a_std_dt = []
+m_std_dt = []
+
+a_min_st = []
+m_min_st = []
+a_max_st = []
+m_max_st = []
+a_mean_st = []
+m_mean_st = []
+a_med_st = []
+m_med_st = []
+a_std_st = []
+m_std_st = []
+
+all_a = [a_hr, a_min_t, a_max_t, a_mean_t, a_med_t, a_std_t, a_rmss, a_min_dt, a_max_dt, a_mean_dt, a_med_dt, a_std_dt, a_min_st, a_max_st, a_mean_st, a_med_st, a_std_st]
+all_m = [m_hr, m_min_t, m_max_t, m_mean_t, m_med_t, m_std_t, m_rmss, m_min_dt, m_max_dt, m_mean_dt, m_med_dt, m_std_dt, m_min_st, m_max_st, m_mean_st, m_med_st, m_std_st]
+
+# Compute stats (auto)
+all_a = append_with(all_a, stats(d, None))
+# all_a = append_with(all_a, stats(d1, None))
+# all_a = append_with(all_a, stats(d2, None))
+# all_a = append_with(all_a, stats(d3, None))
+all_a = append_with(all_a, stats(d4, None))
+all_a = append_with(all_a, stats(d5, None))
+all_a = append_with(all_a, stats(d6, None))
+# all_a = append_with(all_a, stats(d7, None))
+all_a = append_with(all_a, stats(d8, None))
+all_a = append_with(all_a, stats(d9, None))
+# all_a = append_with(all_a, stats(d10, None))
+# all_a = append_with(all_a, stats(d11, None))
+# all_a = append_with(all_a, stats(d12, None))
+# all_a = append_with(all_a, stats(d13, None))
+# all_a = append_with(all_a, stats(d14, None))
+# all_a = append_with(all_a, stats(d15, None))
+all_a = append_with(all_a, stats(d16, None))
+# all_a = append_with(all_a, stats(d17, None))
+all_a = append_with(all_a, stats(d18, None))
+# all_a = append_with(all_a, stats(d19, None))
+# all_a = append_with(all_a, stats(d20, None))
+# all_a = append_with(all_a, stats(d21, None))
+# all_a = append_with(all_a, stats(d22, None))
+# all_a = append_with(all_a, stats(d23, None))
+
+# Compute stats (man)
+all_m = append_with(all_m, stats(md, None))
+# all_m = append_with(all_m, stats(md1, None))
+# all_m = append_with(all_m, stats(md2, None))
+# all_m = append_with(all_m, stats(md3, None))
+all_m = append_with(all_m, stats(md4, None))
+all_m = append_with(all_m, stats(md5, None))
+all_m = append_with(all_m, stats(md6, None))
+# all_m = append_with(all_m, stats(md7, None))
+all_m = append_with(all_m, stats(md8, None))
+all_m = append_with(all_m, stats(md9, None))
+# all_m = append_with(all_m, stats(md10, None))
+# all_m = append_with(all_m, stats(md11, None))
+# all_m = append_with(all_m, stats(md12, None))
+# all_m = append_with(all_m, stats(md13, None))
+# all_m = append_with(all_m, stats(md14, None))
+# all_m = append_with(all_m, stats(md15, None))
+all_m = append_with(all_m, stats(md16, None))
+# all_m = append_with(all_m, stats(md17, None))
+all_m = append_with(all_m, stats(md18, None))
+# all_m = append_with(all_m, stats(md19, None))
+# all_m = append_with(all_m, stats(md20, None))
+# all_m = append_with(all_m, stats(md21, None))
+# all_m = append_with(all_m, stats(md22, None))
+# all_m = append_with(all_m, stats(md23, None))
 
 
 # Deconstruct

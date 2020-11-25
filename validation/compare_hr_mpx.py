@@ -5,7 +5,7 @@ import pandas as pd
 import glob
 from statsmodels.nonparametric.smoothers_lowess import lowess
 
-from heartcv.core.segmentation import _minmax_scale as scale
+from heartcv import minmax_scale as scale
 
 def mse(truth, act):
     truth, act = map(np.asarray, (truth, act))
@@ -258,6 +258,209 @@ all_m = append_with(all_m, stats(*mds12))
 all_m = append_with(all_m, stats(*mds13))
 all_m = append_with(all_m, stats(*mds14))
 all_m = append_with(all_m, stats(*mds15))
+all_m = append_with(all_m, stats(*mds16))
+
+# Deconstruct
+[a_hr, a_min_t, a_max_t, a_mean_t, a_med_t, a_std_t, a_rmss, a_min_dt, a_max_dt, a_mean_dt, a_med_dt, a_std_dt, a_min_st, a_max_st, a_mean_st, a_med_st, a_std_st] = all_a
+[m_hr, m_min_t, m_max_t, m_mean_t, m_med_t, m_std_t, m_rmss, m_min_dt, m_max_dt, m_mean_dt, m_med_dt, m_std_dt, m_min_st, m_max_st, m_mean_st, m_med_st, m_std_st] = all_m
+
+# And plot
+plt.scatter(m_hr, a_hr)
+plt.xlabel('Manual HR (for 10s)')
+plt.ylabel('HeartCV HR (for 10s)')
+plt.show()
+
+# Beat to beat stats
+fig, ((ax1,ax2,ax3,),(ax4,ax5,ax6)) = plt.subplots(2, 3)
+ax1.scatter(m_min_t, a_min_t)
+ax1.set_xlabel('Manual min beat to beat timing')
+ax1.set_ylabel('HeartCV min beat to beat timing')
+
+ax2.scatter(m_max_t, a_max_t)
+ax2.set_xlabel('Manual max beat to beat timing')
+ax2.set_ylabel('HeartCV max beat to beat timing')
+
+ax3.scatter(m_mean_t, a_mean_t)
+ax3.set_xlabel('Manual mean beat to beat timing')
+ax3.set_ylabel('HeartCV mean beat to beat timing')
+
+ax4.scatter(m_med_t, a_med_t)
+ax4.set_xlabel('Manual med beat to beat timing')
+ax4.set_ylabel('HeartCV med beat to beat timing')
+
+ax5.scatter(m_std_t, a_std_t)
+ax5.set_xlabel('Manual std beat to beat timing')
+ax5.set_ylabel('HeartCV std beat to beat timing')
+
+ax6.scatter(m_rmss, a_rmss)
+ax6.set_xlabel('Manual rmss beat to beat timing')
+ax6.set_ylabel('HeartCV rmss beat to beat timing')
+plt.show()
+
+# Diastole timing stats
+fig, ((ax1,ax2,ax3,),(ax4,ax5,ax6)) = plt.subplots(2, 3)
+ax1.scatter(m_min_dt, a_min_dt)
+ax1.set_xlabel('Manual min diastole timing')
+ax1.set_ylabel('HeartCV min diastole timing')
+
+ax2.scatter(m_max_dt, a_max_dt)
+ax2.set_xlabel('Manual max diastole timing')
+ax2.set_ylabel('HeartCV max diastole timing')
+
+ax3.scatter(m_mean_dt, a_mean_dt)
+ax3.set_xlabel('Manual mean diastole timing')
+ax3.set_ylabel('HeartCV mean diastole timing')
+
+ax4.scatter(m_med_dt, a_med_dt)
+ax4.set_xlabel('Manual med diastole timing')
+ax4.set_ylabel('HeartCV med diastole timing')
+
+ax5.scatter(m_std_dt, a_std_dt)
+ax5.set_xlabel('Manual std diastole timing')
+ax5.set_ylabel('HeartCV std diastole timing')
+
+plt.show()
+
+# Systole timing stats
+fig, ((ax1,ax2,ax3,),(ax4,ax5,ax6)) = plt.subplots(2, 3)
+ax1.scatter(m_min_st, a_min_st)
+ax1.set_xlabel('Manual min systole timing')
+ax1.set_ylabel('HeartCV min systole timing')
+
+ax2.scatter(m_max_st, a_max_st)
+ax2.set_xlabel('Manual max systole timing')
+ax2.set_ylabel('HeartCV max systole timing')
+
+ax3.scatter(m_mean_st, a_mean_st)
+ax3.set_xlabel('Manual mean systole timing')
+ax3.set_ylabel('HeartCV mean systole timing')
+
+ax4.scatter(m_med_st, a_med_st)
+ax4.set_xlabel('Manual med systole timing')
+ax4.set_ylabel('HeartCV med systole timing')
+
+ax5.scatter(m_std_st, a_std_st)
+ax5.set_xlabel('Manual std systole timing')
+ax5.set_ylabel('HeartCV std systole timing')
+
+plt.show()
+
+
+# Auto
+ds = parse_auto('./data/radix/mpx_auto_20deg_A1.csv', inv=False, subset=None, frac=0, prominence=0.1) 
+# ds1 = parse_auto('./data/radix/mpx_auto_20deg_A3.csv', inv=False, subset=dict(s=1), frac=0, prominence=0.05) # s[1:]
+# ds2 = parse_auto('./data/radix/mpx_auto_20deg_A4.csv', inv=False, subset=dict(d=-1, s=1), frac=0, prominence=0.1) # d[:-1], s[1:]
+# ds3 = parse_auto('./data/radix/mpx_auto_20deg_A6.csv', inv=False, subset=dict(d=-1), frac=0, prominence=0.15)
+ds4 = parse_auto('./data/radix/mpx_auto_20deg_B1.csv', inv=False, subset=None, frac=0, prominence=0.1)
+ds5 = parse_auto('./data/radix/mpx_auto_20deg_B2.csv', inv=False, subset=dict(d=-1, s=1), frac=0, prominence=0.17) # s[1:]
+ds6 = parse_auto('./data/radix/mpx_auto_20deg_B3.csv', inv=False, subset=None, frac=0, prominence=0.13) # s[1:]
+ds7 = parse_auto('./data/radix/mpx_auto_25deg_A1.csv', inv=False, subset=dict(d=-1, s=1), frac=0, prominence=0.05) # s[1:]
+ds8 = parse_auto('./data/radix/mpx_auto_25deg_A4.csv', inv=False, subset=None, frac=0, prominence=0.04) # s[1:]
+ds9 = parse_auto('./data/radix/mpx_auto_25deg_A5.csv', inv=False, subset=dict(d=-1, s=1), frac=0, prominence=0.1)
+ds10 = parse_auto('./data/radix/mpx_auto_25deg_B1.csv', inv=False, subset=dict(d=-1, s=1), frac=0, prominence=0.1)
+# ds11 = parse_auto('./data/radix/mpx_auto_25deg_B3.csv', inv=False, subset=dict(d=-1), frac=0, prominence=0.08, distance=5)
+ds12 = parse_auto('./data/radix/mpx_auto_30deg_A1.csv', inv=False, subset=dict(d=-1), frac=0, prominence=0.05)
+ds13 = parse_auto('./data/radix/mpx_auto_30deg_A4.csv', inv=False, subset=dict(d=-1), frac=0, prominence=0.001)
+ds14 = parse_auto('./data/radix/mpx_auto_30deg_A5.csv', inv=False, subset=dict(s=1), frac=0, prominence=0.01)
+# ds15 = parse_auto('./data/radix/mpx_auto_30deg_A6.csv', inv=False, subset=None, frac=0, prominence=0.05)
+ds16 = parse_auto('./data/radix/mpx_auto_30deg_B1.csv', inv=False, subset=dict(d=-1), frac=0, prominence=0.01) 
+
+# Man
+mds = parse_man('./data/radix/hr_man_20deg_A1.csv', ) 
+# mds1 = parse_man('./data/radix/hr_man_20deg_A3.csv') # s[1:]
+# mds2 = parse_man('./data/radix/hr_man_20deg_A4.csv') # d[:-1], s[1:]
+# mds3 = parse_man('./data/radix/hr_man_20deg_A6.csv')
+mds4 = parse_man('./data/radix/hr_man_20deg_B1.csv')
+mds5 = parse_man('./data/radix/hr_man_20deg_B2.csv') # s[1:]
+mds6 = parse_man('./data/radix/hr_man_20deg_B3.csv') # s[1:]
+mds7 = parse_man('./data/radix/hr_man_25deg_A1.csv') # s[1:]
+mds8 = parse_man('./data/radix/hr_man_25deg_A4.csv') # s[1:]
+mds9 = parse_man('./data/radix/hr_man_25deg_A5.csv')
+mds10 = parse_man('./data/radix/hr_man_25deg_B1.csv')
+# mds11 = parse_man('./data/radix/hr_man_25deg_B3.csv')
+mds12 = parse_man('./data/radix/hr_man_30deg_A1.csv')
+mds13 = parse_man('./data/radix/hr_man_30deg_A4.csv')
+mds14 = parse_man('./data/radix/hr_man_30deg_A5.csv')
+# mds15 = parse_man('./data/radix/hr_man_30deg_A6.csv')
+mds16 = parse_man('./data/radix/hr_man_30deg_B1.csv') 
+
+# Create containers
+a_hr = []
+m_hr = []
+a_min_t = []
+m_min_t = []
+a_max_t = []
+m_max_t = []
+a_mean_t = []
+m_mean_t = []
+a_med_t = []
+m_med_t = []
+a_std_t = []
+m_std_t = []
+a_rmss = []
+m_rmss = []
+
+a_min_dt = []
+m_min_dt = []
+a_max_dt = []
+m_max_dt = []
+a_mean_dt = []
+m_mean_dt = []
+a_med_dt = []
+m_med_dt = []
+a_std_dt = []
+m_std_dt = []
+
+a_min_st = []
+m_min_st = []
+a_max_st = []
+m_max_st = []
+a_mean_st = []
+m_mean_st = []
+a_med_st = []
+m_med_st = []
+a_std_st = []
+m_std_st = []
+
+all_a = [a_hr, a_min_t, a_max_t, a_mean_t, a_med_t, a_std_t, a_rmss, a_min_dt, a_max_dt, a_mean_dt, a_med_dt, a_std_dt, a_min_st, a_max_st, a_mean_st, a_med_st, a_std_st]
+all_m = [m_hr, m_min_t, m_max_t, m_mean_t, m_med_t, m_std_t, m_rmss, m_min_dt, m_max_dt, m_mean_dt, m_med_dt, m_std_dt, m_min_st, m_max_st, m_mean_st, m_med_st, m_std_st]
+
+# Compute stats (auto)
+all_a = append_with(all_a, stats(*ds))
+# all_a = append_with(all_a, stats(*ds1))
+# all_a = append_with(all_a, stats(*ds2))
+# all_a = append_with(all_a, stats(*ds3))
+all_a = append_with(all_a, stats(*ds4))
+all_a = append_with(all_a, stats(*ds5))
+all_a = append_with(all_a, stats(*ds6))
+all_a = append_with(all_a, stats(*ds7))
+all_a = append_with(all_a, stats(*ds8))
+all_a = append_with(all_a, stats(*ds9))
+all_a = append_with(all_a, stats(*ds10))
+# all_a = append_with(all_a, stats(*ds11))
+# all_a = append_with(all_a, stats(*ds12))
+all_a = append_with(all_a, stats(*ds13))
+all_a = append_with(all_a, stats(*ds14))
+# all_a = append_with(all_a, stats(*ds15))
+all_a = append_with(all_a, stats(*ds16))
+
+# Compute stats (man)
+all_m = append_with(all_m, stats(*mds))
+# all_m = append_with(all_m, stats(*mds1))
+# all_m = append_with(all_m, stats(*mds2))
+# all_m = append_with(all_m, stats(*mds3))
+all_m = append_with(all_m, stats(*mds4))
+all_m = append_with(all_m, stats(*mds5))
+all_m = append_with(all_m, stats(*mds6))
+all_m = append_with(all_m, stats(*mds7))
+all_m = append_with(all_m, stats(*mds8))
+all_m = append_with(all_m, stats(*mds9))
+all_m = append_with(all_m, stats(*mds10))
+# all_m = append_with(all_m, stats(*mds11))
+# all_m = append_with(all_m, stats(*mds12))
+all_m = append_with(all_m, stats(*mds13))
+all_m = append_with(all_m, stats(*mds14))
+# all_m = append_with(all_m, stats(*mds15))
 all_m = append_with(all_m, stats(*mds16))
 
 # Deconstruct
