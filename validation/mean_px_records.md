@@ -100,9 +100,9 @@ Paleomon | 15_15ppt_old_F10_21 | Old | Tom | &#x2611;
 Paleomon | 15_15ppt_old_H6 | Old | Tom | &#x2611;
 -- | -- | -- | -- | --
  Radix | 20deg_A1 | 20 | Ziad | &#x2611;
- Radix | 20deg_A3 | 20 | -- | &#x2612;
- Radix | 20deg_A4 | 20 | -- | &#x2612;
- Radix | 20deg_A6 | 20 | -- | &#x2612;
+ Radix | 20deg_A3 | 20 | Tom | &#x2612;
+ Radix | 20deg_A4 | 20 | Tom | &#x2612;
+ Radix | 20deg_A6 | 20 | Tom | &#x2612;
  Radix | 20deg_B1 | 20 | Tom | &#x2611;
  Radix | 20deg_B2 | 20 | Tom | &#x2611;
  Radix | 20deg_B3 | 20 | Tom | &#x2611;
