@@ -109,7 +109,7 @@ Paleomon | 15_15ppt_old_H6 | Old | Tom | &#x2611;
  Radix | 25deg_A1 | 25 | Ziad | &#x2611;
  Radix | 25deg_A4 | 25 | Ziad | &#x2611;
  Radix | 25deg_A5 | 25 | Ziad | &#x2611;
- Radix | 25deg_A6 | 25 | Ziad | &#x2611;
+ Radix | 25deg_A6 | 25 | Ziad | &#x2612;
  Radix | 25deg_A7 | 25 | Ziad | &#x2611;
  Radix | 25deg_B1 | 25 | Tom | &#x2611;
  Radix | 25deg_B2 | 25 | -- | &#x2612;
