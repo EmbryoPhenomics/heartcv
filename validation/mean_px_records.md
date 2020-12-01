@@ -100,28 +100,28 @@ Paleomon | 15_15ppt_old_F10_21 | Old | Tom | &#x2611;
 Paleomon | 15_15ppt_old_H6 | Old | Tom | &#x2611;
 -- | -- | -- | -- | --
  Radix | 20deg_A1 | 20 | Ziad | &#x2611;
- Radix | 20deg_A3 | 20 | Tom | &#x2612;
- Radix | 20deg_A4 | 20 | Tom | &#x2612;
- Radix | 20deg_A6 | 20 | Tom | &#x2612;
+ Radix | 20deg_A3 | 20 | Tom | &#x2611;
+ Radix | 20deg_A4 | 20 | Tom | &#x2611;
+ Radix | 20deg_A6 | 20 | Tom | &#x2611;
  Radix | 20deg_B1 | 20 | Tom | &#x2611;
  Radix | 20deg_B2 | 20 | Tom | &#x2611;
  Radix | 20deg_B3 | 20 | Tom | &#x2611;
  Radix | 25deg_A1 | 25 | Ziad | &#x2611;
  Radix | 25deg_A4 | 25 | Ziad | &#x2611;
  Radix | 25deg_A5 | 25 | Ziad | &#x2611;
- Radix | 25deg_A6 | 25 | Ziad | &#x2612;
- Radix | 25deg_A7 | 25 | Ziad | &#x2612;
+ Radix | 25deg_A6 | 25 | Ziad | &#x2611;
+ Radix | 25deg_A7 | 25 | Ziad | &#x2611;
  Radix | 25deg_B1 | 25 | Tom | &#x2611;
  Radix | 25deg_B2 | 25 | -- | &#x2612;
  Radix | 25deg_B3 | 25 | -- | &#x2612;
- Radix | 30deg_A1 | 30 | Tom | &#x2611;
+ Radix | 30deg_A1 | 30 | Tom | &#x2612;
  Radix | 30deg_A4 | 30 | Tom | &#x2611;
  Radix | 30deg_A5 | 30 | Tom | &#x2611;
- Radix | 30deg_A6 | 30 | Tom | &#x2612;
- Radix | 30deg_A7 | 30 | Tom | &#x2612;
+ Radix | 30deg_A6 | 30 | Tom | &#x2611;
+ Radix | 30deg_A7 | 30 | Tom | &#x2611;
  Radix | 30deg_B1 | 30 | Tom | &#x2611;
- Radix | 30deg_B3 | 30 | Tom | &#x2612;
- Radix | 30deg_B5 | 30 | Tom | &#x2612;
+ Radix | 30deg_B3 | 30 | Tom | &#x2611;
+ Radix | 30deg_B5 | 30 | Tom | &#x2611;
 
 
 ## Summary plots - Frame differencing values
@@ -135,3 +135,9 @@ Paleomon | 15_15ppt_old_H6 | Old | Tom | &#x2611;
 <img src='https://github.com/zibbini/misc_embryoPhenomics/blob/master/python/stroke-volume/heartcv/validation/plots/fd_diastole_time_stats.png'>
 
 <img src='https://github.com/zibbini/misc_embryoPhenomics/blob/master/python/stroke-volume/heartcv/validation/plots/fd_systole_time_stats.png'>
+
+### Radix
+
+<img src='https://github.com/zibbini/misc_embryoPhenomics/blob/master/python/stroke-volume/heartcv/validation/plots/radix_hr.png'>
+
+<img src='https://github.com/zibbini/misc_embryoPhenomics/blob/master/python/stroke-volume/heartcv/validation/plots/radix_beat_stats.png'>
