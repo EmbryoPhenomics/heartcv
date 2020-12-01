@@ -128,16 +128,16 @@ Paleomon | 15_15ppt_old_H6 | Old | Tom | &#x2611;
 
 ### Paleomon
 
-<img src='https://github.com/zibbini/heartcv/blob/main/python/stroke-volume/heartcv/validation/plots/fd_hr.png'>
+<img src='https://github.com/EmbryoPhenomics/heartcv/blob/main/validation/plots/fd_hr.png'>
 
-<img src='https://github.com/zibbini/heartcv/blob/main/python/stroke-volume/heartcv/validation/plots/fd_beat_stats.png'>
+<img src='https://github.com/EmbryoPhenomics/heartcv/blob/main/validation/plots/fd_beat_stats.png'>
 
-<img src='https://github.com/zibbini/heartcv/blob/main/python/stroke-volume/heartcv/validation/plots/fd_diastole_time_stats.png'>
+<img src='https://github.com/EmbryoPhenomics/heartcv/blob/main/validation/plots/fd_diastole_time_stats.png'>
 
-<img src='https://github.com/zibbini/heartcv/blob/main/python/stroke-volume/heartcv/validation/plots/fd_systole_time_stats.png'>
+<img src='https://github.com/EmbryoPhenomics/heartcv/blob/main/validation/plots/fd_systole_time_stats.png'>
 
 ### Radix
 
-<img src='https://github.com/zibbini/heartcv/blob/main/python/stroke-volume/heartcv/validation/plots/radix_hr.png'>
+<img src='https://github.com/EmbryoPhenomics/heartcv/blob/main/validation/plots/radix_hr.png'>
 
-<img src='https://github.com/zibbini/heartcv/blob/main/python/stroke-volume/heartcv/validation/plots/radix_beat_stats.png'>
+<img src='https://github.com/EmbryoPhenomics/heartcv/blob/main/validation/plots/radix_beat_stats.png'>
