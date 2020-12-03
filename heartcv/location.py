@@ -17,7 +17,7 @@ def default(img):
     '''
     _, thresh = cv2.threshold(img, 0, 255, cv2.THRESH_BINARY + cv2.THRESH_OTSU)
     median = cv2.medianBlur(thresh, 3)
-    contours, hierarchy = cvu.find_contours(medi, cv2.RETR_TREE, cv2.CHAIN_APPROX_NONEan)
+    contours, hierarchy = cvu.find_contours(medi, cv2.RETR_TREE, cv2.CHAIN_APPROX_NONE)
 
     return contours, hierarchy
 
