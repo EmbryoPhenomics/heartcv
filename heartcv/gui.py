@@ -14,7 +14,7 @@ def location_gui(video, method):
     Launch a gui for testing an embryo location method.
 
     Keyword arguments:
-        video    HeartCV.Video.   HeartCV.Video object to the video to test (Required).
+        video    cvu.Video.       cvu.Video object to the video to test (Required).
 
         method   Callable.        Callable to execute on each frame to
                                   locate the embryo (Required).
@@ -51,12 +51,12 @@ def location_gui(video, method):
 
     return gui.embryo_outline, gui.values()
 
-def activity_gui(frame, diff_img, rotate=True):
+def activity_gui(video, diff_img, rotate=True):
     '''
     Launch a gui for finding a bounding box from the output of the activity location methods.
 
     Keyword arguments:
-        frame     Numpy ndarray.    RGB image from footage to be processed (Required).
+        video     cvu.Video.        cvu.Video object to the video to test (Required).
 
         diff_img  Numpy ndarray.    Grayscale image produced from HeartCV.sum_abs_diff() (Required).
         
@@ -68,14 +68,12 @@ def activity_gui(frame, diff_img, rotate=True):
         Tuple.    Binary threshold and gaussian kernel values (thresh, gauss).
 
     '''
-    gui = cvu.FrameGUI(frame=(frame, diff_img), title='ROI viewer')
+    gui = cvu.VideoGUI(video=video, title='ROI viewer')
 
     @gui.process
     def find(gui):
-        frame, diff = gui.frame
-        frame_proc, diff_proc = (frame.copy(), diff.copy())
-        if len(frame_proc.shape) == 2:
-            frame_proc = cvu.bgr(frame)
+        diff_proc = diff_img.copy()
+        frame_proc = gui.frame.copy()
 
         _thresh = gui['thresh']
         _gauss = gui['gauss']
