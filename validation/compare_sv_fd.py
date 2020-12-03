@@ -216,19 +216,19 @@ mds5 = parse_man('./data/paleomon/hr_man_15_15ppt_young_A4_60.csv') # s[1:]
 
 msv = []
 (md,ms),(mad,mas) = mds2[0],mds2[1]
-msv.append(np.mean(mad[:6] - mas[:6]))
+msv.extend(mad[:6] - mas[:6])
 (md,ms),(mad,mas) = mds4[0],mds4[1]
-msv.append(np.mean(mad[:6] - mas[:6]))
+msv.extend(mad[:6] - mas[:6])
 (md,ms),(mad,mas) = mds5[0],mds5[1]
-msv.append(np.mean(mad[:6] - mas[:6]))
+msv.extend(mad[:6] - mas[:6])
 
 asv = []
 d,aad,s,aas = ds2
-asv.append(np.mean(aad[:6]))
+asv.extend(aad[:6])
 d,aad,s,aas = ds4
-asv.append(np.mean(aad[:6]))
+asv.extend(aad[:6])
 d,aad,s,aas = ds5
-asv.append(np.mean(aad[:6]))
+asv.extend(aad[:6])
 
 plt.scatter(msv, asv)
 plt.show()
