@@ -10,7 +10,7 @@ import numpy as np
 import pandas as pd
 from flask import request
 
-import heartcv as hcv
+import cvu
 import app_utils, app_layout
 
 external_stylesheets = ['./assets/app.css'] # courtesy of dadamson
@@ -20,7 +20,6 @@ app.layout = app_layout.app_layout()
 
 # Python session containers used instead of passing around data through html divs
 dstore = app_utils.DataStore([0],[0],[0],[0])
-cstore = app_utils.ContourStore()
 vstore = app_utils.VideoStore()
 
 # For callbacks where no return is needed
@@ -34,8 +33,10 @@ def check_raw_path(path):
         if not os.path.exists(path):
             return 'Specified path does not exist.'
         else:
+            cstore = app_utils.ContourStore()
             vstore.add_raw(path)
             cstore.add_raw(vstore.raw_video) 
+            cstore.add_hcv(vstore.hcv_video)
             return True
 
 @app.callback(
@@ -46,7 +47,9 @@ def check_hcv_path(path):
         if not os.path.exists(path):
             return 'Specified path does not exist.'
         else:
+            cstore = app_utils.ContourStore()
             vstore.add_hcv(path)
+            cstore.add_raw(vstore.raw_video) 
             cstore.add_hcv(vstore.hcv_video)
             return True
 
@@ -107,8 +110,7 @@ def update_still_image(filename, fr):
         if not fr:
             return None
         else:
-            vstore.raw_video.set(1,fr)
-            success, frame = vstore.raw_video.read()
+            frame = vstore.raw_video.read(index=fr)
             vstore.current_frame = frame
 
             return trigger
@@ -139,7 +141,7 @@ def compute_area(selected_data, input_type, fr, ellipse):
         if ellipse:
             arr = np.zeros((maxy, maxx), dtype='uint8')
             arr = cv2.ellipse(arr, (cv2.fitEllipse(contour)), 255, -1)
-            contour, _ = hcv.util.find_contours(arr)
+            contour, _ = cvu.find_contours(arr, cv2.RETR_TREE, cv2.CHAIN_APPROX_NONE)
             if isinstance(contour, list):
                 contour = hcv.largest(contour)
 
@@ -159,9 +161,8 @@ def compute_area(selected_data, input_type, fr, ellipse):
             elif input_type == 'systole':
                 dstore.ss_area[index] = area
 
-            vstore.raw_video.set(1,fr)
-            success, frame = vstore.raw_video.read()
-            hcv.util.draw_contours(frame, contour, -1, (0,0,255), 1)
+            frame = vstore.raw_video.read(index=fr)
+            cvu.draw_contours(frame, contour, -1, (0,0,255), 1)
             vstore.current_frame = frame
 
             return trigger, trigger

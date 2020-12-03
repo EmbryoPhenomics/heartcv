@@ -8,7 +8,7 @@ from dataclasses import dataclass
 import numpy as np
 import os
 
-import heartcv as hcv
+import cvu
 
 # Text defaults for opencv
 font = cv2.FONT_HERSHEY_SIMPLEX
@@ -25,13 +25,6 @@ class DataStore:
     ss_frame: list
     ss_area: list
 
-def check_open(video):
-    release = False
-    if not isinstance(video, cv2.VideoCapture):
-        video = cv2.VideoCapture(video)
-        release = True
-    return video, release
-
 class VideoStore:
     '''Backend container for holding video capture instances. '''
     def __init__(self):
@@ -40,10 +33,10 @@ class VideoStore:
         self.current_frame = None
 
     def add_raw(self, raw_video):
-        (self.raw_video, self.raw_video_release) = check_open(raw_video)
+        (self.raw_video, self.raw_video_release) = cvu.open_video(raw_video)
 
     def add_hcv(self, hcv_video):
-        (self.hcv_video, self.hcv_video_release) = check_open(hcv_video)
+        (self.hcv_video, self.hcv_video_release) = cvu.open_video(hcv_video)
 
     def close(self):
         def release(video, video_release):
@@ -66,13 +59,13 @@ class ContourStore:
         self.hcv_video_release = False
 
     def add_raw(self, raw_video):
-        (self.raw_video, self.raw_video_release) = check_open(raw_video)
-        _, frame = self.raw_video.read()
+        (self.raw_video, self.raw_video_release) = cvu.open_video(raw_video)
+        frame = self.raw_video.read(index=0)
         x,y,_ = frame.shape
         self.full = (x,y)
 
     def add_hcv(self, hcv_video):
-        (self.hcv_video, self.hcv_video_release) = check_open(hcv_video)
+        (self.hcv_video, self.hcv_video_release) = cvu.open_video(hcv_video)
 
     def add_contour(self, event, frame, contour):
         if event and frame and contour.all():
@@ -84,13 +77,10 @@ class ContourStore:
 
     def export(self, outpath):
         for (e,fr,c) in self.contour_info:
-            self.raw_video.set(1,fr)
-            success, raw_f = self.raw_video.read()
-            hcv.util.imgops.draw_contours(raw_f, c, -1, (0,0,255), 1)
+            raw_f = self.raw_video.read(index=fr)
+            cvu.draw_contours(raw_f, c, -1, (0,0,255), 1)
 
-            self.hcv_video.set(1,fr)
-            success, hcv_f = self.hcv_video.read()
-
+            hcv_f = self.hcv_video.read(index=fr)
             both = np.hstack((raw_f, hcv_f)) 
             cv2.imwrite(os.path.join(outpath, f'{fr}_{e}.png'), both)
 
@@ -127,15 +117,14 @@ def frameLabeler(filename, queue):
                     queue object.    GUI (Required).
     '''
 
-    video = cv2.VideoCapture(filename)
-    frame_count = int(video.get(cv2.CAP_PROP_FRAME_COUNT))
-    fps = video.get(cv2.CAP_PROP_FPS)
+    video = cvu.Video(filename)
+    frame_count = len(video)
+    fps = video.fps
     window_title = 'Frame recorder'
     frames = list(range(frame_count))
 
     def display(val):
-        video.set(1,val)
-        success, frame = video.read()
+        frame = video.read(index=val)
         cv2.putText(
             frame, 'Frame: {}'.format(val), 
             tuple(map(int, (0.025*frame.shape[1], 0.975*frame.shape[0]))), font, fontScale, fontColor, lineType)
@@ -143,7 +132,6 @@ def frameLabeler(filename, queue):
         cv2.imshow(window_title, frame)
 
     def stream(val):
-        video.set(1,val)
         _current = val
         for f in range(val,frame_count):
             key = cv2.waitKey(1)
@@ -189,7 +177,7 @@ def frameLabeler(filename, queue):
 
         time.sleep(0.01)
 
-    video.release()
+    video.close()
     queue.put((diastoleFrameRecord, systoleFrameRecord))
 
 def interactiveImage(id, img):
