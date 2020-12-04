@@ -122,6 +122,11 @@ Paleomon | 15_15ppt_old_H6 | Old | Tom | &#x2611;
  Radix | 30deg_B1 | 30 | Tom | &#x2611;
  Radix | 30deg_B3 | 30 | Tom | &#x2611;
  Radix | 30deg_B5 | 30 | Tom | &#x2611;
+ Radix | unknown_C1 | 30 | Tom | &#x2611;
+ Radix | unknown_C2 | 30 | Tom | &#x2611;
+ Radix | unknown_C3 | 30 | Tom | &#x2611;
+ Radix | unknown_C8 | 30 | Tom | &#x2611;
+ Radix | unknown_D1 | 30 | Tom | &#x2611;
 
 
 ## Summary plots - Frame differencing values
