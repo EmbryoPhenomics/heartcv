@@ -172,13 +172,13 @@ ds5 = parse_auto('./data/paleomon/fd_auto_15_15ppt_young_A4_60.csv', inv=False, 
 # ds6 = parse_auto('./data/paleomon/fd_auto_15_15ppt_young_C12_1.csv', inv=False, subset=None, idx=0, prominence=0.1) # s[1:]
 # ds7 = parse_auto('./data/paleomon/fd_auto_15_15ppt_young_D3_50.csv', inv=False, subset=None, idx=0, prominence=0.1) # s[1:]
 # ds8 = parse_auto('./data/paleomon/fd_auto_15_15ppt_young_H3_90.csv', inv=False, subset=None, idx=0, prominence=0.1) # s[1:]
-# ds9 = parse_auto('./data/paleomon/fd_auto_15_15ppt_medium_B2_60.csv', inv=False, subset=None, idx=1, prominence=0.1) 
-# ds10 = parse_auto('./data/paleomon/fd_auto_15_15ppt_medium_C2_149.csv', inv=False, subset=None, idx=0, prominence=0.1) 
+ds9 = parse_auto('./data/paleomon/fd_auto_15_15ppt_medium_B2_60.csv', inv=False, subset=None, idx=1, prominence=0.1) 
+ds10 = parse_auto('./data/paleomon/fd_auto_15_15ppt_medium_C2_149.csv', inv=False, subset=None, idx=0, prominence=0.1) 
 # ds11 = parse_auto('./data/paleomon/fd_auto_15_15ppt_medium_C5_1.csv', inv=False, subset=None, idx=0, prominence=0.1) 
-# ds12 = parse_auto('./data/paleomon/fd_auto_15_15ppt_medium_F7_68.csv', inv=False, subset=None, idx=1, prominence=0.1) 
-# ds13 = parse_auto('./data/paleomon/fd_auto_15_15ppt_medium_G2_113.csv', inv=False, subset=None, idx=1, prominence=0.1) 
-# ds14 = parse_auto('./data/paleomon/fd_auto_15_15ppt_medium_G5_1.csv', inv=False, subset=None, idx=1, prominence=0.1) 
-# ds15 = parse_auto('./data/paleomon/fd_auto_15_15ppt_medium_G1_82.csv', inv=False, subset=None, idx=1, prominence=0.07) 
+ds12 = parse_auto('./data/paleomon/fd_auto_15_15ppt_medium_F7_68.csv', inv=False, subset=None, idx=1, prominence=0.1) 
+ds13 = parse_auto('./data/paleomon/fd_auto_15_15ppt_medium_G2_113.csv', inv=False, subset=None, idx=1, prominence=0.1) 
+ds14 = parse_auto('./data/paleomon/fd_auto_15_15ppt_medium_G5_1.csv', inv=False, subset=None, idx=1, prominence=0.1) 
+ds15 = parse_auto('./data/paleomon/fd_auto_15_15ppt_medium_G1_82.csv', inv=False, subset=None, idx=1, prominence=0.07) 
 # ds16 = parse_auto('./data/paleomon/fd_auto_15_15ppt_young_H12_119.csv', inv=False, subset=None, idx=0, prominence=0.1) 
 # ds17 = parse_auto('./data/paleomon/fd_auto_15_15ppt_old_B5_26.csv', inv=False, subset=None, idx=0, prominence=0.1) 
 # ds18 = parse_auto('./data/paleomon/fd_auto_15_15ppt_old_B8_1.csv', inv=False, subset=None, idx=1, prominence=0) 
@@ -198,13 +198,13 @@ mds5 = parse_man('./data/paleomon/hr_man_15_15ppt_young_A4_60.csv') # s[1:]
 # mds6 = parse_man('./data/paleomon/hr_man_15_15ppt_young_C12_1.csv') # s[1:]
 # mds7 = parse_man('./data/paleomon/hr_man_15_15ppt_young_D3_50.csv')  # s[1:]
 # mds8 = parse_man('./data/paleomon/hr_man_15_15ppt_young_H3_90.csv') # s[1:]
-# mds9 = parse_man('./data/paleomon/hr_man_15_15ppt_medium_B2_60.csv')
-# mds10 = parse_man('./data/paleomon/hr_man_15_15ppt_medium_C2_149.csv')
+mds9 = parse_man('./data/paleomon/hr_man_15_15ppt_medium_B2_60.csv')
+mds10 = parse_man('./data/paleomon/hr_man_15_15ppt_medium_C2_149.csv')
 # mds11 = parse_man('./data/paleomon/hr_man_15_15ppt_medium_C5_1.csv')
-# mds12 = parse_man('./data/paleomon/hr_man_15_15ppt_medium_F7_68.csv')
-# mds13 = parse_man('./data/paleomon/hr_man_15_15ppt_medium_G2_113.csv')
-# mds14 = parse_man('./data/paleomon/hr_man_15_15ppt_medium_G5_1.csv')
-# mds15 = parse_man('./data/paleomon/hr_man_15_15ppt_medium_G1_82.csv')
+mds12 = parse_man('./data/paleomon/hr_man_15_15ppt_medium_F7_68.csv')
+mds13 = parse_man('./data/paleomon/hr_man_15_15ppt_medium_G2_113.csv')
+mds14 = parse_man('./data/paleomon/hr_man_15_15ppt_medium_G5_1.csv')
+mds15 = parse_man('./data/paleomon/hr_man_15_15ppt_medium_G1_82.csv')
 # mds16 = parse_man('./data/paleomon/hr_man_15_15ppt_young_H12_119.csv')
 # mds17 = parse_man('./data/paleomon/hr_man_15_15ppt_old_B5_26.csv') 
 # mds18 = parse_man('./data/paleomon/hr_man_15_15ppt_old_B8_1.csv') 
@@ -216,19 +216,44 @@ mds5 = parse_man('./data/paleomon/hr_man_15_15ppt_young_A4_60.csv') # s[1:]
 
 msv = []
 (md,ms),(mad,mas) = mds2[0],mds2[1]
-msv.extend(mad[:6] - mas[:6])
+# msv.append(np.mean(scale(mad[:6] - mas[:6])))
 (md,ms),(mad,mas) = mds4[0],mds4[1]
-msv.extend(mad[:6] - mas[:6])
-(md,ms),(mad,mas) = mds5[0],mds5[1]
-msv.extend(mad[:6] - mas[:6])
+msv.append(np.mean(scale(mad[:6] - mas[:6])))
+# (md,ms),(mad,mas) = mds5[0],mds5[1]
+# msv.append(np.mean(scale(mad[:6] - mas[:6])))
+(md,ms),(mad,mas) = mds2[0],mds9[1]
+msv.append(np.mean(scale(mad[:6] - mas[:6])))
+(md,ms),(mad,mas) = mds4[0],mds10[1]
+# msv.append(np.mean(scale(mad[:6] - mas[:6])))
+(md,ms),(mad,mas) = mds5[0],mds12[1]
+msv.append(np.mean(scale(mad[:6] - mas[:6])))
+(md,ms),(mad,mas) = mds5[0],mds13[1]
+msv.append(np.mean(scale(mad[:6] - mas[:6])))
+(md,ms),(mad,mas) = mds5[0],mds14[1]
+msv.append(np.mean(scale(mad[:6] - mas[:6])))
+(md,ms),(mad,mas) = mds5[0],mds15[1]
+# msv.append(np.mean(scale(mad[:6] - mas[:6])))
 
 asv = []
 d,aad,s,aas = ds2
-asv.extend(aad[:6])
+# asv.append(np.mean(scale(aad[:6])))
 d,aad,s,aas = ds4
-asv.extend(aad[:6])
-d,aad,s,aas = ds5
-asv.extend(aad[:6])
+asv.append(np.mean(scale(aad[:6])))
+# d,aad,s,aas = ds5
+# asv.append(np.mean(scale(aad[:6])))
+d,aad,s,aas = ds9
+asv.append(np.mean(scale(aad[:6])))
+d,aad,s,aas = ds10
+# asv.append(np.mean(scale(aad[:6])))
+d,aad,s,aas = ds12
+asv.append(np.mean(scale(aad[:6])))
+d,aad,s,aas = ds13
+asv.append(np.mean(scale(aad[:6])))
+d,aad,s,aas = ds14
+asv.append(np.mean(scale(aad[:6])))
+d,aad,s,aas = ds15
+# asv.append(np.mean(scale(aad[:6])))
+
 
 plt.scatter(msv, asv)
 plt.show()

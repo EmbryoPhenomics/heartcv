@@ -58,6 +58,14 @@ class ContourStore:
         self.hcv_video = None
         self.hcv_video_release = False
 
+    def refresh(self):
+        self.contour_info = []
+        self.contour_fr = []
+        self.raw_video = None
+        self.raw_video_release = False
+        self.hcv_video = None
+        self.hcv_video_release = False
+
     def add_raw(self, raw_video):
         (self.raw_video, self.raw_video_release) = cvu.open_video(raw_video)
         frame = self.raw_video.read(index=0)

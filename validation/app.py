@@ -21,6 +21,7 @@ app.layout = app_layout.app_layout()
 # Python session containers used instead of passing around data through html divs
 dstore = app_utils.DataStore([0],[0],[0],[0])
 vstore = app_utils.VideoStore()
+cstore = app_utils.ContourStore()
 
 # For callbacks where no return is needed
 trigger = {'dummydata': True}
@@ -33,10 +34,9 @@ def check_raw_path(path):
         if not os.path.exists(path):
             return 'Specified path does not exist.'
         else:
-            cstore = app_utils.ContourStore()
+            cstore.refresh()
             vstore.add_raw(path)
             cstore.add_raw(vstore.raw_video) 
-            cstore.add_hcv(vstore.hcv_video)
             return True
 
 @app.callback(
@@ -47,9 +47,7 @@ def check_hcv_path(path):
         if not os.path.exists(path):
             return 'Specified path does not exist.'
         else:
-            cstore = app_utils.ContourStore()
             vstore.add_hcv(path)
-            cstore.add_raw(vstore.raw_video) 
             cstore.add_hcv(vstore.hcv_video)
             return True
 
