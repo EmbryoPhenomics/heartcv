@@ -462,34 +462,91 @@ all_m = append_with(all_m, stats(*mds23))
 [m_hr, m_min_t, m_max_t, m_mean_t, m_med_t, m_std_t, m_rmss] = all_m
 
 # And plot
-plt.scatter(m_hr, a_hr)
-plt.xlabel('Manual HR (for 10s)')
-plt.ylabel('HeartCV HR (for 10s)')
+fig, ax = plt.subplots()
+ax.scatter(m_hr, a_hr)
+lims = [
+    np.min([ax.get_xlim(), ax.get_ylim()]),  # min of both axes
+    np.max([ax.get_xlim(), ax.get_ylim()]),  # max of both axes
+]
+ax.plot(lims, lims, 'k-', alpha=0.75, zorder=0)
+ax.set_aspect('equal')
+ax.set_xlim(lims)
+ax.set_ylim(lims)
+ax.set_xlabel('Manual HR (for 10s)')
+ax.set_ylabel('HeartCV HR (for 10s)')
 plt.show()
 
 # Beat to beat stats
 fig, ((ax1,ax2,ax3,),(ax4,ax5,ax6)) = plt.subplots(2, 3)
 ax1.scatter(m_min_t, a_min_t)
+lims = [
+    np.min([ax1.get_xlim(), ax1.get_ylim()]),  
+    np.max([ax1.get_xlim(), ax1.get_ylim()]),  
+]
+ax1.plot(lims, lims, 'k-', alpha=0.75, zorder=0)
+ax1.set_aspect('equal')
+ax1.set_xlim(lims)
+ax1.set_ylim(lims)
 ax1.set_xlabel('Manual min beat to beat timing')
 ax1.set_ylabel('HeartCV min beat to beat timing')
 
 ax2.scatter(m_max_t, a_max_t)
+lims = [
+    np.min([ax2.get_xlim(), ax2.get_ylim()]),  
+    np.max([ax2.get_xlim(), ax2.get_ylim()]),  
+]
+ax2.plot(lims, lims, 'k-', alpha=0.75, zorder=0)
+ax2.set_aspect('equal')
+ax2.set_xlim(lims)
+ax2.set_ylim(lims)
 ax2.set_xlabel('Manual max beat to beat timing')
 ax2.set_ylabel('HeartCV max beat to beat timing')
 
 ax3.scatter(m_mean_t, a_mean_t)
+lims = [
+    np.min([ax3.get_xlim(), ax3.get_ylim()]),  
+    np.max([ax3.get_xlim(), ax3.get_ylim()]),  
+]
+ax3.plot(lims, lims, 'k-', alpha=0.75, zorder=0)
+ax3.set_aspect('equal')
+ax3.set_xlim(lims)
+ax3.set_ylim(lims)
 ax3.set_xlabel('Manual mean beat to beat timing')
 ax3.set_ylabel('HeartCV mean beat to beat timing')
 
 ax4.scatter(m_med_t, a_med_t)
+lims = [
+    np.min([ax4.get_xlim(), ax4.get_ylim()]),  
+    np.max([ax4.get_xlim(), ax4.get_ylim()]),  
+]
+ax4.plot(lims, lims, 'k-', alpha=0.75, zorder=0)
+ax4.set_aspect('equal')
+ax4.set_xlim(lims)
+ax4.set_ylim(lims)
 ax4.set_xlabel('Manual med beat to beat timing')
 ax4.set_ylabel('HeartCV med beat to beat timing')
 
 ax5.scatter(m_std_t, a_std_t)
+lims = [
+    np.min([ax5.get_xlim(), ax5.get_ylim()]),  
+    np.max([ax5.get_xlim(), ax5.get_ylim()]),  
+]
+ax5.plot(lims, lims, 'k-', alpha=0.75, zorder=0)
+ax5.set_aspect('equal')
+ax5.set_xlim(lims)
+ax5.set_ylim(lims)
 ax5.set_xlabel('Manual std beat to beat timing')
 ax5.set_ylabel('HeartCV std beat to beat timing')
 
 ax6.scatter(m_rmss, a_rmss)
+lims = [
+    np.min([ax6.get_xlim(), ax6.get_ylim()]),  
+    np.max([ax6.get_xlim(), ax6.get_ylim()]),  
+]
+ax6.plot(lims, lims, 'k-', alpha=0.75, zorder=0)
+ax6.set_aspect('equal')
+ax6.set_xlim(lims)
+ax6.set_ylim(lims)
 ax6.set_xlabel('Manual rmss beat to beat timing')
 ax6.set_ylabel('HeartCV rmss beat to beat timing')
 plt.show()

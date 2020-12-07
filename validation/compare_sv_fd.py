@@ -215,35 +215,35 @@ mds15 = parse_man('./data/paleomon/hr_man_15_15ppt_medium_G1_82.csv')
 # mds23 = parse_man('./data/paleomon/hr_man_15_15ppt_old_H6.csv') 
 
 msv = []
-(md,ms),(mad,mas) = mds2[0],mds2[1]
+# (md,ms),(mad,mas) = mds2[0],mds2[1]
 # msv.append(np.mean(scale(mad[:6] - mas[:6])))
-(md,ms),(mad,mas) = mds4[0],mds4[1]
-msv.append(np.mean(scale(mad[:6] - mas[:6])))
+# (md,ms),(mad,mas) = mds4[0],mds4[1]
+# msv.append(np.mean(scale(mad[:6] - mas[:6])))
 # (md,ms),(mad,mas) = mds5[0],mds5[1]
 # msv.append(np.mean(scale(mad[:6] - mas[:6])))
-(md,ms),(mad,mas) = mds2[0],mds9[1]
+(md,ms),(mad,mas) = mds9[0],mds9[1]
 msv.append(np.mean(scale(mad[:6] - mas[:6])))
-(md,ms),(mad,mas) = mds4[0],mds10[1]
+# (md,ms),(mad,mas) = mds10[0],mds10[1]
 # msv.append(np.mean(scale(mad[:6] - mas[:6])))
-(md,ms),(mad,mas) = mds5[0],mds12[1]
+(md,ms),(mad,mas) = mds12[0],mds12[1]
 msv.append(np.mean(scale(mad[:6] - mas[:6])))
-(md,ms),(mad,mas) = mds5[0],mds13[1]
+(md,ms),(mad,mas) = mds13[0],mds13[1]
 msv.append(np.mean(scale(mad[:6] - mas[:6])))
-(md,ms),(mad,mas) = mds5[0],mds14[1]
+(md,ms),(mad,mas) = mds14[0],mds14[1]
 msv.append(np.mean(scale(mad[:6] - mas[:6])))
-(md,ms),(mad,mas) = mds5[0],mds15[1]
+# (md,ms),(mad,mas) = mds15[0],mds15[1]
 # msv.append(np.mean(scale(mad[:6] - mas[:6])))
 
 asv = []
-d,aad,s,aas = ds2
+# d,aad,s,aas = ds2
 # asv.append(np.mean(scale(aad[:6])))
-d,aad,s,aas = ds4
-asv.append(np.mean(scale(aad[:6])))
+# d,aad,s,aas = ds4
+# asv.append(np.mean(scale(aad[:6])))
 # d,aad,s,aas = ds5
 # asv.append(np.mean(scale(aad[:6])))
 d,aad,s,aas = ds9
 asv.append(np.mean(scale(aad[:6])))
-d,aad,s,aas = ds10
+# d,aad,s,aas = ds10
 # asv.append(np.mean(scale(aad[:6])))
 d,aad,s,aas = ds12
 asv.append(np.mean(scale(aad[:6])))
@@ -251,7 +251,7 @@ d,aad,s,aas = ds13
 asv.append(np.mean(scale(aad[:6])))
 d,aad,s,aas = ds14
 asv.append(np.mean(scale(aad[:6])))
-d,aad,s,aas = ds15
+# d,aad,s,aas = ds15
 # asv.append(np.mean(scale(aad[:6])))
 
 
