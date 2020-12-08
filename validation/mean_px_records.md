@@ -131,13 +131,9 @@ Paleomon | 15_15ppt_old_H6 | Old | Tom | &#x2611;
 
 ### Paleomon
 
-<img src='https://github.com/EmbryoPhenomics/heartcv/blob/main/validation/plots/fd_hr.png'>
+<img src='https://github.com/EmbryoPhenomics/heartcv/blob/main/validation/plots/paleomon_hr.png'>
 
-<img src='https://github.com/EmbryoPhenomics/heartcv/blob/main/validation/plots/fd_beat_stats.png'>
-
-<img src='https://github.com/EmbryoPhenomics/heartcv/blob/main/validation/plots/fd_diastole_time_stats.png'>
-
-<img src='https://github.com/EmbryoPhenomics/heartcv/blob/main/validation/plots/fd_systole_time_stats.png'>
+<img src='https://github.com/EmbryoPhenomics/heartcv/blob/main/validation/plots/paleomon_beat_stats.png'>
 
 ### Radix
 
