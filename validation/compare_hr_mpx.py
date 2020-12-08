@@ -71,16 +71,21 @@ def parse_auto(file, inv, subset, frac, plot=False, *args, **kwargs):
         plt.plot(area)
         plt.plot(d, area[d], 'x')
         plt.plot(s, area[s], 'x')
+        plt.title(file)
         plt.show()
 
     print(tuple(map(len, (d,s))))
+
+
 
     return (d,s)
 
 def parse_man(file, subset=None):
     dat = pd.read_csv(file)
     d_peaks = dat['EndDiastoleFrame']
+    d_peaks = d_peaks[d_peaks <= 300]
     s_peaks = dat['EndSystoleFrame']
+    s_peaks = s_peaks[s_peaks <= 300]
 
     if subset:
         d_to = subset.pop('d', None)
@@ -91,7 +96,7 @@ def parse_man(file, subset=None):
         if s_to:
             s_peaks = s_peaks[s_to]
 
-    return tuple(map(np.asarray, (d_peaks, s_peaks)))
+    return tuple(map(np.asarray, (s_peaks, d_peaks)))
 
 def stats(d_peaks, s_peaks):
     # HR - bpm
@@ -109,20 +114,39 @@ def stats(d_peaks, s_peaks):
     # vi) Standard deviation in timing difference between peaks.
     # vii) Root mean square of successive difference in the timing between peaks
 
-    hr = len(s_peaks)
+    hr = np.mean((len(s_peaks), len(d_peaks)))
 
     # Diffs
-    s_diffs = s_peaks[1:] - s_peaks[:-1] # only use systole as more reliablly accurate
-    min_t = s_diffs.min()
-    max_t = s_diffs.max()
-    mean_t = s_diffs.mean()
-    med_t = np.median(s_diffs)
-    std_t = s_diffs.std()
+    d_diffs = d_peaks[1:] - d_peaks[:-1] 
+    min_t = d_diffs.min()
+    max_t = d_diffs.max()
+    mean_t = d_diffs.mean()
+    med_t = np.median(d_diffs)
+    std_t = d_diffs.std()
     
     # RMSS
-    rmss = rmse(s_diffs[1:], s_diffs[:-1])    
+    rmssd = rmse(d_diffs[1:], d_diffs[:-1])  
 
-    return [[hr], [min_t], [max_t], [mean_t], [med_t], [std_t], [rmss]]
+    # Diffs
+    s_diffs = s_peaks[1:] - s_peaks[:-1] 
+    min_t = np.mean((min_t, s_diffs.min()))
+    max_t = np.mean((max_t, s_diffs.min()))
+    mean_t = np.mean((mean_t, s_diffs.min()))
+    med_t = np.mean((med_t, s_diffs.min()))
+    std_t = np.mean((std_t, s_diffs.min()))
+    
+    # RMSS
+    rmssd = np.mean((rmssd, rmse(s_diffs[1:], s_diffs[:-1])))
+
+    # # Hists for beat timings
+    # plt.hist(x=d_diffs, bins=100, alpha=0.7, rwidth=0.85)
+    # plt.hist(x=s_diffs, bins=100, alpha=0.7, rwidth=0.85)
+    # plt.grid(axis='y', alpha=0.75)
+    # plt.xlabel('Beat timings')
+    # plt.ylabel('Frequency')
+    # plt.show()
+
+    return [[hr], [min_t], [max_t], [mean_t], [med_t], [std_t], [rmssd]]
 
 def append_with(to, with_):
     new = []
@@ -335,29 +359,29 @@ def append_with(to, with_):
 
 # Auto
 ds = parse_auto('./data/radix/mpx_auto_20deg_A1.csv', inv=False, subset=None, frac=0, prominence=0.1) 
-ds1 = parse_auto('./data/radix/mpx_auto_20deg_A3.csv', inv=False, subset=dict(s=1), frac=0, prominence=0.1) # s[1:]
-ds2 = parse_auto('./data/radix/mpx_auto_20deg_A4.csv', inv=False, subset=dict(s=1), frac=0, prominence=0.2) # d[:-1], s[1:]
-ds3 = parse_auto('./data/radix/mpx_auto_20deg_A6.csv', inv=False, subset=dict(d=-1), frac=0, prominence=0.2)
+ds1 = parse_auto('./data/radix/mpx_auto_20deg_A3.csv', inv=False, subset=None, frac=0, prominence=0.1) # s[1:]
+ds2 = parse_auto('./data/radix/mpx_auto_20deg_A4.csv', inv=False, subset=None, frac=0, prominence=0.2) # d[:-1], s[1:]
+ds3 = parse_auto('./data/radix/mpx_auto_20deg_A6.csv', inv=False, subset=None, frac=0, prominence=0.2)
 ds4 = parse_auto('./data/radix/mpx_auto_20deg_B1.csv', inv=False, subset=None, frac=0, prominence=0.1)
-ds5 = parse_auto('./data/radix/mpx_auto_20deg_B2.csv', inv=True, subset=None, frac=0, prominence=0.05, distance=8) # s[1:]
-ds6 = parse_auto('./data/radix/mpx_auto_20deg_B3.csv', inv=True, subset=dict(d=-1, s=1), frac=0, prominence=0.14) # s[1:]b
-ds7 = parse_auto('./data/radix/mpx_auto_25deg_A1.csv', inv=True, subset=dict(d=-1), frac=0, prominence=0.05) # s[1:]
-ds8 = parse_auto('./data/radix/mpx_auto_25deg_A4.csv', inv=True, subset=dict(d=-1, s=1), frac=0, prominence=0.1) # s[1:]
-ds9 = parse_auto('./data/radix/mpx_auto_25deg_A5.csv', inv=False, subset=dict(d=-1, s=1), frac=0, prominence=0.1)
-ds10 = parse_auto('./data/radix/mpx_auto_25deg_A6.csv', inv=False, subset=dict(d=-1), frac=0, prominence=0.04, distance=5)
-ds11 = parse_auto('./data/radix/mpx_auto_25deg_A7.csv', inv=True, subset=None, frac=0, prominence=0.1)
-ds12 = parse_auto('./data/radix/mpx_auto_25deg_B1.csv', inv=True, subset=dict(d=-1), frac=0, prominence=0.1)
-ds13 = parse_auto('./data/radix/mpx_auto_30deg_A1.csv', inv=False, subset=dict(d=-2, s=-1), frac=0, prominence=0.08)
-ds14 = parse_auto('./data/radix/mpx_auto_30deg_A4.csv', inv=False, subset=dict(d=-1), frac=0, prominence=0.001)
-ds15 = parse_auto('./data/radix/mpx_auto_30deg_A5.csv', inv=False, subset=dict(s=1), frac=0, prominence=0.01)
-ds16 = parse_auto('./data/radix/mpx_auto_30deg_B1.csv', inv=False, subset=dict(d=-1), frac=0, prominence=0.01) 
-ds17 = parse_auto('./data/radix/mpx_auto_30deg_B3.csv', inv=True, subset=dict(s=1), frac=0, prominence=0.04) 
+ds5 = parse_auto('./data/radix/mpx_auto_20deg_B2.csv', inv=False, subset=None, frac=0, prominence=0.05, distance=8) # s[1:]
+ds6 = parse_auto('./data/radix/mpx_auto_20deg_B3.csv', inv=False, subset=None, frac=0, prominence=0.14) # s[1:]b
+ds7 = parse_auto('./data/radix/mpx_auto_25deg_A1.csv', inv=False, subset=None, frac=0, prominence=0.05) # s[1:]
+ds8 = parse_auto('./data/radix/mpx_auto_25deg_A4.csv', inv=False, subset=None,frac=0, prominence=0.1) # s[1:]
+ds9 = parse_auto('./data/radix/mpx_auto_25deg_A5.csv', inv=False, subset=None, frac=0, prominence=0.1)
+# ds10 = parse_auto('./data/radix/mpx_auto_25deg_A6.csv', inv=False, subset=None, frac=0, prominence=0.04, distance=5)
+ds11 = parse_auto('./data/radix/mpx_auto_25deg_A7.csv', inv=False, subset=None, frac=0, prominence=0.1)
+ds12 = parse_auto('./data/radix/mpx_auto_25deg_B1.csv', inv=False, subset=None, frac=0, prominence=0.1)
+ds13 = parse_auto('./data/radix/mpx_auto_30deg_A1.csv', inv=False, subset=None, frac=0, prominence=0.08)
+# ds14 = parse_auto('./data/radix/mpx_auto_30deg_A4.csv', inv=False, subset=None, frac=0, prominence=0.001)
+ds15 = parse_auto('./data/radix/mpx_auto_30deg_A5.csv', inv=False, subset=None, frac=0, prominence=0.01)
+ds16 = parse_auto('./data/radix/mpx_auto_30deg_B1.csv', inv=False, subset=None, frac=0, prominence=0.01) 
+# ds17 = parse_auto('./data/radix/mpx_auto_30deg_B3.csv', inv=False, subset=None, frac=0, prominence=0.04) 
 ds18 = parse_auto('./data/radix/mpx_auto_30deg_B5.csv', inv=False, subset=None, frac=0, prominence=0.15, distance=5) 
 ds19 = parse_auto('./data/radix/mpx_auto_unknown_C1.csv', inv=False, subset=None, frac=0, prominence=0.1) 
-ds20 = parse_auto('./data/radix/fd_auto_unknown_C2.csv', inv=True, subset=None, frac=0, prominence=0.4) 
-ds21 = parse_auto('./data/radix/mpx_auto_unknown_C3.csv', inv=True, subset=dict(d=-1), frac=0, prominence=0.02) 
-ds22 = parse_auto('./data/radix/mpx_auto_unknown_C8.csv', inv=True, subset=dict(d=-1), frac=0, prominence=0.02, distance=10) 
-ds23 = parse_auto('./data/radix/mpx_auto_unknown_D1.csv', inv=True, subset=dict(d=-1), frac=0, prominence=0.15)
+# ds20 = parse_auto('./data/radix/mpx_auto_unknown_C2.csv', inv=False, subset=None, frac=0, plot=True, prominence=0.05, distance=5) 
+ds21 = parse_auto('./data/radix/mpx_auto_unknown_C3.csv', inv=False, subset=None, frac=0, prominence=0.02) 
+ds22 = parse_auto('./data/radix/mpx_auto_unknown_C8.csv', inv=False, subset=None, frac=0, prominence=0.02, distance=10) 
+ds23 = parse_auto('./data/radix/mpx_auto_unknown_D1.csv', inv=False, subset=None, frac=0, prominence=0.15)
 
 # Man
 mds = parse_man('./data/radix/hr_man_20deg_A1.csv') 
@@ -370,17 +394,17 @@ mds6 = parse_man('./data/radix/hr_man_20deg_B3.csv') # s[1:]b
 mds7 = parse_man('./data/radix/hr_man_25deg_A1.csv') # s[1:]
 mds8 = parse_man('./data/radix/hr_man_25deg_A4.csv') # s[1:]
 mds9 = parse_man('./data/radix/hr_man_25deg_A5.csv')
-mds10 = parse_man('./data/radix/hr_man_25deg_A6.csv')
+# mds10 = parse_man('./data/radix/hr_man_25deg_A6.csv')
 mds11 = parse_man('./data/radix/hr_man_25deg_A7.csv')
 mds12 = parse_man('./data/radix/hr_man_25deg_B1.csv')
 mds13 = parse_man('./data/radix/hr_man_30deg_A1.csv')
-mds14 = parse_man('./data/radix/hr_man_30deg_A4.csv')
+# mds14 = parse_man('./data/radix/hr_man_30deg_A4.csv')
 mds15 = parse_man('./data/radix/hr_man_30deg_A5.csv')
 mds16 = parse_man('./data/radix/hr_man_30deg_B1.csv') 
-mds17 = parse_man('./data/radix/hr_man_30deg_B3.csv') 
+# mds17 = parse_man('./data/radix/hr_man_30deg_B3.csv') 
 mds18 = parse_man('./data/radix/hr_man_30deg_B5.csv') 
 mds19 = parse_man('./data/radix/hr_man_unknown_C1.csv') 
-mds20 = parse_man('./data/radix/hr_man_unknown_C2.csv') 
+# mds20 = parse_man('./data/radix/hr_man_unknown_C2.csv') 
 mds21 = parse_man('./data/radix/hr_man_unknown_C3.csv') 
 mds22 = parse_man('./data/radix/hr_man_unknown_C8.csv') 
 mds23 = parse_man('./data/radix/hr_man_unknown_D1.csv')
@@ -419,7 +443,7 @@ all_a = append_with(all_a, stats(*ds9))
 all_a = append_with(all_a, stats(*ds11))
 all_a = append_with(all_a, stats(*ds12))
 # all_a = append_with(all_a, stats(*ds13))
-all_a = append_with(all_a, stats(*ds14))
+# all_a = append_with(all_a, stats(*ds14))
 all_a = append_with(all_a, stats(*ds15))
 all_a = append_with(all_a, stats(*ds16))
 # all_a = append_with(all_a, stats(*ds17))
@@ -429,7 +453,6 @@ all_a = append_with(all_a, stats(*ds19))
 all_a = append_with(all_a, stats(*ds21))
 all_a = append_with(all_a, stats(*ds22))
 all_a = append_with(all_a, stats(*ds23))
-# 
 
 # Compute stats (man)
 all_m = append_with(all_m, stats(*mds))
@@ -446,7 +469,7 @@ all_m = append_with(all_m, stats(*mds9))
 all_m = append_with(all_m, stats(*mds11))
 all_m = append_with(all_m, stats(*mds12))
 # all_m = append_with(all_m, stats(*mds13))
-all_m = append_with(all_m, stats(*mds14))
+# all_m = append_with(all_m, stats(*mds14))
 all_m = append_with(all_m, stats(*mds15))
 all_m = append_with(all_m, stats(*mds16))
 # all_m = append_with(all_m, stats(*mds17))
@@ -460,6 +483,8 @@ all_m = append_with(all_m, stats(*mds23))
 # Deconstruct
 [a_hr, a_min_t, a_max_t, a_mean_t, a_med_t, a_std_t, a_rmss] = all_a
 [m_hr, m_min_t, m_max_t, m_mean_t, m_med_t, m_std_t, m_rmss] = all_m
+
+print(a_hr, m_hr)
 
 # And plot
 fig, ax = plt.subplots()
@@ -478,6 +503,8 @@ plt.show()
 
 # Beat to beat stats
 fig, ((ax1,ax2,ax3,),(ax4,ax5,ax6)) = plt.subplots(2, 3)
+fig.suptitle('Manual (x-axis) vs HeartCV (y-axis)')
+
 ax1.scatter(m_min_t, a_min_t)
 lims = [
     np.min([ax1.get_xlim(), ax1.get_ylim()]),  
@@ -487,8 +514,7 @@ ax1.plot(lims, lims, 'k-', alpha=0.75, zorder=0)
 ax1.set_aspect('equal')
 ax1.set_xlim(lims)
 ax1.set_ylim(lims)
-ax1.set_xlabel('Manual min beat to beat timing')
-ax1.set_ylabel('HeartCV min beat to beat timing')
+ax1.set_title('Min')
 
 ax2.scatter(m_max_t, a_max_t)
 lims = [
@@ -499,8 +525,7 @@ ax2.plot(lims, lims, 'k-', alpha=0.75, zorder=0)
 ax2.set_aspect('equal')
 ax2.set_xlim(lims)
 ax2.set_ylim(lims)
-ax2.set_xlabel('Manual max beat to beat timing')
-ax2.set_ylabel('HeartCV max beat to beat timing')
+ax2.set_title('Max')
 
 ax3.scatter(m_mean_t, a_mean_t)
 lims = [
@@ -511,8 +536,7 @@ ax3.plot(lims, lims, 'k-', alpha=0.75, zorder=0)
 ax3.set_aspect('equal')
 ax3.set_xlim(lims)
 ax3.set_ylim(lims)
-ax3.set_xlabel('Manual mean beat to beat timing')
-ax3.set_ylabel('HeartCV mean beat to beat timing')
+ax3.set_title('Mean')
 
 ax4.scatter(m_med_t, a_med_t)
 lims = [
@@ -523,8 +547,7 @@ ax4.plot(lims, lims, 'k-', alpha=0.75, zorder=0)
 ax4.set_aspect('equal')
 ax4.set_xlim(lims)
 ax4.set_ylim(lims)
-ax4.set_xlabel('Manual med beat to beat timing')
-ax4.set_ylabel('HeartCV med beat to beat timing')
+ax4.set_title('Median')
 
 ax5.scatter(m_std_t, a_std_t)
 lims = [
@@ -535,8 +558,7 @@ ax5.plot(lims, lims, 'k-', alpha=0.75, zorder=0)
 ax5.set_aspect('equal')
 ax5.set_xlim(lims)
 ax5.set_ylim(lims)
-ax5.set_xlabel('Manual std beat to beat timing')
-ax5.set_ylabel('HeartCV std beat to beat timing')
+ax5.set_title('Std')
 
 ax6.scatter(m_rmss, a_rmss)
 lims = [
@@ -547,6 +569,5 @@ ax6.plot(lims, lims, 'k-', alpha=0.75, zorder=0)
 ax6.set_aspect('equal')
 ax6.set_xlim(lims)
 ax6.set_ylim(lims)
-ax6.set_xlabel('Manual rmss beat to beat timing')
-ax6.set_ylabel('HeartCV rmss beat to beat timing')
+ax6.set_title('RMSSD')
 plt.show()
