@@ -1,11 +1,15 @@
+import io
+from PIL import Image
 import functools
 import cv2
 import numpy as np
 from typing import Callable
 from dataclasses import dataclass
-import cvu
+import matplotlib.pyplot as plt
+from scipy import signal
+import vuba
 
-from heartcv import location 
+from heartcv import location
 
 # Implementations for the semi-automated API ------------------------------------
 
@@ -14,7 +18,7 @@ def location_gui(video, method):
     Launch a gui for testing an embryo location method.
 
     Keyword arguments:
-        video    cvu.Video.       cvu.Video object to the video to test (Required).
+        video    vuba.Video.       vuba.Video object to the video to test (Required).
 
         method   Callable.        Callable to execute on each frame to
                                   locate the embryo (Required).
@@ -25,19 +29,19 @@ def location_gui(video, method):
         Dict.            Dict of trackbar names and their current values on exit.               
 
     '''
-    gui = cvu.VideoGUI(video=video, title='Embryo location GUI')
+    gui = vuba.VideoGUI(video=video, title='Embryo location GUI')
 
-    @gui.process
+    @gui.method
     def locate(gui):
         frame = gui.frame.copy()
-        frame_proc = cvu.gray(frame)
+        frame_proc = vuba.gray(frame)
 
         if method.preprocess is location.binary_thresh:
             gui.embryo_outline = method(frame_proc, gui['thresh'])
         else:
             gui.embryo_outline = method(frame_proc)
 
-        cvu.draw_contours(frame, gui.embryo_outline, -1, (0,255,0), 1)
+        vuba.draw_contours(frame, gui.embryo_outline, -1, (0,255,0), 1)
         return frame
 
     if method.preprocess is location.binary_thresh:
@@ -56,7 +60,7 @@ def activity_gui(video, diff_img, rotate=True):
     Launch a gui for finding a bounding box from the output of the activity location methods.
 
     Keyword arguments:
-        video     cvu.Video.        cvu.Video object to the video to test (Required).
+        video     vuba.Video.        vuba.Video object to the video to test (Required).
 
         diff_img  Numpy ndarray.    Grayscale image produced from HeartCV.sum_abs_diff() (Required).
         
@@ -68,9 +72,9 @@ def activity_gui(video, diff_img, rotate=True):
         Tuple.    Binary threshold and gaussian kernel values (thresh, gauss).
 
     '''
-    gui = cvu.VideoGUI(video=video, title='ROI viewer')
+    gui = vuba.VideoGUI(video=video, title='ROI viewer')
 
-    @gui.process
+    @gui.method
     def find(gui):
         diff_proc = diff_img.copy()
         frame_proc = gui.frame.copy()
@@ -82,17 +86,17 @@ def activity_gui(video, diff_img, rotate=True):
 
         bbox, contour, blur = location._roi_filter(diff_proc, _thresh, _gauss, rotate=rotate)
         if bbox is not None:
-            cvu.draw_contours(frame_proc, contour, -1, (0,0,255), 1)
+            vuba.draw_contours(frame_proc, contour, -1, (0,0,255), 1)
 
             gui.bbox = bbox
             gui.contour = contour
             if not rotate:
-                cvu.draw_rectangles(frame_proc, bbox, (0,255,0), 1)
+                vuba.draw_rectangles(frame_proc, bbox, (0,255,0), 1)
             else:
                 bbox = np.int0(cv2.boxPoints(bbox))
-                cvu.draw_contours(frame_proc, bbox, -1, (0,255,0), 1)
+                vuba.draw_contours(frame_proc, bbox, -1, (0,255,0), 1)
 
-        diff_proc = cvu.bgr(blur)
+        diff_proc = vuba.bgr(blur)
         allImg = np.hstack((frame_proc, diff_proc))
 
         return allImg
