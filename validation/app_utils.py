@@ -8,7 +8,7 @@ from dataclasses import dataclass
 import numpy as np
 import os
 
-import cvu
+import vuba
 
 # Text defaults for opencv
 font = cv2.FONT_HERSHEY_SIMPLEX
@@ -33,10 +33,10 @@ class VideoStore:
         self.current_frame = None
 
     def add_raw(self, raw_video):
-        (self.raw_video, self.raw_video_release) = cvu.open_video(raw_video)
+        (self.raw_video, self.raw_video_release) = vuba.open_video(raw_video)
 
     def add_hcv(self, hcv_video):
-        (self.hcv_video, self.hcv_video_release) = cvu.open_video(hcv_video)
+        (self.hcv_video, self.hcv_video_release) = vuba.open_video(hcv_video)
 
     def close(self):
         def release(video, video_release):
@@ -67,13 +67,13 @@ class ContourStore:
         self.hcv_video_release = False
 
     def add_raw(self, raw_video):
-        (self.raw_video, self.raw_video_release) = cvu.open_video(raw_video)
+        (self.raw_video, self.raw_video_release) = vuba.open_video(raw_video)
         frame = self.raw_video.read(index=0)
         x,y,_ = frame.shape
         self.full = (x,y)
 
     def add_hcv(self, hcv_video):
-        (self.hcv_video, self.hcv_video_release) = cvu.open_video(hcv_video)
+        (self.hcv_video, self.hcv_video_release) = vuba.open_video(hcv_video)
 
     def add_contour(self, event, frame, contour):
         if event and frame and contour.all():
@@ -86,7 +86,7 @@ class ContourStore:
     def export(self, outpath):
         for (e,fr,c) in self.contour_info:
             raw_f = self.raw_video.read(index=fr)
-            cvu.draw_contours(raw_f, c, -1, (0,0,255), 1)
+            vuba.draw_contours(raw_f, c, -1, (0,0,255), 1)
 
             hcv_f = self.hcv_video.read(index=fr)
             both = np.hstack((raw_f, hcv_f)) 
@@ -125,7 +125,7 @@ def frameLabeler(filename, queue):
                     queue object.    GUI (Required).
     '''
 
-    video = cvu.Video(filename)
+    video = vuba.Video(filename)
     frame_count = len(video)
     fps = video.fps
     window_title = 'Frame recorder'

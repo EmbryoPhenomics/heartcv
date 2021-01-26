@@ -71,12 +71,10 @@ def parse_auto(file, inv, subset, frac, plot=False, *args, **kwargs):
         plt.plot(area)
         plt.plot(d, area[d], 'x')
         plt.plot(s, area[s], 'x')
-        plt.title(file)
+        # plt.title(file)
         plt.show()
 
     print(tuple(map(len, (d,s))))
-
-
 
     return (d,s)
 
@@ -115,9 +113,11 @@ def stats(d_peaks, s_peaks):
     # vii) Root mean square of successive difference in the timing between peaks
 
     hr = np.mean((len(s_peaks), len(d_peaks)))
+    hr = hr * 6 # convert hr to bpm
 
     # Diffs
     d_diffs = d_peaks[1:] - d_peaks[:-1] 
+    d_diffs = d_diffs * (20/30) # convert frame timings to absolute (sec)
     min_t = d_diffs.min()
     max_t = d_diffs.max()
     mean_t = d_diffs.mean()
@@ -293,13 +293,13 @@ ax.plot(lims, lims, 'k-', alpha=0.75, zorder=0)
 ax.set_aspect('equal')
 ax.set_xlim(lims)
 ax.set_ylim(lims)
-ax.set_xlabel('Manual HR (for 10s)')
-ax.set_ylabel('HeartCV HR (for 10s)')
+ax.set_xlabel('Manual HR (bpm)')
+ax.set_ylabel('HeartCV HR (bpm)')
 plt.show()
 
 # Beat to beat stats
 fig, ((ax1,ax2,ax3,),(ax4,ax5,ax6)) = plt.subplots(2, 3)
-fig.suptitle('Manual (x-axis) vs HeartCV (y-axis)')
+fig.suptitle('Manual (x-axis) vs HeartCV (y-axis) beat to beat timings (sec)')
 
 ax1.scatter(m_min_t, a_min_t)
 lims = [
@@ -356,16 +356,16 @@ ax5.set_xlim(lims)
 ax5.set_ylim(lims)
 ax5.set_title('Std')
 
-ax6.scatter(m_rmss, a_rmss)
-lims = [
-    np.min([ax6.get_xlim(), ax6.get_ylim()]),  
-    np.max([ax6.get_xlim(), ax6.get_ylim()]),  
-]
-ax6.plot(lims, lims, 'k-', alpha=0.75, zorder=0)
-ax6.set_aspect('equal')
-ax6.set_xlim(lims)
-ax6.set_ylim(lims)
-ax6.set_title('RMSSD')
+# ax6.scatter(m_rmss, a_rmss)
+# lims = [
+#     np.min([ax6.get_xlim(), ax6.get_ylim()]),  
+#     np.max([ax6.get_xlim(), ax6.get_ylim()]),  
+# ]
+# ax6.plot(lims, lims, 'k-', alpha=0.75, zorder=0)
+# ax6.set_aspect('equal')
+# ax6.set_xlim(lims)
+# ax6.set_ylim(lims)
+# ax6.set_title('RMSSD')
 plt.show()
 
 
@@ -510,13 +510,13 @@ ax.plot(lims, lims, 'k-', alpha=0.75, zorder=0)
 ax.set_aspect('equal')
 ax.set_xlim(lims)
 ax.set_ylim(lims)
-ax.set_xlabel('Manual HR (for 10s)')
-ax.set_ylabel('HeartCV HR (for 10s)')
+ax.set_xlabel('Manual HR (bpm)')
+ax.set_ylabel('HeartCV HR (bpm)')
 plt.show()
 
 # Beat to beat stats
 fig, ((ax1,ax2,ax3,),(ax4,ax5,ax6)) = plt.subplots(2, 3)
-fig.suptitle('Manual (x-axis) vs HeartCV (y-axis)')
+fig.suptitle('Manual (x-axis) vs HeartCV (y-axis) beat to beat timings (sec)')
 
 ax1.scatter(m_min_t, a_min_t)
 lims = [
@@ -573,14 +573,14 @@ ax5.set_xlim(lims)
 ax5.set_ylim(lims)
 ax5.set_title('Std')
 
-ax6.scatter(m_rmss, a_rmss)
-lims = [
-    np.min([ax6.get_xlim(), ax6.get_ylim()]),  
-    np.max([ax6.get_xlim(), ax6.get_ylim()]),  
-]
-ax6.plot(lims, lims, 'k-', alpha=0.75, zorder=0)
-ax6.set_aspect('equal')
-ax6.set_xlim(lims)
-ax6.set_ylim(lims)
-ax6.set_title('RMSSD')
+# ax6.scatter(m_rmss, a_rmss)
+# lims = [
+#     np.min([ax6.get_xlim(), ax6.get_ylim()]),  
+#     np.max([ax6.get_xlim(), ax6.get_ylim()]),  
+# ]
+# ax6.plot(lims, lims, 'k-', alpha=0.75, zorder=0)
+# ax6.set_aspect('equal')
+# ax6.set_xlim(lims)
+# ax6.set_ylim(lims)
+# ax6.set_title('RMSSD')
 plt.show()

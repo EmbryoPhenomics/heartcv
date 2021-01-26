@@ -39,7 +39,7 @@ def diastole(arr, peaks, troughs):
 
     return between(arr, peaks, troughs)
 
-def parse_auto(file, inv, subset, rem_peak=None, idx=1, plot=False, *args, **kwargs):
+def parse_auto(file, inv, subset, rem_peak=None, idx=1, plot=True, *args, **kwargs):
     dat = pd.read_csv(file)
     area = dat['area']
     if inv:

@@ -10,7 +10,7 @@ import numpy as np
 import pandas as pd
 from flask import request
 
-import cvu
+import vuba
 import app_utils, app_layout
 
 external_stylesheets = ['./assets/app.css'] # courtesy of dadamson
@@ -139,7 +139,7 @@ def compute_area(selected_data, input_type, fr, ellipse):
         if ellipse:
             arr = np.zeros((maxy, maxx), dtype='uint8')
             arr = cv2.ellipse(arr, (cv2.fitEllipse(contour)), 255, -1)
-            contour, _ = cvu.find_contours(arr, cv2.RETR_TREE, cv2.CHAIN_APPROX_NONE)
+            contour, _ = vuba.find_contours(arr, cv2.RETR_TREE, cv2.CHAIN_APPROX_NONE)
             if isinstance(contour, list):
                 contour = hcv.largest(contour)
 
@@ -160,7 +160,7 @@ def compute_area(selected_data, input_type, fr, ellipse):
                 dstore.ss_area[index] = area
 
             frame = vstore.raw_video.read(index=fr)
-            cvu.draw_contours(frame, contour, -1, (0,0,255), 1)
+            vuba.draw_contours(frame, contour, -1, (0,0,255), 1)
             vstore.current_frame = frame
 
             return trigger, trigger
