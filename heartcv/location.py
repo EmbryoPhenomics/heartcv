@@ -3,9 +3,8 @@ import numpy as np
 from more_itertools import pairwise
 import vuba
 
-from heartcv.util import HeartCVError
+from heartcv.util import HeartCVError, hcv_logger
 from heartcv import util
-from heartcv.util import hcv_logger
 
 
 def default(img):
@@ -17,25 +16,21 @@ def default(img):
 
     Parameters
     ----------
-    img : Numpy.ndarray
+    img : ndarray
         Grayscale image to perform embryo localisation on.
 
     Returns
     -------
-    contours : Numpy.ndarray
+    contours : ndarray
         Array of contour(s) detected.
-    hierarchy : Numpy.ndarray
+    hierarchy : ndarray
         Associated hierarchy information for the contours detected.
 
     See Also
     --------
     two_stage
-        Default method but with two stages of contour detection.
     binary_thresh
-        Default method but with a variable threshold instead of an
-        OTSU threshold.
     Location
-        Location wrapper class.
 
     """
     _, thresh = cv2.threshold(img, 0, 255, cv2.THRESH_BINARY + cv2.THRESH_OTSU)
@@ -45,7 +40,7 @@ def default(img):
     return contours, hierarchy
 
 
-def two_stage(img):
+def two_stage(img, rotate=False):
     """
     Default method but with two stages of contour detection.
 
@@ -54,20 +49,68 @@ def two_stage(img):
     contour detected first, and then the same default method is applied to the
     masked image.
 
-    """
-    firstContour = default(img)
+    Parameters
+    ----------
+    img : ndarray
+        Grayscale image to perform embryo localisation on.
+    rotate : bool
+        Whether to fit a rotated bounding box to the largest contour
+        detected in the first stage. Default is False.
+    
+    Returns
+    -------
+    contours : ndarray
+        Array of contour(s) detected.
+    hierarchy : ndarray
+        Associated hierarchy information for the contours detected.
 
-    bbox = cv2.boundingRect(firstContour)
-    firstRectMask = vuba.rect_mask(img, bbox)
-    onlyFirst = cv2.bitwise_and(img, img, mask=firstRectMask)
+    See Also
+    --------
+    two_stage
+    binary_thresh
+    Location
+
+    """
+    first_contour = default(img)
+
+    if rotate:
+        box = cv2.minAreaRect(first_contour)
+        box = cv2.boxPoints(box)
+        box = np.int0(box)
+        first_rect_mask = vuba.contour_mask(img, box)
+    else:
+        bbox = cv2.boundingRect(first_contour)
+        first_rect_mask = vuba.rect_mask(img, bbox)
+
+    only_first = cv2.bitwise_and(img, img, mask=first_rect_mask)
 
     return default(img)
 
 
 def binary_thresh(img, thresh):
     """
-    Default method but with a variable binary threshold instead of an
+    Default embryo location method but with a variable binary threshold instead of an
     OTSU threshold.
+
+    Parameters
+    ----------
+    img : ndarray
+        Grayscale image to perform embryo localisation on.
+    thresh : int
+        Binary threshold value.
+
+    Returns
+    -------
+    contours : ndarray or list
+        Array of contour(s) detected.
+    hierarchy : ndarray or list
+        Associated hierarchy information for the contours detected.
+
+    See Also
+    --------
+    two_stage
+    binary_thresh
+    Location
 
     """
     _, thresh = cv2.threshold(img, thresh, 255, cv2.THRESH_BINARY)
@@ -87,30 +130,56 @@ class Location:
     and subsequent contour filters to extract a suitable embryo outline from
     an image.
 
+    Parameters
+    ----------
+    preprocess : callable.    
+        Pre-processing method required for producing image contours.
+    contour_filter : callable.    
+        Contour filtering method for applying to contours produced 
+        from the pre-processing method.
+
+    Returns
+    -------
+    handler : Location
+        Class object for performing localisation using the supplied methods.
+
+    See Also
+    --------
+    default
+    two_stage
+    binary_thresh
+
     """
 
     def __init__(self, preprocess, contour_filter):
-        """
-        Keyword arguments:
-            preprocess       Callable.    Pre-processing method required for producing
-                                          image contours.
-
-            contour_filter   Callable.    Contour filtering method for applying to contours
-                                          produced from the pre-processing method.
-
-        """
         self.preprocess = preprocess
         self.contour_filter = contour_filter
 
-    def __call__(self, img, *args, **kwargs):
+    def find(self, img, *args, **kwargs) -> 'Location':
         """
         Callable for processing an image and producing an embryo outline.
 
-        Keyword arguments:
-            img    Numpy.ndarray.    Image to process.
+        Parameters
+        ----------
+        img : ndarray
+            Grayscale image to perform embryo localisation on.
+        *args : tuple or list
+            Arguments corresponding to additional parameters required by the
+            supplied callables at initiation.
+        **kwargs : dict
+            Keyword arguments corresponding to additional parameters required by the
+            supplied callables at initiation
 
-        Returns:
-            Numpy.ndarray or List.    Contour(s) outlining embryo.
+        Returns
+        -------
+        contours : ndarray or list
+            Array of contour(s) detected.
+
+        See Also
+        --------
+        default
+        two_stage
+        binary_thresh
 
         """
         contours, hierarchy = self.preprocess(img, *args, **kwargs)
@@ -118,91 +187,87 @@ class Location:
             raise HeartCVError(f"{self.preprocess} did not find contours.")
 
         try:
-            filtContours = self.contour_filter(contours, hierarchy)
+            filt_contours = self.contour_filter(contours, hierarchy)
         except TypeError:
-            filtContours = self.contour_filter(contours)
+            filt_contours = self.contour_filter(contours)
         except:
             raise
-        return filtContours
-
-
-def _abs_diffs(frames, mask):
-    """
-    Function for computing the absolute differences between consecutive frames,
-    used in both individual and sum frame differencing below.
-
-    """
-    first = vuba.take_first(frames)
-    if mask is None:
-        mask = np.ones(first.shape, dtype="uint8")
-    mask_ = vuba.Mask(mask)
-
-    for prev, next_ in pairwise(map(mask_, frames)):
-        yield cv2.absdiff(prev, next_)
+        return filt_contours
 
 
 def abs_diffs(frames, mask=None, thresh_val=10):
     """
     Compute the absolute differences between consecutive frames.
 
-    Unlike conventional background subtraction, this method computes the absolute
-    differences in consecutive frames. This generally results in much better localisation
-    of heart activity, since any non-heart noise and changes in animal orientation
-    are not registered to the same extent.
+    Parameters
+    ----------
+    frames : list or ndarray or Frames
+        Sequence of grayscale frames to process.
+    mask : ndarray
+        Optional mask to filter footage to, default is None.
+    thresh_val : int
+        Binary threshold value to apply to difference images. Adjusting
+        this parameter is useful at removing background noise in footage.
+        Default is n=10.
 
-    Keyword arguments:
-        frames       List.                  List of rgb frames (Required).
+    Returns
+    -------
+    difference_frames : generator
+        Generator that will supply difference frames.
 
-        mask         Numpy ndarray.         Mask to filter footage to.
-
-        thresh_val   Integer.               Binary threhsold value to threshold difference images (Required).
-                                            Default is None.
-
-    Returns:
-        List.    Sequence of difference frames.
+    See Also
+    --------
+    sum_abs_diff
 
     """
     hcv_logger.info("Computing the absolute differences for footage...")
 
-    diff_frames = []
-    with util.pgbar(total=len(frames) - 1) as pgbar:
-        for diff in _abs_diffs(frames, mask):
-            _, thresh = cv2.threshold(diff, thresh_val, 255, cv2.THRESH_BINARY)
-            diff_frames.append(thresh)
-            pgbar.update(1)
+    first = vuba.take_first(frames)
+    if mask is None:
+        mask = np.ones(first.shape, dtype="uint8")
+    mask_ = vuba.Mask(mask)
 
-    return diff_frames
+    with util.pgbar(total=len(frames) - 1) as pgbar:
+        for prev, next_ in pairwise(map(mask_, frames)):
+            diff = cv2.absdiff(prev, next_)
+            _, thresh = cv2.threshold(diff, thresh_val, 255, cv2.THRESH_BINARY)
+            
+            yield thresh
+
+            pgbar.update(1)
 
 
 def sum_abs_diff(frames, mask=None, thresh_val=10):
     """
     Compute the sum of absolute differences between consecutive frames.
 
-    Unlike conventional background subtraction, this method computes the absolute
-    differences in consecutive frames. This generally results in much better localisation
-    of heart activity, since any non-heart noise and changes in animal orientation
-    are not registered to the same extent.
+    Parameters
+    ----------
+    frames : list or ndarray or Frames
+        Sequence of grayscale frames to process.
+    mask : ndarray
+        Optional mask to filter footage to, default is None.
+    thresh_val : int
+        Binary threshold value to apply to difference images. Adjusting
+        this parameter is useful at removing background noise in footage.
+        Default is n=10.
 
-    Keyword arguments:
-        frames       List.                  List of rgb frames (Required).
+    Returns
+    -------
+    sum_diff : ndarray
+        Sum difference image, this is the cumulative of all difference frames.    
 
-        mask         Numpy ndarray.         Mask to filter footage to.
-
-        thresh_val   Integer.               Binary threhsold value to threshold difference images (Required).
-                                            Default is None.
-
-    Returns:
-        Numpy ndarray.    Sum difference image, this is the cumulative of all consecutive
-                          difference frames.
+    See Also
+    --------
+    abs_diffs
 
     """
     hcv_logger.info("Computing sum of the absolute differences for footage...")
 
     sum_diff = np.zeros_like(vuba.take_first(frames))
     with util.pgbar(total=len(frames) - 1) as pgbar:
-        for diff in _abs_diffs(frames, mask):
-            _, thresh = cv2.threshold(diff, thresh_val, 1, cv2.THRESH_BINARY)
-            sum_diff += thresh
+        for diff in abs_diffs(frames, mask, thresh_val):
+            sum_diff += diff
             pgbar.update(1)
 
     return sum_diff
@@ -227,24 +292,41 @@ def roi_filter(diff_img, thresh_val, gauss_kernel, rotate):
         return (bbox, contour, blur)
 
 
-def roi_search(diff_img, thresh_range, gauss_range, rotate=False):
+def roi_search(diff_img, thresh_range, gauss_range, area_range, rotate=False):
     """
     Find an roi for the heart via grid search across pre-defined binary
     threshold and gaussian blur ranges.
 
-    Keyword arguments:
-        diff_img        Numpy ndarray.    Grayscale image produced from HeartCV.sum_abs_diff() (Required).
+    Parameters
+    ----------
+    diff_img : ndarray
+        Grayscale image produced from HeartCV.sum_abs_diff().
+    thresh_range : tuple
+        Binary threshold values to conduct roi search over.
+    gauss_range : tuple
+        Gaussian kernel sizes to conduct roi search over.
+    area_range : tuple 
+        Area limits to filter roi's on.
+    rotate : bool
+        Whether to rotate bounding boxes, default is False.
 
-        thresh_range    Tuple.            Binary threshold values to conduct roi search over (Required).
+    Returns
+    -------
+    bbox : tuple
+        Bounding box dimensions of the median roi.
+    bboxs : list
+        List of all bounding box dimensions found.
 
-        gauss_range     Tuple.            Gaussian kernel sizes to conduct roi search over (Required).
+    Notes
+    -----
+    This method will compute the median roi dimensions after grid-search
+    across the parameters supplied. Also note that rotated bounding box
+    dimensions are not kept in the same format as that produced by minAreaRect, 
+    where they would be: ((x,y), (w,h), a) vs here where they are: (x,y,w,h,a).
 
-        rotate          Bool.             Whether to rotate bounding boxes, default is False.
-
-    Returns:
-        Tuple.    Bounding box dimensions of the median roi.
-
-        List.     List of all bounding box dimensions found.
+    See Also
+    --------
+    roi_filter
 
     """
     hcv_logger.info("Computing the heart roi...")
