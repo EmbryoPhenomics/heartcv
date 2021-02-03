@@ -4,22 +4,23 @@ from scipy import signal
 # Still requires re-factoring and automating
 
 def _merge(vals1, vals2):
-    '''Helper function for merging two lists. '''
-    vals = [(i,j) for i,j in zip(vals1,vals2)]
-    return np.asarray(vals).reshape(1,len(vals)*2).tolist()[0]
+    """Helper function for merging two lists. """
+    vals = [(i, j) for i, j in zip(vals1, vals2)]
+    return np.asarray(vals).reshape(1, len(vals) * 2).tolist()[0]
+
 
 def find_events(areas, *args, **kwargs):
-    '''
+    """
     Find cardiac events in a signal outputted from heartcv.heartArea().
 
-    Note that this method is built around scipy's find_peaks, and so any 
+    Note that this method is built around scipy's find_peaks, and so any
     keyword arguments that you would supply to that function can be supplied
-    here as well. 
+    here as well.
 
     Keyword arguments:
         areas     List.     Sequence of area values computed using heartcv (Required).
 
-        *args               Any number of arguments that you would 
+        *args               Any number of arguments that you would
         **kwargs            ordinarily supply to find_peaks().
 
     Returns:
@@ -28,7 +29,7 @@ def find_events(areas, *args, **kwargs):
                       - total        = indices, areas
                       - end diastole =      ''
                       - end systole  =      ''
-    '''
+    """
 
     arr = np.asarray(areas)
     arr_inv = np.max(arr) - arr
