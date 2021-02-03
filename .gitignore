@@ -1,0 +1,19 @@
+# Python files #
+################
+# setup.py working directory
+build
+
+# sphinx build directory
+_build
+generated
+savefig
+
+# setup.py dist directory
+dist
+
+# Egg metadata
+*.egg-info
+
+# pycache
+**/__pycache__
+
