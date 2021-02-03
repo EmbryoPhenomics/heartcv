@@ -14,9 +14,7 @@ def subset(frames, x, y, w, h):
 
 hcv.show_progress(True)
 
-source_dir = '/home/z/Documents/heartcv_testdata/mean_px/paleomon/raw'
-
-video = vuba.Video(f"{source_dir}/15_15ppt_medium_G1_82.avi")
+video = vuba.Video("./data/test.avi")
 frames = video.read(start=0, stop=300, grayscale=True)
 
 frame = video.read(index=0, grayscale=True)
@@ -44,10 +42,5 @@ dia_vals = np.asarray([d for i,d in enumerate(dia_vals) if i%2 == idx])
 plt.plot(diff_vals)
 plt.plot(dia_vals, diff_vals[dia_vals], 'x')
 plt.show()
-
-import pandas as pd
-
-dat = pd.DataFrame(data=dict(area=diff_vals))
-dat.to_csv('../../heartcv_main/validation/data/paleomon/fd_auto_15_15ppt_medium_G1_82.csv')
 
 video.close()

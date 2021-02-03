@@ -15,7 +15,7 @@ def subset(frames, x, y, w, h):
 
 hcv.show_progress(True)
 
-video = vuba.Video("./test.avi")
+video = vuba.Video("./data/test.avi")
 frames = video.read(start=0, stop=100, grayscale=True)
 
 frame = video.read(0, grayscale=True)
@@ -33,7 +33,7 @@ bboxs_areas = np.asarray([box_area(*bbox) for bbox in bboxs])
 
 # For some reason a tuple is returned from np.where here, hence the zero index
 # Area limits (px) will need to be adjusted depending on the developmental stage
-indices = np.where((bboxs_areas >= 1000) & (bboxs_areas <= 20000))[0]
+indices = np.where((bboxs_areas >= 5000) & (bboxs_areas <= 20000))[0]
 
 # This can probably be cleaned up but works for now
 good_bboxs = bboxs[indices]
