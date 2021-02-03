@@ -3,6 +3,7 @@ from scipy import signal
 
 # Still requires re-factoring and automating
 
+
 def _merge(vals1, vals2):
     """Helper function for merging two lists. """
     vals = [(i, j) for i, j in zip(vals1, vals2)]
@@ -47,4 +48,3 @@ def find_events(areas, *args, **kwargs):
     total = (indices, _areas)
 
     return (total, endDs, endSs)
-

@@ -53,15 +53,15 @@ frames = list(subset(frames, *bbox))
 diff_vals = hcv.minmax_scale([np.sum(diff) for diff in hcv.abs_diffs(frames)])
 
 # Find peaks and troughs
-t,dia,sys = hcv.find_events(diff_vals, prominence=0.05)
+t, dia, sys = hcv.find_events(diff_vals, prominence=0.05)
 
 # Exclude second peaks so we only have contraction phase
 dia_vals, dia_peaks = dia
-idx = 1 # change to one if peaks shifted by one due to a peak at start of sequence
-dia_vals = np.asarray([d for i,d in enumerate(dia_vals) if i%2 == idx])
+idx = 1  # change to one if peaks shifted by one due to a peak at start of sequence
+dia_vals = np.asarray([d for i, d in enumerate(dia_vals) if i % 2 == idx])
 
 plt.plot(diff_vals)
-plt.plot(dia_vals, diff_vals[dia_vals], 'x')
+plt.plot(dia_vals, diff_vals[dia_vals], "x")
 plt.show()
 
 video.close()
