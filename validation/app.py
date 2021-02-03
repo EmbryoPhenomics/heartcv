@@ -137,11 +137,12 @@ def compute_area(selected_data, input_type, fr, ellipse):
         contour[:,0],contour[:,1] = x,y
 
         if ellipse:
-            arr = np.zeros((maxy, maxx), dtype='uint8')
-            arr = cv2.ellipse(arr, (cv2.fitEllipse(contour)), 255, -1)
+            arr = np.zeros_like(vuba.gray(vstore.current_frame))
+            print(arr.shape)
+            vuba.draw_ellipses(arr, (vuba.fit_ellipses(contour)), 255, -1)
             contour, _ = vuba.find_contours(arr, cv2.RETR_TREE, cv2.CHAIN_APPROX_NONE)
             if isinstance(contour, list):
-                contour = hcv.largest(contour)
+                contour = vuba.largest(contour)
 
         cstore.add_contour(input_type, fr, contour)
         area = cv2.contourArea(contour)
