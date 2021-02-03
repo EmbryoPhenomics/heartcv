@@ -254,9 +254,10 @@ asv.append(aad[:6])
 d,aad,s,aas = ds15
 asv.append(aad[:6])
 
-print(msv, asv)
 
-plt.scatter(msv, asv)
+for mv,av in zip(msv, asv):
+    plt.scatter(mv,av)
+
 plt.xlabel('Manual')
 plt.ylabel('HeartCV')
 plt.show()
