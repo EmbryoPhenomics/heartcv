@@ -1,10 +1,8 @@
 import cv2
 import multiprocessing as mp
 import dash
-import dash_core_components as dcc
 import dash_html_components as html
 from dash.dependencies import Input, Output, State
-import dash_table
 import os
 import numpy as np
 import pandas as pd
