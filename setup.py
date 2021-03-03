@@ -26,7 +26,7 @@ def get_version(rel_path):
 setup(
     name="heartcv",
     version=get_version("heartcv/__init__.py"),
-    description="A platform for the semi-automated extraction of various cardiac proxy traits from bioimaging footage of embryos.",
+    description="A platform for automated, noninvasive extraction of various cardiac proxy traits from bioimaging footage.",
     long_description=long_description,
     long_description_content_type="text/markdown",
     url="https://github.com/EmbryoPhenomics/heartcv",
@@ -38,19 +38,10 @@ setup(
     install_requires=[
         "vuba",
         "numpy",
-        "cython",
-        "matplotlib",
         "scipy",
         "tqdm",
         "opencv-python",
-        "pandas",
-        "more_itertools",
-        "dash==1.9.1",
-        "dash_daq",
-        "dataclasses",
-        "flask",
-        "dash_table==4.6.1",
-        "natsort",
+        "more_itertools"
     ],
     project_urls={
         "Source": "https://github.com/EmbryoPhenomics/heartcv/tree/main/heartcv"
