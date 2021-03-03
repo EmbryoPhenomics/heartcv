@@ -1,7 +1,6 @@
 from contextlib import contextmanager
 import logging
 from tqdm import tqdm
-import cv2
 import numpy as np
 
 # Signal operations -----------------------------------------------------------------
