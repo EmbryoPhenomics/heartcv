@@ -1,20 +1,65 @@
-.. heartcv documentation master file, created by
+.. HeartCV documentation master file, created by
    sphinx-quickstart on Sat Feb  6 15:03:05 2021.
    You can adapt this file completely to your liking, but it should at least
    contain the root `toctree` directive.
 
-Welcome to heartcv's documentation!
-===================================
+HeartCV
+=======
+
+HeartCV is an easy to use library for automated, noninvasive quantification of cardiac proxy traits from bioimaging footage. We developed this library to primarily reduce the barrier to entry for researchers seeking to assess the cardiac physiology of their animals through bioimaging. For a more thorough overview of this library, please see the following paper:
+
+*link here*
+
+**User Guide**
+
+* :doc:`installation`
+* :doc:`localisation`
+* :doc:`quantification`
+* :doc:`validation`
+* :doc:`applications`
+
+.. toctree::
+   :maxdepth: 1
+   :hidden:
+   :caption: User Guide
+
+   installation
+   localisation
+   quantification
+   validation
+   applications
+
+**Reference**
+
+* :doc:`api-reference`
+* :doc:`related-projects`
+* :doc:`contributing`
 
 .. toctree::
    :maxdepth: 2
-   :caption: Contents:
+   :hidden:
+   :caption: API Reference
 
+	api-reference
+	related-projects
+	contributing
 
+See also
+--------
 
-Indices and tables
-==================
+HeartCV is part of the wider project **EmbryoPhenomics**, to find out more about the project follow the links below:
 
-* :ref:`genindex`
-* :ref:`modindex`
-* :ref:`search`
+* Website_
+* GitHub_
+* Twitter_
+
+.. _Website: https://www.embryophenomics.org/
+.. _GitHub: https://www.github.com/EmbryoPhenomics
+.. _Twitter: https://twitter.com/embryophenomics
+
+License
+-------
+
+HeartCV is available under the open source `MIT License`__.
+
+__ https://opensource.org/licenses/MIT
