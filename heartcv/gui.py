@@ -36,9 +36,9 @@ def location_gui(video, method):
         frame_proc = vuba.gray(frame)
 
         if method.preprocess is location.binary_thresh:
-            gui.embryo_outline = method(frame_proc, gui["thresh"])
+            gui.embryo_outline = method.find(frame_proc, gui["thresh"])
         else:
-            gui.embryo_outline = method(frame_proc)
+            gui.embryo_outline = method.find(frame_proc)
 
         vuba.draw_contours(frame, gui.embryo_outline, -1, (0, 255, 0), 1)
         return frame
@@ -86,7 +86,7 @@ def activity_gui(video, diff_img, rotate=False):
     location_gui
 
     """
-    vuba._channel_check(diff_img, 2)
+    vuba.ops._channel_check(diff_img, 2)
 
     gui = vuba.VideoGUI(video=video, title="ROI viewer")
 
