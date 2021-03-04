@@ -47,11 +47,21 @@ Extraction of events
 Utilities
 =========
 
+Stats operations
+----------------
+
 .. autosummary::
    :toctree: generated/
 
    minmax_scale
    mse
    rmse
+
+Logging
+-------
+
+.. autosummary::
+   :toctree: generated/
+
    show_progress
    pgbar
