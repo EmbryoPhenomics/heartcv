@@ -36,7 +36,7 @@ HeartCV is an easy to use library for automated, noninvasive quantification of c
 * :doc:`contributing`
 
 .. toctree::
-   :maxdepth: 2
+   :maxdepth: 1
    :hidden:
    :caption: API Reference
 
