@@ -9,7 +9,7 @@ from heartcv import util
 
 def default(img):
     """
-    Simplest embryo location method.
+    Simplest animal location method.
 
     The method applies an OTSU threshold, median filter and finally retrieves
     the largest contour by area.
@@ -17,7 +17,7 @@ def default(img):
     Parameters
     ----------
     img : ndarray
-        Grayscale image to perform embryo localisation on.
+        Grayscale image to perform animal localisation on.
 
     Returns
     -------
@@ -52,7 +52,7 @@ def two_stage(img, rotate=False):
     Parameters
     ----------
     img : ndarray
-        Grayscale image to perform embryo localisation on.
+        Grayscale image to perform animal localisation on.
     rotate : bool
         Whether to fit a rotated bounding box to the largest contour
         detected in the first stage. Default is False.
@@ -89,13 +89,13 @@ def two_stage(img, rotate=False):
 
 def binary_thresh(img, thresh):
     """
-    Default embryo location method but with a variable binary threshold instead of an
+    Default animal location method but with a variable binary threshold instead of an
     OTSU threshold.
 
     Parameters
     ----------
     img : ndarray
-        Grayscale image to perform embryo localisation on.
+        Grayscale image to perform animal localisation on.
     thresh : int
         Binary threshold value.
 
@@ -127,7 +127,7 @@ class Location:
     Location wrapper class.
 
     This allows the application of any number of image pre-processing methods
-    and subsequent contour filters to extract a suitable embryo outline from
+    and subsequent contour filters to extract a suitable animal outline from
     an image.
 
     Parameters
@@ -157,12 +157,12 @@ class Location:
 
     def find(self, img, *args, **kwargs) -> 'Location':
         """
-        Callable for processing an image and producing an embryo outline.
+        Callable for processing an image and producing an animal outline.
 
         Parameters
         ----------
         img : ndarray
-            Grayscale image to perform embryo localisation on.
+            Grayscale image to perform animal localisation on.
         *args : tuple or list
             Arguments corresponding to additional parameters required by the
             supplied callables at initiation.
