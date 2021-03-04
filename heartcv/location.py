@@ -33,7 +33,7 @@ def default(img):
     Location
 
     """
-    vuba._channel_check(img, 2)
+    vuba.ops._channel_check(img, 2)
 
     _, thresh = cv2.threshold(img, 0, 255, cv2.THRESH_BINARY + cv2.THRESH_OTSU)
     median = cv2.medianBlur(thresh, 3)
@@ -73,7 +73,7 @@ def two_stage(img, rotate=False):
     Location
 
     """
-    vuba._channel_check(img, 2)
+    vuba.ops._channel_check(img, 2)
 
     first_contour = default(img)
 
@@ -117,7 +117,7 @@ def binary_thresh(img, thresh):
     Location
 
     """
-    vuba._channel_check(img, 2)
+    vuba.ops._channel_check(img, 2)
 
     _, thresh = cv2.threshold(img, thresh, 255, cv2.THRESH_BINARY)
     median = cv2.medianBlur(thresh, 3)
@@ -188,7 +188,7 @@ class Location:
         binary_thresh
 
         """
-        vuba._channel_check(img, 2)
+        vuba.ops._channel_check(img, 2)
 
         contours, hierarchy = self.preprocess(img, *args, **kwargs)
         if contours is None:
@@ -209,7 +209,7 @@ def abs_diffs(frames, mask=None, thresh_val=10):
 
     Parameters
     ----------
-    frames : list or ndarray or Frames
+    frames : list or ndarray or vuba.Frames
         Sequence of grayscale frames to process.
     mask : ndarray
         Optional mask to filter footage to, default is None.
@@ -238,7 +238,7 @@ def abs_diffs(frames, mask=None, thresh_val=10):
     with util.pgbar(total=len(frames) - 1) as pgbar:
         for prev, next_ in pairwise(map(mask_, frames)):
             diff = cv2.absdiff(prev, next_)
-            _, thresh = cv2.threshold(diff, thresh_val, 255, cv2.THRESH_BINARY)
+            _, thresh = cv2.threshold(diff, thresh_val, 1, cv2.THRESH_BINARY)
             
             yield thresh
 
@@ -251,7 +251,7 @@ def sum_abs_diff(frames, mask=None, thresh_val=10):
 
     Parameters
     ----------
-    frames : list or ndarray or Frames
+    frames : list or ndarray or vuba.Frames
         Sequence of grayscale frames to process.
     mask : ndarray
         Optional mask to filter footage to, default is None.
@@ -283,7 +283,7 @@ def sum_abs_diff(frames, mask=None, thresh_val=10):
 
 def roi_filter(diff_img, thresh_val, gauss_kernel, rotate):
     """Find an roi given a sum difference image. """
-    vuba._channel_check(diff_img, 2)
+    vuba.ops._channel_check(diff_img, 2)
 
     _, thresh = cv2.threshold(diff_img, thresh_val, 255, cv2.THRESH_BINARY)
     blur = cv2.GaussianBlur(thresh, (gauss_kernel, gauss_kernel), 0, 0)
