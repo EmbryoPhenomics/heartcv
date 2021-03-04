@@ -10,7 +10,6 @@ def reverse(vals, ret):
 	return ret * (max(vals) - min(vals)) + min(vals)
 
 
-@pytest.mark.usefixtures("data")
 class Test_MinMaxScale:
 	@pytest.mark.parametrize('data', data())
 	def test_limits(self, data):
