@@ -33,6 +33,8 @@ def default(img):
     Location
 
     """
+    vuba._channel_check(img, 2)
+
     _, thresh = cv2.threshold(img, 0, 255, cv2.THRESH_BINARY + cv2.THRESH_OTSU)
     median = cv2.medianBlur(thresh, 3)
     contours, hierarchy = vuba.find_contours(medi, cv2.RETR_TREE, cv2.CHAIN_APPROX_NONE)
@@ -71,6 +73,8 @@ def two_stage(img, rotate=False):
     Location
 
     """
+    vuba._channel_check(img, 2)
+
     first_contour = default(img)
 
     if rotate:
@@ -113,6 +117,8 @@ def binary_thresh(img, thresh):
     Location
 
     """
+    vuba._channel_check(img, 2)
+
     _, thresh = cv2.threshold(img, thresh, 255, cv2.THRESH_BINARY)
     median = cv2.medianBlur(thresh, 3)
     contours, hierarchy = vuba.find_contours(
@@ -182,6 +188,8 @@ class Location:
         binary_thresh
 
         """
+        vuba._channel_check(img, 2)
+
         contours, hierarchy = self.preprocess(img, *args, **kwargs)
         if contours is None:
             raise HeartCVError(f"{self.preprocess} did not find contours.")
@@ -275,6 +283,8 @@ def sum_abs_diff(frames, mask=None, thresh_val=10):
 
 def roi_filter(diff_img, thresh_val, gauss_kernel, rotate):
     """Find an roi given a sum difference image. """
+    vuba._channel_check(diff_img, 2)
+
     _, thresh = cv2.threshold(diff_img, thresh_val, 255, cv2.THRESH_BINARY)
     blur = cv2.GaussianBlur(thresh, (gauss_kernel, gauss_kernel), 0, 0)
 

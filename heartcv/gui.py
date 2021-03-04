@@ -86,6 +86,8 @@ def activity_gui(video, diff_img, rotate=False):
     location_gui
 
     """
+    vuba._channel_check(diff_img, 2)
+
     gui = vuba.VideoGUI(video=video, title="ROI viewer")
 
     @gui.method
