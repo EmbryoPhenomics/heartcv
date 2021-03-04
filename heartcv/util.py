@@ -3,7 +3,7 @@ import logging
 from tqdm import tqdm
 import numpy as np
 
-# Signal operations -----------------------------------------------------------------
+# Stats operations -----------------------------------------------------------------
 
 
 def minmax_scale(vals):
