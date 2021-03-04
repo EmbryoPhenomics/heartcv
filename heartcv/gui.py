@@ -4,19 +4,29 @@ import vuba
 
 from heartcv import location
 
-# Implementations for the semi-automated API ------------------------------------
-
 
 def location_gui(video, method):
     """
-    Launch a gui for testing an embryo location method.
-    Keyword arguments:
-        video    vuba.Video.       vuba.Video object to the video to test (Required).
-        method   Callable.        Callable to execute on each frame to
-                                  locate the embryo (Required).
-    Returns:
-        Numpy ndarray.   Embryo outline determined by the supplied method.
-        Dict.            Dict of trackbar names and their current values on exit.
+    Launch a GUI for testing an animal location method.
+
+    Parameters
+    ----------
+    video : vuba.Video
+        Video object to test animal location for.
+    method : callable
+        Callable to execute on each frame to locate the animal.
+
+    Returns
+    -------
+    outline : ndarray
+        Outline of an animal determined by the method supplied.
+    config : dict
+        Last trackbar values used before closing the GUI.
+
+    See Also
+    --------
+    activity_gui
+
     """
     gui = vuba.VideoGUI(video=video, title="Embryo location GUI")
 
@@ -48,14 +58,33 @@ def location_gui(video, method):
 
 def activity_gui(video, diff_img, rotate=False):
     """
-    Launch a gui for finding a bounding box from the output of the activity location methods.
-    Keyword arguments:
-        video     vuba.Video.        vuba.Video object to the video to test (Required).
-        diff_img  Numpy ndarray.    Grayscale image produced from HeartCV.sum_abs_diff() (Required).
-        rotate    Bool.             Whether to rotate bounding boxes, default is False.
-    Returns:
-        Tuple.    Bounding box dimensions for the heart (x,y,w,h).
-        Tuple.    Binary threshold and gaussian kernel values (thresh, gauss).
+    Launch a GUI for finding a bounding box from the output of the activity location methods.
+
+    Parameters
+    ----------
+    video : vuba.Video
+        Video object to test activity location for.
+    diff_img : ndarray
+        Grayscale image produced from ``HeartCV.sum_abs_diff()``.
+    rotate : bool
+        Whether to rotate bounding boxes, default is False.
+
+    Returns
+    -------
+    bbox : tuple or ndarray
+        Bounding box dimensions for a region of activity. This will be
+        (x,y,w,h) if the rotate=False, and a series of contour coordinates
+        if rotate=True.
+    contour : ndarray
+        Contour outline of region of activity identified.
+    config : tuple 
+        The last binary threshold and gaussian kernel values used before
+        closing the GUI.
+
+    See Also
+    --------
+    location_gui
+
     """
     gui = vuba.VideoGUI(video=video, title="ROI viewer")
 

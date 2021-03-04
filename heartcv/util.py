@@ -7,7 +7,25 @@ import numpy as np
 
 
 def minmax_scale(vals):
-    """Convenience function for performing min/max normalization. """
+    """
+    Convenience function for performing min/max normalization. 
+
+    Parameters
+    ----------
+    vals : list or ndarray
+        Sequence of values to perform normalization on.
+
+    Returns
+    -------
+    vals : ndarray
+        Sequence of normalized values.
+
+    See Also
+    --------
+    mse
+    rmse
+
+    """
     vals = np.asarray(vals)
     m = np.nanmin(vals)
     M = np.nanmax(vals)
@@ -15,7 +33,27 @@ def minmax_scale(vals):
 
 
 def mse(truth, act):
-    """Compute the mean square error between truth and actual values. """
+    """
+    Compute the mean square error between truth and actual values. 
+
+    Parameters
+    ----------
+    truth : list or ndarray
+        Sequence of truth values.
+    act : list or ndarray
+        Sequence of actual values.
+
+    Returns
+    -------
+    ret : int or float
+        Mean square error of the values of provided.
+
+    See Also
+    --------
+    minmax_scale
+    rmse
+
+    """
     truth, act = map(np.asarray, (truth, act))
     truth, act = map(scale, (truth, act))
     diff = truth - act
@@ -23,7 +61,27 @@ def mse(truth, act):
 
 
 def rmse(truth, act):
-    """Compute the root mean square error between truth and actual values. """
+    """
+    Compute the root mean square error between truth and actual values. 
+
+    Parameters
+    ----------
+    truth : list or ndarray
+        Sequence of truth values.
+    act : list or ndarray
+        Sequence of actual values.
+
+    Returns
+    -------
+    ret : int or float
+        Root mean square error of the values of provided.
+
+    See Also
+    --------
+    minmax_scale
+    mse
+
+    """
     return np.sqrt(mse(truth, act))
 
 
@@ -54,12 +112,20 @@ def show_progress(on):
     """
     Show progress information for functions in HeartCV.
 
+    Parameters
+    ----------
+    on : bool
+        Whether to enable package wide progress information.
+
+    See Also
+    --------
+    pgbar
+
+    Notes
+    -----
     This will only print progress for functions which have long running
     computation, much of the convenience functions will not print any
     progress.
-
-    Keyword arguments:
-        on    Bool.    Whether to enable package wide progress monitoring (Required).
 
     """
     global SHOW_PROGRESS
@@ -80,27 +146,32 @@ def pgbar(total):
     """
     Create a progress bar to be used in a 'with' context.
 
-    Note that this is displayed depending on the global
-    variable SHOW_PROGRESS. For VideoCapture objects with infinite
-    feeds, such as camera streams, a progress bar will not
-    be produced.
+    Parameters
+    ----------
+    total : int
+        Length of progress bar.
 
-    Keyword arguments:
-        total    Integer.    Length of progress bar (Required).
+    Returns
+    -------
+    pgbar : tqdm.tqdm
+        Progress bar.
 
-    Returns:
-        tqdm progress bar.
+    See Also
+    --------
+    show_progress
+
+    Notes 
+    -----
+    This is displayed depending on the global variable SHOW_PROGRESS, 
+    changed for HeartCV.show_progress.
 
     """
 
     if SHOW_PROGRESS:
-        if total is not None or total != -1:
-            _pgbar = tqdm(total=total)
-            try:
-                yield _pgbar
-            finally:
-                _pgbar.close()
-        else:
-            yield EmptyPGbar
+        _pgbar = tqdm(total=total)
+        try:
+            yield _pgbar
+        finally:
+            _pgbar.close()
     else:
         yield EmptyPGbar
