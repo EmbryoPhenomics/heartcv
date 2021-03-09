@@ -8,6 +8,12 @@ from scipy.stats import pearsonr
 
 from heartcv import minmax_scale as scale
 
+def HR(hr_f, l, fs):
+    return (hr_f/(l/fs))*60
+
+def HRV(in_stat, fs):
+    return in_stat/fs
+
 def corr_stats(r, p):
     if p <= 0.05:
         if p <= 0.01:
@@ -123,7 +129,7 @@ def parse_man(file, subset=None):
     return tuple(map(np.asarray, (s_peaks, d_peaks)))
 
 
-def stats(d_peaks, s_peaks):
+def stats(d_peaks, s_peaks, l, fs):
     # HR - bpm
     # Diastole timing
     # Systole timing
@@ -140,11 +146,11 @@ def stats(d_peaks, s_peaks):
     # vii) Root mean square of successive difference in the timing between peaks
 
     hr = np.mean((len(s_peaks), len(d_peaks)))
-    # hr = hr * 6  # convert hr to bpm
+    hr = HR(hr, l, fs)
 
     # Diffs
     d_diffs = d_peaks[1:] - d_peaks[:-1]
-    d_diffs = d_diffs * (20 / 30)  # convert frame timings to absolute (sec)
+    d_diffs = HRV(d_diffs, fs)
     min_t = d_diffs.min()
     max_t = d_diffs.max()
     mean_t = d_diffs.mean()
@@ -156,6 +162,7 @@ def stats(d_peaks, s_peaks):
 
     # Diffs
     s_diffs = s_peaks[1:] - s_peaks[:-1]
+    s_diffs = HRV(s_diffs, fs)
     min_t = np.mean((min_t, s_diffs.min()))
     max_t = np.mean((max_t, s_diffs.min()))
     mean_t = np.mean((mean_t, s_diffs.min()))
@@ -164,14 +171,6 @@ def stats(d_peaks, s_peaks):
 
     # RMSS
     rmssd = np.mean((rmssd, rmse(s_diffs[1:], s_diffs[:-1])))
-
-    # # Hists for beat timings
-    # plt.hist(x=d_diffs, bins=100, alpha=0.7, rwidth=0.85)
-    # plt.hist(x=s_diffs, bins=100, alpha=0.7, rwidth=0.85)
-    # plt.grid(axis='y', alpha=0.75)
-    # plt.xlabel('Beat timings')
-    # plt.ylabel('Frequency')
-    # plt.show()
 
     return [[hr], [min_t], [max_t], [mean_t], [med_t], [std_t], [rmssd]]
 
@@ -184,8 +183,6 @@ def append_with(to, with_):
 
 
 # Auto
-# ds = parse_auto('./data/paleomon/mpx_auto_15_15ppt_medium_1.csv', inv=False, subset=None, frac=0, prominence=0.1)
-# ds1 = parse_auto('./data/paleomon/mpx_auto_15_15ppt_old_1.csv', inv=False, subset=None, frac=0, prominence=0.1) # s[1:]
 ds2 = parse_auto(
     "./data/paleomon/mpx_auto_15_15ppt_young_1.csv",
     inv=False,
@@ -348,8 +345,6 @@ ds23 = parse_auto(
 )
 
 # Man
-# mds = parse_man('./data/paleomon/hr_man_15_15ppt_medium_1.csv', subset=dict(d=slice(1, None, None), s=slice(1, None, None)))
-# mds1 = parse_man('./data/paleomon/hr_man_15_15ppt_old_1.csv') # s[1:]
 mds2 = parse_man("./data/paleomon/hr_man_15_15ppt_young_1.csv")  # d[:-1], s[1:]
 mds3 = parse_man("./data/paleomon/hr_man_15_15ppt_young_A1_37.csv")
 mds4 = parse_man("./data/paleomon/hr_man_15_15ppt_young_A1_60.csv")
@@ -393,56 +388,52 @@ all_a = [a_hr, a_min_t, a_max_t, a_mean_t, a_med_t, a_std_t, a_rmss]
 all_m = [m_hr, m_min_t, m_max_t, m_mean_t, m_med_t, m_std_t, m_rmss]
 
 # Compute stats (auto)
-# all_a = append_with(all_a, stats(*ds))
-# all_a = append_with(all_a, stats(*ds1))
-all_a = append_with(all_a, stats(*ds2))
-all_a = append_with(all_a, stats(*ds3))
-all_a = append_with(all_a, stats(*ds4))
-all_a = append_with(all_a, stats(*ds5))
-all_a = append_with(all_a, stats(*ds6))
-all_a = append_with(all_a, stats(*ds7))
-all_a = append_with(all_a, stats(*ds8))
-all_a = append_with(all_a, stats(*ds9))
-all_a = append_with(all_a, stats(*ds10))
-all_a = append_with(all_a, stats(*ds11))
-all_a = append_with(all_a, stats(*ds12))
-all_a = append_with(all_a, stats(*ds13))
-all_a = append_with(all_a, stats(*ds14))
-all_a = append_with(all_a, stats(*ds15))
-all_a = append_with(all_a, stats(*ds16))
-all_a = append_with(all_a, stats(*ds17))
-all_a = append_with(all_a, stats(*ds18))
-all_a = append_with(all_a, stats(*ds19))
-all_a = append_with(all_a, stats(*ds20))
-all_a = append_with(all_a, stats(*ds21))
-all_a = append_with(all_a, stats(*ds22))
-all_a = append_with(all_a, stats(*ds23))
+all_a = append_with(all_a, stats(*ds2, 300, 30))
+all_a = append_with(all_a, stats(*ds3, 300, 30))
+all_a = append_with(all_a, stats(*ds4, 300, 30))
+all_a = append_with(all_a, stats(*ds5, 300, 30))
+all_a = append_with(all_a, stats(*ds6, 300, 30))
+all_a = append_with(all_a, stats(*ds7, 300, 30))
+all_a = append_with(all_a, stats(*ds8, 300, 30))
+all_a = append_with(all_a, stats(*ds9, 300, 30))
+all_a = append_with(all_a, stats(*ds10, 300, 30))
+all_a = append_with(all_a, stats(*ds11, 300, 30))
+all_a = append_with(all_a, stats(*ds12, 300, 30))
+all_a = append_with(all_a, stats(*ds13, 300, 30))
+all_a = append_with(all_a, stats(*ds14, 300, 30))
+all_a = append_with(all_a, stats(*ds15, 300, 30))
+all_a = append_with(all_a, stats(*ds16, 300, 30))
+all_a = append_with(all_a, stats(*ds17, 300, 30))
+all_a = append_with(all_a, stats(*ds18, 300, 30))
+all_a = append_with(all_a, stats(*ds19, 300, 30))
+all_a = append_with(all_a, stats(*ds20, 300, 30))
+all_a = append_with(all_a, stats(*ds21, 300, 30))
+all_a = append_with(all_a, stats(*ds22, 300, 30))
+all_a = append_with(all_a, stats(*ds23, 300, 30))
 
 # Compute stats (man)
-# all_m = append_with(all_m, stats(*mds))
-# all_m = append_with(all_m, stats(*mds1))
-all_m = append_with(all_m, stats(*mds2))
-all_m = append_with(all_m, stats(*mds3))
-all_m = append_with(all_m, stats(*mds4))
-all_m = append_with(all_m, stats(*mds5))
-all_m = append_with(all_m, stats(*mds6))
-all_m = append_with(all_m, stats(*mds7))
-all_m = append_with(all_m, stats(*mds8))
-all_m = append_with(all_m, stats(*mds9))
-all_m = append_with(all_m, stats(*mds10))
-all_m = append_with(all_m, stats(*mds11))
-all_m = append_with(all_m, stats(*mds12))
-all_m = append_with(all_m, stats(*mds13))
-all_m = append_with(all_m, stats(*mds14))
-all_m = append_with(all_m, stats(*mds15))
-all_m = append_with(all_m, stats(*mds16))
-all_m = append_with(all_m, stats(*mds17))
-all_m = append_with(all_m, stats(*mds18))
-all_m = append_with(all_m, stats(*mds19))
-all_m = append_with(all_m, stats(*mds20))
-all_m = append_with(all_m, stats(*mds21))
-all_m = append_with(all_m, stats(*mds22))
-all_m = append_with(all_m, stats(*mds23))
+all_m = append_with(all_m, stats(*mds2, 300, 30))
+all_m = append_with(all_m, stats(*mds3, 300, 30))
+all_m = append_with(all_m, stats(*mds4, 300, 30))
+all_m = append_with(all_m, stats(*mds5, 300, 30))
+all_m = append_with(all_m, stats(*mds6, 300, 30))
+all_m = append_with(all_m, stats(*mds7, 300, 30))
+all_m = append_with(all_m, stats(*mds8, 300, 30))
+all_m = append_with(all_m, stats(*mds9, 300, 30))
+all_m = append_with(all_m, stats(*mds10, 300, 30))
+all_m = append_with(all_m, stats(*mds11, 300, 30))
+all_m = append_with(all_m, stats(*mds12, 300, 30))
+all_m = append_with(all_m, stats(*mds13, 300, 30))
+all_m = append_with(all_m, stats(*mds14, 300, 30))
+all_m = append_with(all_m, stats(*mds15, 300, 30))
+all_m = append_with(all_m, stats(*mds16, 300, 30))
+all_m = append_with(all_m, stats(*mds17, 300, 30))
+all_m = append_with(all_m, stats(*mds18, 300, 30))
+all_m = append_with(all_m, stats(*mds19, 300, 30))
+all_m = append_with(all_m, stats(*mds20, 300, 30))
+all_m = append_with(all_m, stats(*mds21, 300, 30))
+all_m = append_with(all_m, stats(*mds22, 300, 30))
+all_m = append_with(all_m, stats(*mds23, 300, 30))
 
 # Deconstruct
 [a_hr, a_min_t, a_max_t, a_mean_t, a_med_t, a_std_t, a_rmss] = all_a
@@ -492,7 +483,6 @@ ds8 = parse_auto(
 ds9 = parse_auto(
     "./data/radix/mpx_auto_25deg_A5.csv", inv=False, subset=None, frac=0, prominence=0.1
 )
-# ds10 = parse_auto('./data/radix/mpx_auto_25deg_A6.csv', inv=False, subset=None, frac=0, prominence=0.04, distance=5)
 ds11 = parse_auto(
     "./data/radix/mpx_auto_25deg_A7.csv", inv=False, subset=None, frac=0, prominence=0.1
 )
@@ -506,7 +496,6 @@ ds13 = parse_auto(
     frac=0,
     prominence=0.08,
 )
-# ds14 = parse_auto('./data/radix/mpx_auto_30deg_A4.csv', inv=False, subset=None, frac=0, prominence=0.001)
 ds15 = parse_auto(
     "./data/radix/mpx_auto_30deg_A5.csv",
     inv=False,
@@ -521,7 +510,6 @@ ds16 = parse_auto(
     frac=0,
     prominence=0.01,
 )
-# ds17 = parse_auto('./data/radix/mpx_auto_30deg_B3.csv', inv=False, subset=None, frac=0, prominence=0.04)
 ds18 = parse_auto(
     "./data/radix/mpx_auto_30deg_B5.csv",
     inv=False,
@@ -537,7 +525,6 @@ ds19 = parse_auto(
     frac=0,
     prominence=0.1,
 )
-# ds20 = parse_auto('./data/radix/mpx_auto_unknown_C2.csv', inv=False, subset=None, frac=0, plot=True, prominence=0.05, distance=5)
 ds21 = parse_auto(
     "./data/radix/mpx_auto_unknown_C3.csv",
     inv=False,
@@ -572,17 +559,13 @@ mds6 = parse_man("./data/radix/hr_man_20deg_B3.csv")  # s[1:]b
 mds7 = parse_man("./data/radix/hr_man_25deg_A1.csv")  # s[1:]
 mds8 = parse_man("./data/radix/hr_man_25deg_A4.csv")  # s[1:]
 mds9 = parse_man("./data/radix/hr_man_25deg_A5.csv")
-# mds10 = parse_man('./data/radix/hr_man_25deg_A6.csv')
 mds11 = parse_man("./data/radix/hr_man_25deg_A7.csv")
 mds12 = parse_man("./data/radix/hr_man_25deg_B1.csv")
 mds13 = parse_man("./data/radix/hr_man_30deg_A1.csv")
-# mds14 = parse_man('./data/radix/hr_man_30deg_A4.csv')
 mds15 = parse_man("./data/radix/hr_man_30deg_A5.csv")
 mds16 = parse_man("./data/radix/hr_man_30deg_B1.csv")
-# mds17 = parse_man('./data/radix/hr_man_30deg_B3.csv')
 mds18 = parse_man("./data/radix/hr_man_30deg_B5.csv")
 mds19 = parse_man("./data/radix/hr_man_unknown_C1.csv")
-# mds20 = parse_man('./data/radix/hr_man_unknown_C2.csv')
 mds21 = parse_man("./data/radix/hr_man_unknown_C3.csv")
 mds22 = parse_man("./data/radix/hr_man_unknown_C8.csv")
 mds23 = parse_man("./data/radix/hr_man_unknown_D1.csv")
@@ -607,56 +590,46 @@ all_a = [a_hr1, a_min_t1, a_max_t1, a_mean_t1, a_med_t1, a_std_t1, a_rmss]
 all_m = [m_hr1, m_min_t1, m_max_t1, m_mean_t1, m_med_t1, m_std_t1, m_rmss]
 
 # Compute stats (auto)
-all_a = append_with(all_a, stats(*ds))
-all_a = append_with(all_a, stats(*ds1))
-all_a = append_with(all_a, stats(*ds2))
-all_a = append_with(all_a, stats(*ds3))
-all_a = append_with(all_a, stats(*ds4))
-all_a = append_with(all_a, stats(*ds5))
-all_a = append_with(all_a, stats(*ds6))
-all_a = append_with(all_a, stats(*ds7))
-all_a = append_with(all_a, stats(*ds8))
-all_a = append_with(all_a, stats(*ds9))
-# all_a = append_with(all_a, stats(*ds10))
-all_a = append_with(all_a, stats(*ds11))
-all_a = append_with(all_a, stats(*ds12))
-# all_a = append_with(all_a, stats(*ds13))
-# all_a = append_with(all_a, stats(*ds14))
-all_a = append_with(all_a, stats(*ds15))
-all_a = append_with(all_a, stats(*ds16))
-# all_a = append_with(all_a, stats(*ds17))
-all_a = append_with(all_a, stats(*ds18))
-all_a = append_with(all_a, stats(*ds19))
-# all_a = append_with(all_a, stats(*ds20))
-all_a = append_with(all_a, stats(*ds21))
-all_a = append_with(all_a, stats(*ds22))
-all_a = append_with(all_a, stats(*ds23))
+all_a = append_with(all_a, stats(*ds, 300, 30))
+all_a = append_with(all_a, stats(*ds1, 300, 30))
+all_a = append_with(all_a, stats(*ds2, 300, 30))
+all_a = append_with(all_a, stats(*ds3, 300, 30))
+all_a = append_with(all_a, stats(*ds4, 300, 30))
+all_a = append_with(all_a, stats(*ds5, 300, 30))
+all_a = append_with(all_a, stats(*ds6, 300, 30))
+all_a = append_with(all_a, stats(*ds7, 300, 30))
+all_a = append_with(all_a, stats(*ds8, 300, 30))
+all_a = append_with(all_a, stats(*ds9, 300, 30))
+all_a = append_with(all_a, stats(*ds11, 300, 30))
+all_a = append_with(all_a, stats(*ds12, 300, 30))
+all_a = append_with(all_a, stats(*ds15, 300, 30))
+all_a = append_with(all_a, stats(*ds16, 300, 30))
+all_a = append_with(all_a, stats(*ds18, 300, 30))
+all_a = append_with(all_a, stats(*ds19, 300, 30))
+all_a = append_with(all_a, stats(*ds21, 300, 30))
+all_a = append_with(all_a, stats(*ds22, 300, 30))
+all_a = append_with(all_a, stats(*ds23, 300, 30))
 
 # Compute stats (man)
-all_m = append_with(all_m, stats(*mds))
-all_m = append_with(all_m, stats(*mds1))
-all_m = append_with(all_m, stats(*mds2))
-all_m = append_with(all_m, stats(*mds3))
-all_m = append_with(all_m, stats(*mds4))
-all_m = append_with(all_m, stats(*mds5))
-all_m = append_with(all_m, stats(*mds6))
-all_m = append_with(all_m, stats(*mds7))
-all_m = append_with(all_m, stats(*mds8))
-all_m = append_with(all_m, stats(*mds9))
-# all_m = append_with(all_m, stats(*mds10))
-all_m = append_with(all_m, stats(*mds11))
-all_m = append_with(all_m, stats(*mds12))
-# all_m = append_with(all_m, stats(*mds13))
-# all_m = append_with(all_m, stats(*mds14))
-all_m = append_with(all_m, stats(*mds15))
-all_m = append_with(all_m, stats(*mds16))
-# all_m = append_with(all_m, stats(*mds17))
-all_m = append_with(all_m, stats(*mds18))
-all_m = append_with(all_m, stats(*mds19))
-# all_m = append_with(all_m, stats(*mds20))
-all_m = append_with(all_m, stats(*mds21))
-all_m = append_with(all_m, stats(*mds22))
-all_m = append_with(all_m, stats(*mds23))
+all_m = append_with(all_m, stats(*mds, 300, 30))
+all_m = append_with(all_m, stats(*mds1, 300, 30))
+all_m = append_with(all_m, stats(*mds2, 300, 30))
+all_m = append_with(all_m, stats(*mds3, 300, 30))
+all_m = append_with(all_m, stats(*mds4, 300, 30))
+all_m = append_with(all_m, stats(*mds5, 300, 30))
+all_m = append_with(all_m, stats(*mds6, 300, 30))
+all_m = append_with(all_m, stats(*mds7, 300, 30))
+all_m = append_with(all_m, stats(*mds8, 300, 30))
+all_m = append_with(all_m, stats(*mds9, 300, 30))
+all_m = append_with(all_m, stats(*mds11, 300, 30))
+all_m = append_with(all_m, stats(*mds12, 300, 30))
+all_m = append_with(all_m, stats(*mds15, 300, 30))
+all_m = append_with(all_m, stats(*mds16, 300, 30))
+all_m = append_with(all_m, stats(*mds18, 300, 30))
+all_m = append_with(all_m, stats(*mds19, 300, 30))
+all_m = append_with(all_m, stats(*mds21, 300, 30))
+all_m = append_with(all_m, stats(*mds22, 300, 30))
+all_m = append_with(all_m, stats(*mds23, 300, 30))
 
 # Deconstruct
 [a_hr1, a_min_t1, a_max_t1, a_mean_t1, a_med_t1, a_std_t1, a_rmss1] = all_a
@@ -702,56 +675,12 @@ ds11 = parse_auto(
 ds12 = parse_auto(
     "./data/ciona/mpx_auto_MAH03795.csv", inv=False, subset=None, frac=0, prominence=0.15
 )
-# ds13 = parse_auto(
-#     "./data/ciona/mpx_auto_MAH03796.csv", inv=False, subset=None, frac=0, prominence=0.2
-# )
-# ds14 = parse_auto(
-#     "./data/ciona/mpx_auto_MAH03797.csv", inv=False, subset=None, frac=0, prominence=0.11
-# )
 ds15 = parse_auto(
     "./data/ciona/mpx_auto_MAH03798.csv", inv=False, subset=None, frac=0, prominence=0.11
 )
 ds16 = parse_auto(
     "./data/ciona/mpx_auto_MAH03799.csv", inv=False, subset=None, frac=0, prominence=0.11
 )
-# ds17 = parse_auto(
-#     "./data/ciona/mpx_auto_MAH03800.csv", inv=False, subset=None, frac=0, prominence=0.3
-# )
-# ds18 = parse_auto(
-#     "./data/ciona/mpx_auto_MAH03801.csv", inv=False, subset=None, frac=0, prominence=0.2
-# )
-# ds19 = parse_auto(
-#     "./data/ciona/mpx_auto_MAH03802.csv", inv=False, subset=None, frac=0, prominence=0.15
-# )
-# ds20 = parse_auto(
-#     "./data/ciona/mpx_auto_MAH03803.csv", inv=False, subset=None, frac=0, prominence=0.15
-# )
-# ds21 = parse_auto(
-#     "./data/ciona/mpx_auto_MAH03808.csv", inv=False, subset=None, frac=0, prominence=0.15
-# )
-
-# # Man
-# ds = parse_man('./data/ciona/hr_man_MAH03784.csv')
-# ds1 = parse_man('./data/ciona/hr_man_MAH03785.csv') # s[1:]
-# ds2 = parse_man("./data/ciona/hr_man_MAH03786.csv")  # d[:-1], s[1:]
-# ds3 = parse_man("./data/ciona/hr_man_MAH03787.csv")
-# ds4 = parse_man("./data/ciona/hr_man_MAH03788.csv")
-# ds5 = parse_man("./data/ciona/hr_man_MAH03789.csv")  # s[1:]
-# ds6 = parse_man("./data/ciona/hr_man_MAH03790.csv")  # s[1:]
-# ds7 = parse_man("./data/ciona/hr_man_MAH03791.csv")  # s[1:]
-# ds8 = parse_man("./data/ciona/hr_man_MAH03792.csv")  # s[1:]
-# ds9 = parse_man("./data/ciona/hr_man_MAH03793.csv")
-# ds10 = parse_man("./data/ciona/hr_man_MAH03794.csv")
-# ds11 = parse_man("./data/ciona/hr_man_MAH03795.csv")
-# ds12 = parse_man("./data/ciona/hr_man_MAH03796.csv")
-# # ds13 = parse_man("./data/ciona/hr_man_MAH03797.csv")
-# # ds14 = parse_man("./data/ciona/hr_man_MAH03798.csv")
-# ds15 = parse_man("./data/ciona/hr_man_MAH03799.csv")
-# ds16 = parse_man("./data/ciona/hr_man_MAH03800.csv")
-# # ds17 = parse_man("./data/ciona/hr_man_MAH03801.csv")
-# # ds18 = parse_man("./data/ciona/hr_man_MAH03802.csv")
-# # ds19 = parse_man("./data/ciona/hr_man_MAH03803.csv")
-# # ds20 = parse_man("./data/ciona/hr_man_MAH03808.csv")
 
 # Man
 mds = parse_man('./data/ciona/hr2_man_MAH03784.csv')
@@ -767,14 +696,8 @@ mds9 = parse_man("./data/ciona/hr2_man_MAH03793.csv")
 mds10 = parse_man("./data/ciona/hr2_man_MAH03794.csv")
 mds11 = parse_man("./data/ciona/hr2_man_MAH03795.csv")
 mds12 = parse_man("./data/ciona/hr2_man_MAH03796.csv")
-# mds13 = parse_man("./data/ciona/hr2_man_MAH03797.csv")
-# mds14 = parse_man("./data/ciona/hr2_man_MAH03798.csv")
 mds15 = parse_man("./data/ciona/hr2_man_MAH03799.csv")
 mds16 = parse_man("./data/ciona/hr2_man_MAH03800.csv")
-# mds17 = parse_man("./data/ciona/hr2_man_MAH03801.csv")
-# mds18 = parse_man("./data/ciona/hr2_man_MAH03802.csv")
-# mds19 = parse_man("./data/ciona/hr2_man_MAH03803.csv")
-# mds20 = parse_man("./data/ciona/hr2_man_MAH03808.csv")
 
 # Create containers
 a_hr2 = []
@@ -796,50 +719,36 @@ all_a = [a_hr2, a_min_t2, a_max_t2, a_mean_t2, a_med_t2, a_std_t2, a_rmss]
 all_m = [m_hr2, m_min_t2, m_max_t2, m_mean_t2, m_med_t2, m_std_t2, m_rmss]
 
 # Compute stats (auto)
-all_a = append_with(all_a, stats(*ds))
-all_a = append_with(all_a, stats(*ds1))
-all_a = append_with(all_a, stats(*ds2))
-all_a = append_with(all_a, stats(*ds3))
-all_a = append_with(all_a, stats(*ds4))
-all_a = append_with(all_a, stats(*ds5))
-all_a = append_with(all_a, stats(*ds6))
-all_a = append_with(all_a, stats(*ds7))
-all_a = append_with(all_a, stats(*ds8))
-all_a = append_with(all_a, stats(*ds9))
-all_a = append_with(all_a, stats(*ds10))
-all_a = append_with(all_a, stats(*ds11))
-# all_a = append_with(all_a, stats(*ds12))
-# all_a = append_with(all_a, stats(*ds13))
-# all_a = append_with(all_a, stats(*ds14))
-all_a = append_with(all_a, stats(*ds15))
-all_a = append_with(all_a, stats(*ds16))
-# all_a = append_with(all_a, stats(*ds17))
-# all_a = append_with(all_a, stats(*ds18))
-# all_a = append_with(all_a, stats(*ds19))
-# all_a = append_with(all_a, stats(*ds20))
+all_a = append_with(all_a, stats(*ds, 300, 25))
+all_a = append_with(all_a, stats(*ds1, 300, 25))
+all_a = append_with(all_a, stats(*ds2, 300, 25))
+all_a = append_with(all_a, stats(*ds3, 300, 25))
+all_a = append_with(all_a, stats(*ds4, 300, 25))
+all_a = append_with(all_a, stats(*ds5, 300, 25))
+all_a = append_with(all_a, stats(*ds6, 300, 25))
+all_a = append_with(all_a, stats(*ds7, 300, 25))
+all_a = append_with(all_a, stats(*ds8, 300, 25))
+all_a = append_with(all_a, stats(*ds9, 300, 25))
+all_a = append_with(all_a, stats(*ds10, 300, 25))
+all_a = append_with(all_a, stats(*ds11, 300, 25))
+all_a = append_with(all_a, stats(*ds15, 300, 25))
+all_a = append_with(all_a, stats(*ds16, 300, 25))
 
 # Compute stats (man)
-all_m = append_with(all_m, stats(*mds))
-all_m = append_with(all_m, stats(*mds1))
-all_m = append_with(all_m, stats(*mds2))
-all_m = append_with(all_m, stats(*mds3))
-all_m = append_with(all_m, stats(*mds4))
-all_m = append_with(all_m, stats(*mds5))
-all_m = append_with(all_m, stats(*mds6))
-all_m = append_with(all_m, stats(*mds7))
-all_m = append_with(all_m, stats(*mds8))
-all_m = append_with(all_m, stats(*mds9))
-all_m = append_with(all_m, stats(*mds10))
-all_m = append_with(all_m, stats(*mds11))
-# all_m = append_with(all_m, stats(*mds12))
-# all_m = append_with(all_m, stats(*mds13))
-# all_m = append_with(all_m, stats(*mds14))
-all_m = append_with(all_m, stats(*mds15))
-all_m = append_with(all_m, stats(*mds16))
-# all_m = append_with(all_m, stats(*mds17))
-# all_m = append_with(all_m, stats(*mds18))
-# all_m = append_with(all_m, stats(*mds19))
-# all_m = append_with(all_m, stats(*mds20))
+all_m = append_with(all_m, stats(*mds, 300, 25))
+all_m = append_with(all_m, stats(*mds1, 300, 25))
+all_m = append_with(all_m, stats(*mds2, 300, 25))
+all_m = append_with(all_m, stats(*mds3, 300, 25))
+all_m = append_with(all_m, stats(*mds4, 300, 25))
+all_m = append_with(all_m, stats(*mds5, 300, 25))
+all_m = append_with(all_m, stats(*mds6, 300, 25))
+all_m = append_with(all_m, stats(*mds7, 300, 25))
+all_m = append_with(all_m, stats(*mds8, 300, 25))
+all_m = append_with(all_m, stats(*mds9, 300, 25))
+all_m = append_with(all_m, stats(*mds10, 300, 25))
+all_m = append_with(all_m, stats(*mds11, 300, 25))
+all_m = append_with(all_m, stats(*mds15, 300, 25))
+all_m = append_with(all_m, stats(*mds16, 300, 25))
 
 # Deconstruct
 [a_hr2, a_min_t2, a_max_t2, a_mean_t2, a_med_t2, a_std_t2, a_rmss2] = all_a
@@ -866,15 +775,15 @@ lims = [
 
 min, max = lims
 
-plt.text(max-10, max-(max-8), f'{r}')
-plt.text(max-10, max-(max-6), f'{p}')
+plt.text(max-(0.3*max), max-(max-(0.2*max)), f'{r}')
+plt.text(max-(0.3*max), max-(max-(0.15*max)), f'{p}')
 
 ax.plot(lims, lims, "k-", alpha=0.75, zorder=0)
 ax.set_aspect("equal")
 ax.set_xlim(lims)
 ax.set_ylim(lims)
-ax.set_xlabel("Manual HR")
-ax.set_ylabel("HeartCV HR")
+ax.set_xlabel("Manual HR (bpm)")
+ax.set_ylabel("HeartCV HR (bpm)")
 ax.legend(loc='upper left')
 plt.show()
 
@@ -887,7 +796,7 @@ fig, (
     ),
     (ax4, ax5, ax6),
 ) = plt.subplots(2, 3)
-fig.suptitle("Manual (x-axis) vs HeartCV (y-axis) beat to beat timings (sec)")
+fig.suptitle("Manual (x-axis) vs HeartCV (y-axis) heart rate variability (seconds)")
 
 ax1.scatter(m_min_t, a_min_t, label='P. serratus')
 ax1.scatter(m_min_t1, a_min_t1, label='R. balthica')
@@ -907,8 +816,8 @@ r, p = corr_stats(*pearsonr(m_min_t, a_min_t))
 
 min, max = lims
 
-ax1.text(max-1, max-(max-0.8), f'{r}')
-ax1.text(max-1, max-(max-0.6), f'{p}')
+ax1.text(max-(0.3*max), max-(max-(0.2*max)), f'{r}')
+ax1.text(max-(0.3*max), max-(max-(0.15*max)), f'{p}')
 
 ax1.plot(lims, lims, "k-", alpha=0.75, zorder=0)
 ax1.set_aspect("equal")
@@ -923,6 +832,20 @@ lims = [
     np.min([ax2.get_xlim(), ax2.get_ylim()]),
     np.max([ax2.get_xlim(), ax2.get_ylim()]),
 ]
+
+a_max_t.extend(a_max_t1)
+a_max_t.extend(a_max_t2)
+
+m_max_t.extend(m_max_t1)
+m_max_t.extend(m_max_t2)
+
+r, p = corr_stats(*pearsonr(m_max_t, a_max_t))
+
+min, max = lims
+
+ax2.text(max-(0.3*max), max-(max-(0.2*max)), f'{r}')
+ax2.text(max-(0.3*max), max-(max-(0.15*max)), f'{p}')
+
 ax2.plot(lims, lims, "k-", alpha=0.75, zorder=0)
 ax2.set_aspect("equal")
 ax2.set_xlim(lims)
@@ -936,6 +859,20 @@ lims = [
     np.min([ax3.get_xlim(), ax3.get_ylim()]),
     np.max([ax3.get_xlim(), ax3.get_ylim()]),
 ]
+
+a_mean_t.extend(a_mean_t1)
+a_mean_t.extend(a_mean_t2)
+
+m_mean_t.extend(m_mean_t1)
+m_mean_t.extend(m_mean_t2)
+
+r, p = corr_stats(*pearsonr(m_mean_t, a_mean_t))
+
+min, max = lims
+
+ax3.text(max-(0.3*max), max-(max-(0.2*max)), f'{r}')
+ax3.text(max-(0.3*max), max-(max-(0.15*max)), f'{p}')
+
 ax3.plot(lims, lims, "k-", alpha=0.75, zorder=0)
 ax3.set_aspect("equal")
 ax3.set_xlim(lims)
@@ -949,6 +886,20 @@ lims = [
     np.min([ax4.get_xlim(), ax4.get_ylim()]),
     np.max([ax4.get_xlim(), ax4.get_ylim()]),
 ]
+
+a_med_t.extend(a_med_t1)
+a_med_t.extend(a_med_t2)
+
+m_med_t.extend(m_med_t1)
+m_med_t.extend(m_med_t2)
+
+r, p = corr_stats(*pearsonr(m_med_t, a_med_t))
+
+min, max = lims
+
+ax4.text(max-(0.3*max), max-(max-(0.2*max)), f'{r}')
+ax4.text(max-(0.3*max), max-(max-(0.15*max)), f'{p}')
+
 ax4.plot(lims, lims, "k-", alpha=0.75, zorder=0)
 ax4.set_aspect("equal")
 ax4.set_xlim(lims)
@@ -962,6 +913,20 @@ lims = [
     np.min([ax5.get_xlim(), ax5.get_ylim()]),
     np.max([ax5.get_xlim(), ax5.get_ylim()]),
 ]
+
+a_std_t.extend(a_std_t1)
+a_std_t.extend(a_std_t2)
+
+m_std_t.extend(m_std_t1)
+m_std_t.extend(m_std_t2)
+
+r, p = corr_stats(*pearsonr(m_std_t, a_std_t))
+
+min, max = lims
+
+ax5.text(max-(0.3*max), max-(max-(0.2*max)), f'{r}')
+ax5.text(max-(0.3*max), max-(max-(0.15*max)), f'{p}')
+
 ax5.plot(lims, lims, "k-", alpha=0.75, zorder=0)
 ax5.set_aspect("equal")
 ax5.set_xlim(lims)
@@ -969,9 +934,6 @@ ax5.set_ylim(lims)
 ax5.set_title("Std")
 
 ax1.legend(loc='upper left')
-
-
-
 
 plt.show()
 
