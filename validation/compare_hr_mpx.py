@@ -5,6 +5,7 @@ import pandas as pd
 import glob
 from statsmodels.nonparametric.smoothers_lowess import lowess
 from scipy.stats import pearsonr
+from sklearn.metrics import r2_score
 
 from heartcv import minmax_scale as scale
 
@@ -29,7 +30,7 @@ def corr_stats(r, p):
     else:
         p_str = 'p > 0.05'
 
-    r_str = f'R = {round(r, 3)}'
+    r_str = f'$R^2$ = {round(r, 3)}'
 
     return r_str, p_str
 
@@ -157,8 +158,8 @@ def stats(d_peaks, s_peaks, l, fs):
     med_t = np.median(d_diffs)
     std_t = d_diffs.std()
 
-    # RMSS
-    rmssd = rmse(d_diffs[1:], d_diffs[:-1])
+    # # RMSS
+    # rmssd = rmse(d_diffs[1:], d_diffs[:-1])
 
     # Diffs
     s_diffs = s_peaks[1:] - s_peaks[:-1]
@@ -169,8 +170,10 @@ def stats(d_peaks, s_peaks, l, fs):
     med_t = np.mean((med_t, s_diffs.min()))
     std_t = np.mean((std_t, s_diffs.min()))
 
-    # RMSS
-    rmssd = np.mean((rmssd, rmse(s_diffs[1:], s_diffs[:-1])))
+    # # RMSS
+    # rmssd = np.mean((rmssd, rmse(s_diffs[1:], s_diffs[:-1])))
+
+    rmssd = None
 
     return [[hr], [min_t], [max_t], [mean_t], [med_t], [std_t], [rmssd]]
 
@@ -637,49 +640,55 @@ all_m = append_with(all_m, stats(*mds23, 300, 30))
 
 # Auto
 ds = parse_auto(
-    "./data/ciona/mpx_auto_MAH03784.csv", inv=False, subset=None, frac=0, prominence=0.2
+    "./data/ciona/mpx2_auto_MAH03784.csv", inv=False, subset=None, frac=0, prominence=0.2
 )
 ds1 = parse_auto(
-    "./data/ciona/mpx_auto_MAH03785.csv", inv=False, subset=None, frac=0, prominence=0.2
+    "./data/ciona/mpx2_auto_MAH03785.csv", inv=False, subset=None, frac=0, prominence=0.2
 )
 ds2 = parse_auto(
-    "./data/ciona/mpx_auto_MAH03786.csv", inv=False, subset=None, frac=0, prominence=0.2
+    "./data/ciona/mpx2_auto_MAH03786.csv", inv=False, subset=None, frac=0, prominence=0.2
 )
 ds3 = parse_auto(
-    "./data/ciona/mpx_auto_MAH03787.csv", inv=False, subset=None, frac=0, prominence=0.2
+    "./data/ciona/mpx2_auto_MAH03787.csv", inv=False, subset=None, frac=0, prominence=0.3
 )
 ds4 = parse_auto(
-    "./data/ciona/mpx_auto_MAH03788.csv", inv=False, subset=None, frac=0, prominence=0.3
+    "./data/ciona/mpx2_auto_MAH03788.csv", inv=False, subset=None, frac=0, prominence=0.3, distance=15
 )
 ds5 = parse_auto(
-    "./data/ciona/mpx_auto_MAH03789.csv", inv=False, subset=None, frac=0, prominence=0.3
+    "./data/ciona/mpx2_auto_MAH03789.csv", inv=False, subset=None, frac=0, prominence=0.3
 )
 ds6 = parse_auto(
-    "./data/ciona/mpx_auto_MAH03790.csv", inv=False, subset=None, frac=0, prominence=0.3
+    "./data/ciona/mpx2_auto_MAH03790.csv", inv=False, subset=None, frac=0, prominence=0.3
 )
 ds7 = parse_auto(
-    "./data/ciona/mpx_auto_MAH03791.csv", inv=False, subset=None, frac=0, prominence=0.15
+    "./data/ciona/mpx2_auto_MAH03791.csv", inv=False, subset=None, frac=0, prominence=0.15
 )
 ds8 = parse_auto(
-    "./data/ciona/mpx_auto_MAH03792.csv", inv=False, subset=None, frac=0, prominence=0.15
+    "./data/ciona/mpx2_auto_MAH03792.csv", inv=False, subset=None, frac=0, prominence=0.15
 )
 ds9 = parse_auto(
-    "./data/ciona/mpx_auto_MAH03793.csv", inv=False, subset=None, frac=0, prominence=0.15
+    "./data/ciona/mpx2_auto_MAH03793.csv", inv=False, subset=None, frac=0, prominence=0.2
 )
 ds10 = parse_auto(
-    "./data/ciona/mpx_auto_MAH03794.csv", inv=False, subset=None, frac=0, prominence=0.15
+    "./data/ciona/mpx2_auto_MAH03794.csv", inv=False, subset=None, frac=0, prominence=0.15
 )
 ds11 = parse_auto(
-    "./data/ciona/mpx_auto_MAH03795.csv", inv=False, subset=None, frac=0, prominence=0.15
+    "./data/ciona/mpx2_auto_MAH03795.csv", inv=False, subset=None, frac=0, prominence=0.15
 )
 ds12 = parse_auto(
-    "./data/ciona/mpx_auto_MAH03795.csv", inv=False, subset=None, frac=0, prominence=0.15
+    "./data/ciona/mpx2_auto_MAH03796.csv", inv=False, subset=None, frac=0, prominence=0.2
+)
+ds13 = parse_auto(
+    "./data/ciona/mpx2_auto_MAH03797.csv", inv=False, subset=None, frac=0, prominence=0.1, distance=40
 )
 ds15 = parse_auto(
-    "./data/ciona/mpx_auto_MAH03798.csv", inv=False, subset=None, frac=0, prominence=0.11
+    "./data/ciona/mpx2_auto_MAH03798.csv", inv=False, subset=None, frac=0, prominence=0.11
 )
 ds16 = parse_auto(
-    "./data/ciona/mpx_auto_MAH03799.csv", inv=False, subset=None, frac=0, prominence=0.11
+    "./data/ciona/mpx2_auto_MAH03799.csv", inv=False, subset=None, frac=0, prominence=0.11
+)
+ds17 = parse_auto(
+    "./data/ciona/mpx2_auto_MAH03800.csv", inv=False, subset=None, frac=0, prominence=0.1, distance=20
 )
 
 # Man
@@ -696,8 +705,10 @@ mds9 = parse_man("./data/ciona/hr2_man_MAH03793.csv")
 mds10 = parse_man("./data/ciona/hr2_man_MAH03794.csv")
 mds11 = parse_man("./data/ciona/hr2_man_MAH03795.csv")
 mds12 = parse_man("./data/ciona/hr2_man_MAH03796.csv")
-mds15 = parse_man("./data/ciona/hr2_man_MAH03799.csv")
-mds16 = parse_man("./data/ciona/hr2_man_MAH03800.csv")
+mds13 = parse_man("./data/ciona/hr2_man_MAH03797.csv")
+mds15 = parse_man("./data/ciona/hr2_man_MAH03798.csv")
+mds16 = parse_man("./data/ciona/hr2_man_MAH03799.csv")
+mds17 = parse_man("./data/ciona/hr2_man_MAH03800.csv")
 
 # Create containers
 a_hr2 = []
@@ -731,8 +742,11 @@ all_a = append_with(all_a, stats(*ds8, 300, 25))
 all_a = append_with(all_a, stats(*ds9, 300, 25))
 all_a = append_with(all_a, stats(*ds10, 300, 25))
 all_a = append_with(all_a, stats(*ds11, 300, 25))
+all_a = append_with(all_a, stats(*ds12, 300, 25))
+# all_a = append_with(all_a, stats(*ds13, 300, 25))
 all_a = append_with(all_a, stats(*ds15, 300, 25))
 all_a = append_with(all_a, stats(*ds16, 300, 25))
+all_a = append_with(all_a, stats(*ds17, 300, 25))
 
 # Compute stats (man)
 all_m = append_with(all_m, stats(*mds, 300, 25))
@@ -747,12 +761,17 @@ all_m = append_with(all_m, stats(*mds8, 300, 25))
 all_m = append_with(all_m, stats(*mds9, 300, 25))
 all_m = append_with(all_m, stats(*mds10, 300, 25))
 all_m = append_with(all_m, stats(*mds11, 300, 25))
+all_m = append_with(all_m, stats(*mds12, 300, 25))
+# all_m = append_with(all_m, stats(*mds13, 300, 25))
 all_m = append_with(all_m, stats(*mds15, 300, 25))
 all_m = append_with(all_m, stats(*mds16, 300, 25))
+all_m = append_with(all_m, stats(*mds17, 300, 25))
 
 # Deconstruct
 [a_hr2, a_min_t2, a_max_t2, a_mean_t2, a_med_t2, a_std_t2, a_rmss2] = all_a
 [m_hr2, m_min_t2, m_max_t2, m_mean_t2, m_med_t2, m_std_t2, m_rmss2] = all_m
+
+# print(a_min_t2)
 
 # And plot
 fig, ax = plt.subplots()
@@ -766,7 +785,7 @@ a_hr.extend(a_hr2)
 m_hr.extend(m_hr1)
 m_hr.extend(m_hr2)
 
-r, p = corr_stats(*pearsonr(m_hr, a_hr))
+r, p = corr_stats(r2_score(m_hr, a_hr), pearsonr(m_hr, a_hr)[1])
 
 lims = [
     np.min([ax.get_xlim(), ax.get_ylim()]),  # min of both axes
@@ -812,7 +831,7 @@ a_min_t.extend(a_min_t2)
 m_min_t.extend(m_min_t1)
 m_min_t.extend(m_min_t2)
 
-r, p = corr_stats(*pearsonr(m_min_t, a_min_t))
+r, p = corr_stats(r2_score(m_min_t, a_min_t), pearsonr(m_min_t, a_min_t)[1])
 
 min, max = lims
 
@@ -839,7 +858,7 @@ a_max_t.extend(a_max_t2)
 m_max_t.extend(m_max_t1)
 m_max_t.extend(m_max_t2)
 
-r, p = corr_stats(*pearsonr(m_max_t, a_max_t))
+r, p = corr_stats(r2_score(m_max_t, a_max_t), pearsonr(m_max_t, a_max_t)[1])
 
 min, max = lims
 
@@ -866,7 +885,7 @@ a_mean_t.extend(a_mean_t2)
 m_mean_t.extend(m_mean_t1)
 m_mean_t.extend(m_mean_t2)
 
-r, p = corr_stats(*pearsonr(m_mean_t, a_mean_t))
+r, p = corr_stats(r2_score(m_mean_t, a_mean_t), pearsonr(m_mean_t, a_mean_t)[1])
 
 min, max = lims
 
@@ -893,7 +912,7 @@ a_med_t.extend(a_med_t2)
 m_med_t.extend(m_med_t1)
 m_med_t.extend(m_med_t2)
 
-r, p = corr_stats(*pearsonr(m_med_t, a_med_t))
+r, p = corr_stats(r2_score(m_med_t, a_med_t), pearsonr(m_med_t, a_med_t)[1])
 
 min, max = lims
 
@@ -920,7 +939,7 @@ a_std_t.extend(a_std_t2)
 m_std_t.extend(m_std_t1)
 m_std_t.extend(m_std_t2)
 
-r, p = corr_stats(*pearsonr(m_std_t, a_std_t))
+r, p = corr_stats(r2_score(m_std_t, a_std_t), pearsonr(m_std_t, a_std_t)[1])
 
 min, max = lims
 
