@@ -316,7 +316,7 @@ def roi_search(diff_img, thresh_range, gauss_range, area_range, rotate=False):
     gauss_range : tuple
         Gaussian kernel sizes to conduct roi search over.
     area_range : tuple 
-        Area limits to filter roi's on.
+        Area limits to filter roi's on (min, max).
     rotate : bool
         Whether to rotate bounding boxes, default is False.
 
@@ -341,6 +341,8 @@ def roi_search(diff_img, thresh_range, gauss_range, area_range, rotate=False):
     """
     hcv_logger.info("Computing the heart roi...")
 
+    area_filter = vuba.ops._ByLimit(*area_range)
+
     bboxs = []
     for t in range(*thresh_range):
         for g in range(*gauss_range):
@@ -350,11 +352,21 @@ def roi_search(diff_img, thresh_range, gauss_range, area_range, rotate=False):
 
                 if rotate:
                     (x, y), (w, h), a = bbox
-                    bbox = (x, w, y, h, a)
 
-                if bbox:
-                    bboxs.append(bbox)
+                    if area_filter(w*h):
+                        bboxs.append((x,y,w,h,a))
+ 
+                else:
+                    x,y,w,h = bbox
+
+                    if area_filter(w*h):
+                        bboxs.append(bbox)
 
     bbox = tuple(map(np.median, zip(*bboxs)))
+
+    if rotate:
+        x,y,w,h,a = bbox
+        bbox = (x, y), (w, h), a
+        bboxs = [((x, y), (w, h), a) for (x,y,w,h,a) in bboxs]
 
     return (tuple(map(int, bbox)), bboxs)
