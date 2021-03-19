@@ -5,7 +5,7 @@ import vuba
 from heartcv import location
 
 
-def location_gui(video, method):
+def location_gui(video, method, indices=(None, None)):
     """
     Launch a GUI for testing an animal location method.
 
@@ -15,6 +15,11 @@ def location_gui(video, method):
         Video object to test animal location for.
     method : callable
         Callable to execute on each frame to locate the animal.
+    indices : tuple
+        Frame indices to limit GUI to, especially useful when analysing long sequences
+        of footage. First index will always be interpreted as the minimum index and the 
+        second as the maximum index. If None is specified to either limit, then that limit
+        will be ignored. Default is for no limits, i.e. (None, None).
 
     Returns
     -------
@@ -28,7 +33,7 @@ def location_gui(video, method):
     activity_gui
 
     """
-    gui = vuba.VideoGUI(video=video, title="Embryo location GUI")
+    gui = vuba.VideoGUI(video=video, indices=indices, title="Embryo location GUI")
 
     @gui.method
     def locate(gui):
@@ -56,7 +61,7 @@ def location_gui(video, method):
     return gui.embryo_outline, gui.values()
 
 
-def activity_gui(video, diff_img, rotate=False):
+def activity_gui(video, diff_img, indices=(None, None), rotate=False):
     """
     Launch a GUI for finding a bounding box from the output of the activity location methods.
 
@@ -66,6 +71,11 @@ def activity_gui(video, diff_img, rotate=False):
         Video object to test activity location for.
     diff_img : ndarray
         Grayscale image produced from ``HeartCV.sum_abs_diff()``.
+    indices : tuple
+        Frame indices to limit GUI to, especially useful when analysing long sequences
+        of footage. First index will always be interpreted as the minimum index and the 
+        second as the maximum index. If None is specified to either limit, then that limit
+        will be ignored. Default is for no limits, i.e. (None, None).
     rotate : bool
         Whether to rotate bounding boxes, default is False.
 
@@ -88,7 +98,7 @@ def activity_gui(video, diff_img, rotate=False):
     """
     vuba.ops._channel_check(diff_img, 2)
 
-    gui = vuba.VideoGUI(video=video, title="ROI viewer")
+    gui = vuba.VideoGUI(video=video, indices=indices, title="ROI viewer")
 
     @gui.method
     def find(gui):
