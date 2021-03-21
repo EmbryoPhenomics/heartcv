@@ -203,7 +203,7 @@ class Location:
         return filt_contours
 
 
-def abs_diffs(frames, mask=None, thresh_val=10):
+def abs_diffs(frames, mask=None, thresh_val=10, thresh_to=1):
     """
     Compute the absolute differences between consecutive frames.
 
@@ -217,6 +217,9 @@ def abs_diffs(frames, mask=None, thresh_val=10):
         Binary threshold value to apply to difference images. Adjusting
         this parameter is useful at removing background noise in footage.
         Default is n=10.
+    thresh_to : int
+        Grayscale pixel value to set for pixels with differences that exceed
+        the pre-defined limit (thresh_val). Default is 1.
 
     Returns
     -------
@@ -238,7 +241,7 @@ def abs_diffs(frames, mask=None, thresh_val=10):
     with util.pgbar(total=len(frames) - 1) as pgbar:
         for prev, next_ in pairwise(map(mask_, frames)):
             diff = cv2.absdiff(prev, next_)
-            _, thresh = cv2.threshold(diff, thresh_val, 1, cv2.THRESH_BINARY)
+            _, thresh = cv2.threshold(diff, thresh_val, thresh_to, cv2.THRESH_BINARY)
             
             yield thresh
 
