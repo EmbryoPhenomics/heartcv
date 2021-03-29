@@ -248,7 +248,7 @@ def abs_diffs(frames, mask=None, thresh_val=10, thresh_to=1):
             pgbar.update(1)
 
 
-def sum_abs_diff(frames, mask=None, thresh_val=10):
+def sum_abs_diff(frames, mask=None, thresh_val=10, thresh_to=1):
     """
     Compute the sum of absolute differences between consecutive frames.
 
@@ -262,6 +262,9 @@ def sum_abs_diff(frames, mask=None, thresh_val=10):
         Binary threshold value to apply to difference images. Adjusting
         this parameter is useful at removing background noise in footage.
         Default is n=10.
+    thresh_to : int
+        Grayscale pixel value to set for pixels with differences that exceed
+        the pre-defined limit (thresh_val). Default is 1.
 
     Returns
     -------
@@ -277,7 +280,7 @@ def sum_abs_diff(frames, mask=None, thresh_val=10):
 
     sum_diff = np.zeros_like(vuba.take_first(frames))
     with util.pgbar(total=len(frames) - 1) as pgbar:
-        for diff in abs_diffs(frames, mask, thresh_val):
+        for diff in abs_diffs(frames, mask, thresh_val, thresh_to):
             sum_diff += diff
             pgbar.update(1)
 
