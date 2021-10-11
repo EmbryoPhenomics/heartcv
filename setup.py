@@ -26,12 +26,12 @@ def get_version(rel_path):
 setup(
     name="heartcv",
     version=get_version("heartcv/__init__.py"),
-    description="A platform for automated, noninvasive extraction of various cardiac proxy traits from bioimaging footage.",
+    description="Automated, noninvasive quantification of cardiac traits in transparent animals.",
     long_description=long_description,
     long_description_content_type="text/markdown",
     url="https://github.com/EmbryoPhenomics/heartcv",
-    author="Ziad Ibbini, Oliver Tills",
-    author_email="ziad.ibbini@students.plymouth.ac.uk, oli.tills@plymouth.ac.uk",
+    author="Ziad Ibbini, John I. Spicer, Manuela Truebano, John Bishop, Oliver Tills",
+    author_email="ziad.ibbini@students.plymouth.ac.uk",
     license="MIT",
     packages=["heartcv"],
     python_requires=">=3.5, <4",
@@ -39,9 +39,9 @@ setup(
         "vuba",
         "numpy",
         "scipy",
-        "tqdm",
-        "opencv-python",
-        "more_itertools"
+        "more_itertools",
+        "numba",
+        "matplotlib"
     ],
     project_urls={
         "Source": "https://github.com/EmbryoPhenomics/heartcv/tree/main/heartcv"

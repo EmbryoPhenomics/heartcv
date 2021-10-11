@@ -21,8 +21,8 @@ sys.path.insert(0, os.path.abspath("../"))
 from heartcv import __version__
 
 project = "heartcv"
-copyright = "2020-%s, HeartCV" % datetime.datetime.now().year
-author = "Ziad Ibbini, Oliver Tills"
+copyright = "2021-%s, HeartCV" % datetime.datetime.now().year
+author = 'Ziad Ibbini, John I. Spicer, Manuela Truebano, John Bishop, Oliver Tills'
 
 # The version info for the project you're documenting, acts as replacement for
 # |version| and |release|, also used in various other places throughout the
