@@ -43,7 +43,8 @@ setup(
         "numba",
         "matplotlib",
         "tqdm",
-        "pytest"
+        "pytest",
+        "scikit-image"
     ],
     project_urls={
         "Source": "https://github.com/EmbryoPhenomics/heartcv/tree/main/heartcv"

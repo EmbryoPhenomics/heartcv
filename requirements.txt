@@ -6,3 +6,4 @@ numba
 matplotlib
 tqdm
 pytest
+scikit-image
