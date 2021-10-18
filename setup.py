@@ -42,7 +42,8 @@ setup(
         "more_itertools",
         "numba",
         "matplotlib",
-        "tqdm"
+        "tqdm",
+        "pytest"
     ],
     project_urls={
         "Source": "https://github.com/EmbryoPhenomics/heartcv/tree/main/heartcv"
