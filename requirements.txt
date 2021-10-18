@@ -1,0 +1,7 @@
+vuba
+numpy
+scipy
+more_itertools
+numba
+matplotlib
+tqdm
