@@ -12,14 +12,9 @@ from matplotlib.gridspec import GridSpec
 from mpl_toolkits.axes_grid1 import make_axes_locatable
 import wget
 
-def load_example_video(species='Radix'):
+def load_example_video():
     '''
     Load example video.
-
-    Parameters
-    ----------
-    species : str
-        Species of animal present within video. 
 
     Returns
     -------
@@ -30,42 +25,6 @@ def load_example_video(species='Radix'):
     path = 'https://zenodo.org/record/4645805/files/20C_E3_10d.avi?download=1'
     fn = wget.download(path)
     return vuba.Video(f'./{fn}')
-
-
-def abs_diffs(frames, mask=None, thresh_val=10, thresh_to=1):
-    """
-    Compute the absolute differences between consecutive frames.
-
-    Parameters
-    ----------
-    frames : list or ndarray or vuba.Frames
-        Sequence of grayscale frames to process.
-    mask : ndarray
-        Optional mask to filter footage to, default is None.
-    thresh_val : int
-        Binary threshold value to apply to difference images. Adjusting
-        this parameter is useful at removing background noise in footage.
-        Default is n=10.
-    thresh_to : int
-        Grayscale pixel value to set for pixels with differences that exceed
-        the pre-defined limit (thresh_val). Default is 1.
-
-    Returns
-    -------
-    difference_frames : generator
-        Generator that will supply difference frames.
-
-    """
-    first = vuba.take_first(frames)
-    if mask is None:
-        mask = np.ones(first.shape, dtype="uint8")
-    mask_ = vuba.Mask(mask)
-
-    for prev, next_ in pairwise(map(mask_, frames)):
-        diff = cv2.absdiff(prev, next_)
-        _, thresh = cv2.threshold(diff, thresh_val, thresh_to, cv2.THRESH_BINARY)
-
-        yield thresh
 
 
 def mpx_grid(frames, binsize):
@@ -179,7 +138,7 @@ def _parse_args(freq, args):
             elif fmax and not fmin:
                 condition = freq <= fmax
 
-    elif arg_type == int or float:
+    elif arg_type == int or arg_type == float:
         condition = freq == args
 
     elif arg_type == list or np.ndarray:
