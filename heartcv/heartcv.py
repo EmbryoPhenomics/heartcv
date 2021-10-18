@@ -12,8 +12,9 @@ from matplotlib.gridspec import GridSpec
 from mpl_toolkits.axes_grid1 import make_axes_locatable
 import wget
 
+
 def load_example_video():
-    '''
+    """
     Load example video.
 
     Returns
@@ -21,10 +22,10 @@ def load_example_video():
     video : vuba.Video
         Video instance of example video
 
-    '''
-    path = 'https://zenodo.org/record/4645805/files/20C_E3_10d.avi?download=1'
+    """
+    path = "https://zenodo.org/record/4645805/files/20C_E3_10d.avi?download=1"
     fn = wget.download(path)
-    return vuba.Video(f'./{fn}')
+    return vuba.Video(f"./{fn}")
 
 
 def mpx_grid(frames, binsize):
@@ -108,7 +109,7 @@ def epts(mpx, fs):
     freq = np.empty((int((mpx.shape[0] / 2) + 1), mpx.shape[1], mpx.shape[2]))
     power = freq.copy()
 
-    with tqdm(total=mpx.shape[1]*mpx.shape[2]) as pg:
+    with tqdm(total=mpx.shape[1] * mpx.shape[2]) as pg:
         for i in range(mpx.shape[1]):
             for j in range(mpx.shape[2]):
                 freq[:, i, j], power[:, i, j] = signal.welch(
@@ -304,7 +305,7 @@ def segment(frames, roi, invert=False):
         mask = vuba.rectangle_mask(vuba.take_first(frames), roi)
     else:
         mask = vuba.contour_mask(vuba.take_first(frames), roi)
-    
+
     if invert:
         mask = cv2.bitwise_not(mask)
 
