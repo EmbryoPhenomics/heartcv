@@ -7,6 +7,7 @@ import os
 import numpy as np
 import pandas as pd
 from flask import request
+import signal
 
 import vuba
 import app_utils, app_layout
@@ -276,15 +277,8 @@ def update_data_table(data, selected_data, loaded_data):
 @app.callback(Output("close-app-div", "children"), [Input("close-app", "n_clicks")])
 def shutdown_app(n_clicks):
     if n_clicks:
-        shutdown = request.environ.get("werkzeug.server.shutdown")
-
-        try:
-            vstore.close()
-            shutdown()
-        except:
-            raise RuntimeError("Not running with the Werkzeug Server")
-
-        return "App has been shutdown."
+        vstore.close()
+        os.kill(os.getpid(), signal.SIGTERM)
 
 
 if __name__ == "__main__":
