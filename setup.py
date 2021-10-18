@@ -44,7 +44,8 @@ setup(
         "matplotlib",
         "tqdm",
         "pytest",
-        "scikit-image"
+        "scikit-image",
+        "wget"
     ],
     project_urls={
         "Source": "https://github.com/EmbryoPhenomics/heartcv/tree/main/heartcv"
