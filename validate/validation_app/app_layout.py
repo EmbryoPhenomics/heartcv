@@ -47,15 +47,9 @@ def app_layout():
                                 size=40,
                             ),
                             html.Div(id="filepath-check"),
+
                             html.Br(),
-                            dcc.Input(
-                                id="hcv-filename-input",
-                                type="text",
-                                placeholder="Specify a name to heartcv visual output...",
-                                size=40,
-                            ),
-                            html.Div(id="hcv-filepath-check"),
-                            html.Br(),
+
                             html.Label("Overwrite data-table?"),
                             dcc.RadioItems(
                                 id="overwrite-check",
@@ -69,8 +63,10 @@ def app_layout():
                             html.Button(
                                 "Record cardiac cycle", id="cardiac-frame-recorder"
                             ),
+
                             html.Br(),
                             html.Br(),
+
                             dcc.Markdown(
                                 """
                     **Frame recorder usage:**
@@ -79,22 +75,9 @@ def app_layout():
                     * The `SpaceBar` plays the video in realtime and the `Esc` key closes the GUI.
                 """
                             ),
+
                             html.Br(),
-                            html.Label(children="Image to load for validation:"),
-                            dcc.RadioItems(
-                                id="cardiac-cycle",
-                                options=[
-                                    {"label": "Diastole", "value": "diastole"},
-                                    {"label": "Systole", "value": "systole"},
-                                ],
-                                value="diastole",
-                                labelStyle={"display": "inline-block"},
-                            ),
-                            dcc.Dropdown(
-                                id="frame-number",
-                                placeholder="Please select a frame number to load...",
-                            ),
-                            html.Br(),
+
                             html.Div(
                                 children=[
                                     html.Div(
@@ -123,53 +106,26 @@ def app_layout():
                                 ],
                                 style={"width": "100%", "display": "table"},
                             ),
+
                             html.Div(id="data-load-div"),
                             html.Div(id="data-save-div"),
+
                             html.Br(),
-                            html.Div(
-                                children=[
-                                    html.Div(
-                                        children=[
-                                            html.Button("Export", id="export-frames"),
-                                        ],
-                                        style={"width": "20%", "display": "table-cell"},
-                                    ),
-                                    html.Div(
-                                        children=[],
-                                        style={"width": "10%", "display": "table-cell"},
-                                    ),
-                                    html.Div(
-                                        children=[
-                                            dcc.Input(
-                                                id="frame-output-filename",
-                                                type="text",
-                                                placeholder="Specify a filename to save frames...",
-                                                size=45,
-                                            )
-                                        ],
-                                        style={"width": "70%", "display": "table-cell"},
-                                    ),
-                                ],
-                                style={"width": "100%", "display": "table"},
-                            ),
-                            html.Div(id="frame-export-div"),
+
                             html.Hr(),
+
                             dash_table.DataTable(
                                 id="frame-table",
                                 columns=[
-                                    dict(name="Diastole-frame", id="ds_frame"),
-                                    dict(name="Diastole-area", id="ds_area"),
-                                    dict(name="Systole-frame", id="ss_frame"),
-                                    dict(name="Systole-area", id="ss_area"),
+                                    dict(name="Diastole frame", id="ds_frame"),
+                                    dict(name="Systole frame", id="ss_frame"),
                                 ],
                                 style_cell={"textAlign": "left"},
                                 style_cell_conditional=[
                                     {"if": {"column_id": col}, "width": "25%"}
                                     for col in [
                                         "ds_frame",
-                                        "ds_area",
                                         "ss_frame",
-                                        "ss_area",
                                     ]
                                 ],
                                 fixed_rows={"headers": True},
@@ -177,26 +133,6 @@ def app_layout():
                                 editable=True,
                             ),
                             html.Div(id="recorded-data"),
-                        ],
-                    ),
-                    html.Div(
-                        className="seven columns",
-                        children=[
-                            html.Label(children="Draw ellipses?"),
-                            dcc.RadioItems(
-                                id="draw-ellipse",
-                                options=[
-                                    dict(label="Yes", value=True),
-                                    dict(label="No", value=False),
-                                ],
-                                value=True,
-                                labelStyle={"display": "inline-block"},
-                            ),
-                            html.Br(),
-                            html.Div(id="still-image", children=[]),
-                            html.Div(id="selected-data"),
-                            html.Div(id="update-callback"),
-                            html.Div(id="compute-callback"),
                         ],
                     ),
                 ],

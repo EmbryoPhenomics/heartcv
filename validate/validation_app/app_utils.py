@@ -21,11 +21,9 @@ lineType = 2
 class DataStore:
     """Backend container that holds data from various ui. """
 
-    __slots__ = ["ds_frame", "ds_area", "ss_frame", "ss_area"]
+    __slots__ = ["ds_frame", "ss_frame"]
     ds_frame: list
-    ds_area: list
     ss_frame: list
-    ss_area: list
 
 
 class VideoStore:
@@ -33,74 +31,17 @@ class VideoStore:
 
     def __init__(self):
         self.raw_video = None
-        self.hcv_video = None
         self.current_frame = None
 
-    def add_raw(self, raw_video):
+    def initiate(self, raw_video):
         (self.raw_video, self.raw_video_release) = vuba.open_video(raw_video)
-
-    def add_hcv(self, hcv_video):
-        (self.hcv_video, self.hcv_video_release) = vuba.open_video(hcv_video)
 
     def close(self):
-        def release(video, video_release):
-            if video_release:
-                video.release()
-
-        map(release, (self.raw_video, self.hcv_video))
-
-
-class ContourStore:
-    """
-    Backend container that holds contours and their corresponding frames. Used
-    primarily for exporting both manual and heartcv frames for later comparison.
-    """
-
-    def __init__(self):
-        self.contour_info = []
-        self.contour_fr = []
-        self.raw_video = None
-        self.raw_video_release = False
-        self.hcv_video = None
-        self.hcv_video_release = False
-
-    def refresh(self):
-        self.contour_info = []
-        self.contour_fr = []
-        self.raw_video = None
-        self.raw_video_release = False
-        self.hcv_video = None
-        self.hcv_video_release = False
-
-    def add_raw(self, raw_video):
-        (self.raw_video, self.raw_video_release) = vuba.open_video(raw_video)
-        frame = self.raw_video.read(index=0)
-        x, y, _ = frame.shape
-        self.full = (x, y)
-
-    def add_hcv(self, hcv_video):
-        (self.hcv_video, self.hcv_video_release) = vuba.open_video(hcv_video)
-
-    def add_contour(self, event, frame, contour):
-        if event and frame and contour.all():
-            if frame in self.contour_fr:
-                ind = self.contour_fr.index(frame)
-                self.contour_info[ind] = (event, frame, contour)
-            else:
-                self.contour_info.append((event, frame, contour))
-
-    def export(self, outpath):
-        for (e, fr, c) in self.contour_info:
-            raw_f = self.raw_video.read(index=fr)
-            vuba.draw_contours(raw_f, c, -1, (0, 0, 255), 1)
-
-            hcv_f = self.hcv_video.read(index=fr)
-            both = np.hstack((raw_f, hcv_f))
-            cv2.imwrite(os.path.join(outpath, f"{fr}_{e}.png"), both)
+        if self.raw_video_release:
+            self.raw_video.close()
 
 
 if os.name == "posix":
-
     class Keys:
         """Key codes for keyboard keys (as tested on linux). """
 
@@ -110,10 +51,7 @@ if os.name == "posix":
         s = 115
         space = 32
         esc = 27
-
-
 elif os.name == "nt":
-
     class Keys:
         """Key codes for keyboard keys (as tested on Windows). """
 
@@ -123,24 +61,27 @@ elif os.name == "nt":
         s = 115
         space = 32
         esc = 27
-
-
 else:
     raise OSError(
         "Operating system not currently supported, currently only Windows 10 and Linux are supported."
     )
 
 
-def frameLabeler(filename, queue):
+def frame_recorder(filename, queue):
     """
     GUI for labelling frames that correspond to various stages in the
     cardiac cycle.
+
     Note that the keys bound here may have different codes between systems,
     so this might have to be changed on a system by system basis.
-    Keyword arguments:
-        filename    String.          Filename to process (Required).
-        queue       Multiprocessing  Queue for appending with data from the
-                    queue object.    GUI (Required).
+
+    Parameters
+    ----------
+    filename : str
+        Filename to process.
+    queue : multiprocessing.Queue
+        Queue for appending with data from frame recorder.
+
     """
 
     video = vuba.Video(filename)
@@ -211,79 +152,3 @@ def frameLabeler(filename, queue):
 
     video.close()
     queue.put((diastoleFrameRecord, systoleFrameRecord))
-
-
-def interactiveImage(id, img):
-    """
-    Create an interactive plotly graph from an image.
-    Keyword arguments:
-        id    String.         Component id for use in other callbacks (Required).
-        img   Numpy.ndarray   Image to render (Required).
-    Returns:
-        dash_core_components.Graph component containing the supplied image.
-    """
-    _, img_np = cv2.imencode(".png", img)
-    byteStr = img_np.tobytes()
-
-    encodedImg = base64.b64encode(byteStr)
-    height, width = img.shape[0], img.shape[1]
-
-    source = "data:image/png;base64,{}".format(encodedImg.decode())
-
-    return dcc.Graph(
-        id=id,
-        figure={
-            "data": [],
-            "layout": {
-                "margin": go.layout.Margin(l=0, b=0, t=0, r=0),
-                "xaxis": {
-                    "range": (0, width),
-                    "showgrid": False,
-                    "zeroline": False,
-                    "visible": True,
-                    "scaleanchor": "y",
-                    "scaleratio": 1,
-                },
-                "yaxis": {
-                    "range": (0, height),
-                    "showgrid": False,
-                    "zeroline": False,
-                    "visible": True,
-                },
-                "images": [
-                    {
-                        "xref": "x",
-                        "yref": "y",
-                        "x": 0,
-                        "y": 0,
-                        "yanchor": "bottom",
-                        "sizing": "stretch",
-                        "sizex": width,
-                        "sizey": height,
-                        "layer": "below",
-                        "source": source,
-                    }
-                ],
-                "dragmode": "lasso",
-            },
-        },
-        config={
-            "modeBarButtonsToRemove": [
-                "sendDataToCloud",
-                "autoScale2d",
-                "toggleSpikelines",
-                "hoverClosestCartesian",
-                "hoverCompareCartesian",
-                "zoom2d",
-            ],
-            "displaylogo": False,
-        },
-        style={"width": "900px", "height": "800px"},
-    )
-
-
-def blank():
-    """Convenience function to return a blank image. """
-    img = cv2.imread("./assets/blankImg.png")
-
-    return html.Div(children=[interactiveImage(id="still-image-graph", img=img)])
