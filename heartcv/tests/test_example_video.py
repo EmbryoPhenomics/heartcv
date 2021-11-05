@@ -1,8 +1,6 @@
 import pytest
 import os
 import glob
-import heartcv
-import vuba
 
 import heartcv as hcv
 

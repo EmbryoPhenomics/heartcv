@@ -15,10 +15,10 @@ def data():
 
 @pytest.fixture
 def expected_shape():
-    return (37, 37)
+    return (38, 38)
 
 
-@pytest.mark.parametrize("frequencies", [4, (1, 4), [1, 2, 3, 4]])
+@pytest.mark.parametrize("frequencies", [4, (1, 4), (None, 4), (1, None), [1, 2, 3, 4]])
 def test_shape(data, expected_shape, frequencies):
     np.seterr(
         divide="ignore", invalid="ignore"

@@ -65,12 +65,15 @@ def test_contour_detection(expected_contour, sample):
     assert expected_contour.all() == hcv.detect_largest(sample).all()
 
 
-@pytest.mark.parametrize("invert", [True, False])
-def test_segmentation(sample_sequence, segmented_sequence, invert):
+@pytest.mark.parametrize(("invert", "roi_type"), ([True, False], [tuple, np.ndarray]))
+def test_segmentation(sample_sequence, segmented_sequence, invert, roi_type):
     if invert:
         np.invert(segmented_sequence)
 
     roi = hcv.detect_largest(sample_sequence[0])
+    if roi_type == tuple:
+        roi = vuba.fit_rectangles(roi)
+
     actual_sequence = np.asarray(
         [out for out in hcv.segment(sample_sequence, roi, invert)]
     )

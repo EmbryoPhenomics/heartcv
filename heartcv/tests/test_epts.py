@@ -15,7 +15,7 @@ def data():
 @pytest.fixture
 def expected_shape():
     # Expected output for mpx grid made with x16 binning
-    return [(151, 37, 37), (151, 37, 37)]
+    return [(151, 38, 38), (151, 38, 38)]
 
 
 @pytest.fixture

@@ -27,14 +27,14 @@ def expected_b2b(data):
 @pytest.fixture
 def expected_stats(expected_bpm, expected_b2b):
     return dict(
-        bpm=expected_bpm,
-        min_b2b=expected_b2b.min(),
-        mean_b2b=expected_b2b.mean(),
-        median_b2b=np.median(expected_b2b),
-        max_b2b=expected_b2b.max(),
-        sd_b2b=np.std(expected_b2b),
-        range_b2b=expected_b2b.max() - expected_b2b.min(),
-        rmssd=np.sqrt(np.nanmean((expected_b2b[1:] - expected_b2b[:-1]) ** 2)),
+        bpm=[expected_bpm],
+        min_b2b=[expected_b2b.min()],
+        mean_b2b=[expected_b2b.mean()],
+        median_b2b=[np.median(expected_b2b)],
+        max_b2b=[expected_b2b.max()],
+        sd_b2b=[np.std(expected_b2b)],
+        range_b2b=[expected_b2b.max() - expected_b2b.min()],
+        rmssd=[np.sqrt(np.nanmean((expected_b2b[1:] - expected_b2b[:-1]) ** 2))]
     )
 
 
