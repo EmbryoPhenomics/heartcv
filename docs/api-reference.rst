@@ -46,5 +46,4 @@ Utilities
 .. autosummary::
    :toctree: generated/
 
-   abs_diffs
    minmax_scale

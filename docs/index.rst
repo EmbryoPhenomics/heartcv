@@ -11,8 +11,8 @@ HeartCV is an easy to use library for automated, noninvasive quantification of c
 *link here*
 
 * :doc:`installation`
-* :doc:`api-reference`
 * :doc:`in-depth-example`
+* :doc:`api-reference`
 .. * :doc:`contributing`
 
 .. toctree::
@@ -21,8 +21,8 @@ HeartCV is an easy to use library for automated, noninvasive quantification of c
    :caption: User Guide
 
    installation
-   in-depth-example
    api-reference
+   in-depth-example
    .. contributing
 
 See also

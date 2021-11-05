@@ -14,6 +14,7 @@ The following imports are necessary for this example:
 	import cv2
 	import numpy as np
 	import vuba
+	import pandas as pd
 
 For this example, we will use video specifically for the freshwater pond snail, *Radix balthica*:
 
@@ -191,3 +192,20 @@ We can now use these peaks to compute various metrics of cardiac function as fol
 
 	# Various cardiac statistics
 	hcv.stats(peaks, len(video)*3, video.fps*3)
+
+Exporting such statistics can be done easily using ``pandas`` like so:
+
+.. ipython:: python
+
+	data = hcv.stats(peaks, len(video)*3, video.fps*3)
+	df = pd.DataFrame(data=data)
+	df.to_csv('./output.csv')
+
+.. ipython:: python
+	:suppress:
+
+	import os 
+	import glob
+
+	for file in glob.glob('./*.avi'): os.remove(file)
+	os.remove('./output.csv')
