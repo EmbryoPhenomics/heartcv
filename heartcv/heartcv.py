@@ -1,6 +1,6 @@
 import vuba
 from scipy import signal
-from skimage.util import view_as_blocks
+from skimage.measure import block_reduce
 import math
 from tqdm import tqdm
 import cv2
@@ -70,11 +70,7 @@ def mpx_grid(frames, binsize):
     first_frame = vuba.take_first(frames)
     new_x, new_y = map(lambda v: math.floor(v / binsize) * binsize, first_frame.shape)
 
-    mpxs = [
-        view_as_blocks(frame[:new_x, :new_y], (binsize, binsize)).mean(axis=(2, 3))
-        for frame in frames
-    ]
-
+    mpxs = [block_reduce(frame, block_size=(binsize, binsize), func=np.mean) for frame in frames]
     return np.asarray(mpxs)
 
 
@@ -128,25 +124,30 @@ def _parse_args(freq, args):
     """
     arg_type = type(args)
 
-    if arg_type == tuple:
-        fmin, fmax = args
+    try:
+        len(args) # Force len method
 
-        if fmin and fmax:
-            condition = (freq >= fmin) & (freq <= fmax)
-        else:
-            if fmin and not fmax:
-                condition = freq >= fmin
-            elif fmax and not fmin:
-                condition = freq <= fmax
+        if arg_type == tuple:
+            fmin, fmax = args
 
-    elif arg_type == int or arg_type == float:
+            if fmin and fmax:
+                condition = (freq >= fmin) & (freq <= fmax)
+            else:
+                if fmin and not fmax:
+                    condition = freq >= fmin
+                elif fmax and not fmin:
+                    condition = freq <= fmax
+
+        elif arg_type == list or arg_type == np.ndarray:
+            if arg_type == list:
+                args = np.asarray(args)
+
+            condition = np.asarray([np.where(freq == i)[0][0] for i in args])
+
+    except TypeError:
         condition = freq == args
-
-    elif arg_type == list or np.ndarray:
-        if arg_type == list:
-            args = np.asarray(args)
-
-        condition = np.asarray([np.where(freq == i)[0][0] for i in args])
+    except:
+        raise
 
     return condition
 
@@ -302,7 +303,7 @@ def segment(frames, roi, invert=False):
 
     """
     if type(roi) == tuple:
-        mask = vuba.rectangle_mask(vuba.take_first(frames), roi)
+        mask = vuba.rect_mask(vuba.take_first(frames), roi)
     else:
         mask = vuba.contour_mask(vuba.take_first(frames), roi)
 
@@ -542,12 +543,12 @@ def stats(peaks, sample_length, fs):
     b2b = b2b_intervals(peaks, fs)
 
     return dict(
-        bpm=bpm(len(peaks), sample_length, fs),
-        min_b2b=b2b.min(),
-        mean_b2b=b2b.mean(),
-        median_b2b=np.median(b2b),
-        max_b2b=b2b.max(),
-        sd_b2b=np.std(b2b),
-        range_b2b=b2b.max() - b2b.min(),
-        rmssd=np.sqrt(np.nanmean((b2b[1:] - b2b[:-1]) ** 2)),
+        bpm=[bpm(len(peaks), sample_length, fs)],
+        min_b2b=[b2b.min()],
+        mean_b2b=[b2b.mean()],
+        median_b2b=[np.median(b2b)],
+        max_b2b=[b2b.max()],
+        sd_b2b=[np.std(b2b)],
+        range_b2b=[b2b.max() - b2b.min()],
+        rmssd=[np.sqrt(np.nanmean((b2b[1:] - b2b[:-1]) ** 2))],
     )
