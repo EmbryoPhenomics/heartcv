@@ -38,7 +38,7 @@ def process(files):
 
 
 ciona_files = glob.glob('./video/ciona/*.avi')
-radix_files = glob.glob('/home/z/Documents/radix_raw/last/*.avi')
+radix_files = glob.glob('./video/ciona/*.avi')
 paleomon_files = glob.glob('./video/paleomon/*.avi')
 
 process(ciona_files)
