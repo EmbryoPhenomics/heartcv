@@ -191,7 +191,7 @@ def spectral_map(epts, frequencies):
     return power_map
 
 
-def identify_frequencies(video, epts, rotate=True, indices=(None, None), run=True):
+def identify_frequencies(video, epts, rotate=True, indices=(None, None)):
     """
     Launch a user interface to identify frequencies of interest in the supplied
     energy proxy traits.
@@ -209,9 +209,6 @@ def identify_frequencies(video, epts, rotate=True, indices=(None, None), run=Tru
          Frame indices to limit GUI to, especially useful when analysing long sequences of footage.
          First index will always be interpreted as the minimum index and the second as the maximum index.
          If None is specified to either limit, then that limit will be ignored. Default is for no limits, i.e. (None, None).
-    run : bool
-        Whether to run the GUI. If False then the GUI object will be returned to 
-        modify further. Default is True. 
 
     Returns
     -------
@@ -234,6 +231,7 @@ def identify_frequencies(video, epts, rotate=True, indices=(None, None), run=Tru
     length = len(freq)
 
     gui = vuba.VideoGUI(video=video, indices=indices, title="EPT GUI")
+    gui.roi = None
 
     @gui.method
     def locate(gui):
@@ -245,10 +243,16 @@ def identify_frequencies(video, epts, rotate=True, indices=(None, None), run=Tru
         power_map = spectral_map((freq, power), at)
         power_map = cv2.resize(power_map, video.resolution)
         roi = detect_largest(power_map)
-        rect = vuba.fit_rectangles(roi, rotate=True)
-        c = cv2.boxPoints(rect)
-        c = np.int0(c)
-        vuba.draw_contours(frame, c, 0, (0, 255, 0), 1)
+        rect = vuba.fit_rectangles(roi, rotate=rotate)
+
+        if rotate:
+            c = cv2.boxPoints(rect)
+            c = np.int0(c)
+            vuba.draw_contours(frame, c, 0, (0, 255, 0), 1)
+            gui.roi = c
+        else:
+            vuba.draw_rectangles(frames, rect, (0, 255, 0), 1)
+            gui.roi = rect
 
         both = np.hstack((frame, vuba.bgr(power_map)))
 
@@ -256,11 +260,8 @@ def identify_frequencies(video, epts, rotate=True, indices=(None, None), run=Tru
 
     gui.trackbar("Frequency index", id="freq_ind", min=0, max=length)(None)
 
-    if run:
-        gui.run()
-        return c, at
-    else:
-        return gui
+    gui.run()
+    return gui.roi, freq[:, 0, 0][gui["freq_ind"]]
 
 
 def detect_largest(map):
