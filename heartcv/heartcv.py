@@ -191,7 +191,7 @@ def spectral_map(epts, frequencies):
     return power_map
 
 
-def identify_frequencies(video, epts, indices=(None, None)):
+def identify_frequencies(video, epts, rotate=True, indices=(None, None), run=True):
     """
     Launch a user interface to identify frequencies of interest in the supplied
     energy proxy traits.
@@ -202,15 +202,26 @@ def identify_frequencies(video, epts, indices=(None, None)):
         Video instance of a desired footage.
     epts : ndarray
         Energy proxy traits produced using ``epts``.
+    rotate : bool
+        Whether to fit a rotated bounding box to the largest shape detected in the EPT
+        heatmap. If False, a non-rotated bounding box will be fit. Default is True. 
     indices : tuple
          Frame indices to limit GUI to, especially useful when analysing long sequences of footage.
          First index will always be interpreted as the minimum index and the second as the maximum index.
          If None is specified to either limit, then that limit will be ignored. Default is for no limits, i.e. (None, None).
+    run : bool
+        Whether to run the GUI. If False then the GUI object will be returned to 
+        modify further. Default is True. 
 
     Returns
     -------
+    bbox : ndarray or tuple
+        Bounding box array or tuple describing the coordinates or dimensions over
+        which the box has been fit respectively. 
     frequency : int or float
         Last selected frequency in user interface.
+    gui : vuba.VideoGUI or None
+        If run is False then an instance of VideoGUI will be returned.
 
     See also
     --------
@@ -230,6 +241,7 @@ def identify_frequencies(video, epts, indices=(None, None)):
         frame_gray = vuba.gray(frame)
 
         at = freq[:, 0, 0][gui["freq_ind"]]
+
         power_map = spectral_map((freq, power), at)
         power_map = cv2.resize(power_map, video.resolution)
         roi = detect_largest(power_map)
@@ -244,9 +256,11 @@ def identify_frequencies(video, epts, indices=(None, None)):
 
     gui.trackbar("Frequency index", id="freq_ind", min=0, max=length)(None)
 
-    gui.run()
-
-    return freq[:, 0, 0][gui["freq_ind"]]
+    if run:
+        gui.run()
+        return c, at
+    else:
+        return gui
 
 
 def detect_largest(map):
@@ -336,7 +350,36 @@ def _lms(x_dtr):
     return LMS
 
 
-def _ampd_visualoutput(x, LMS, row_sums, G, S, peaks):
+def _ampd(x):
+    """
+    Python implementation of the AMPD algorithm for detection of local maxima
+    in noisy periodic and quasi-periodic signals.
+
+    """
+    x = np.asarray(x)
+
+    # Linearly detrend signal
+    x_dtr = signal.detrend(x)
+
+    # Compute LSM
+    LMS = _lms(x_dtr)
+
+    # Find scale with most local maxima
+    row_sums = LMS.sum(axis=1)
+
+    # Rescale LMS
+    G = LMS[1 : np.argmin(row_sums), :]
+
+    # Column-wise standard deviation of rescaled LMS
+    S = np.std(G, axis=0)
+
+    # Extract peaks
+    peaks = np.where(S == 0)[0] - 1
+
+    return (x, LMS, row_sums, G, S, peaks)
+
+
+def _ampd_plot(x, LMS, row_sums, G, S, peaks, show):
     """
     Equivalent visual output for the AMPD algorithm to that
     presented in the original paper.
@@ -394,10 +437,12 @@ def _ampd_visualoutput(x, LMS, row_sums, G, S, peaks):
     ax5.set_title("Detected peaks")
     ax5.text(-0.025, 1.05, "e)", transform=ax5.transAxes, size=12)
 
-    plt.show()
+    if show:
+        plt.show()
+    else:
+        return fig
 
-
-def find_peaks(x, visual_output=False):
+def find_peaks(x, plot=False):
     """
     Python implementation of automatic multiscale peak detection (AMPD).
 
@@ -405,7 +450,7 @@ def find_peaks(x, visual_output=False):
     ----------
     x : list or ndarray
         Signal to detect peaks for.
-    visual_output : bool
+    plot : bool
         Whether to produce visual output for the signal provided. If False,
         only the detected peaks will be returned. Default is False.
 
@@ -420,29 +465,12 @@ def find_peaks(x, visual_output=False):
     Scholkmann, F., Boss, J. and Wolf, M., 2012. An Efficient Algorithm for Automatic
     Peak Detection in Noisy Periodic and Quasi-Periodic Signals. Algorithms, 5(4), pp.588-603.
 
-    """
-    x = np.asarray(x)
+    """ 
+    (x, LMS, row_sums, G, S, peaks) = _ampd(x)
 
-    # Linearly detrend signal
-    x_dtr = signal.detrend(x)
 
-    # Compute LSM
-    LMS = _lms(x_dtr)
-
-    # Find scale with most local maxima
-    row_sums = LMS.sum(axis=1)
-
-    # Rescale LMS
-    G = LMS[1 : np.argmin(row_sums), :]
-
-    # Column-wise standard deviation of rescaled LMS
-    S = np.std(G, axis=0)
-
-    # Extract peaks
-    peaks = np.where(S == 0)[0] - 1
-
-    if visual_output:
-        _ampd_visualoutput(x, LMS, row_sums, G, S, peaks)
+    if plot:
+        _ampd_plot(x, LMS, row_sums, G, S, peaks, show=True)
 
     return peaks
 
