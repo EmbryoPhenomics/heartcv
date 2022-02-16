@@ -21,7 +21,7 @@ def corr_stats(r, p, n):
     else:
         p_str = 'p > 0.05'
 
-    df = n-2
+    n_ = n-2    
     r_str = f'$r_{{47}}$ = {round(r, 3)}'
 
     return r_str, p_str
@@ -41,25 +41,25 @@ def parse_man(file, column, upto):
     return np.asarray(d_peaks)
 
 man_files = [
-    "/home/z/github/heartcv_main/validation/data/paleomon/hr_man_15_15ppt_young_1.csv",  
-    "/home/z/github/heartcv_main/validation/data/paleomon/hr_man_15_15ppt_young_A1_37.csv",
-    "/home/z/github/heartcv_main/validation/data/paleomon/hr_man_15_15ppt_young_A1_60.csv",
-    "/home/z/github/heartcv_main/validation/data/paleomon/hr_man_15_15ppt_young_A4_60.csv",  
-    "/home/z/github/heartcv_main/validation/data/paleomon/hr_man_15_15ppt_young_C12_1.csv",  
-    "/home/z/github/heartcv_main/validation/data/paleomon/hr_man_15_15ppt_young_D3_50.csv",  
-    "/home/z/github/heartcv_main/validation/data/paleomon/hr_man_15_15ppt_young_H3_90.csv",  
-    "/home/z/github/heartcv_main/validation/data/paleomon/hr_man_15_15ppt_medium_B2_60.csv",
-    "/home/z/github/heartcv_main/validation/data/paleomon/hr_man_15_15ppt_medium_C2_149.csv",
-    "/home/z/github/heartcv_main/validation/data/paleomon/hr_man_15_15ppt_medium_G2_113.csv",
-    "/home/z/github/heartcv_main/validation/data/paleomon/hr_man_15_15ppt_medium_G5_1.csv",
-    "/home/z/github/heartcv_main/validation/data/paleomon/hr_man_15_15ppt_medium_G1_82.csv",
-    "/home/z/github/heartcv_main/validation/data/paleomon/hr_man_15_15ppt_old_B5_26.csv",
-    "/home/z/github/heartcv_main/validation/data/paleomon/hr_man_15_15ppt_old_B8_1.csv",
-    "/home/z/github/heartcv_main/validation/data/paleomon/hr_man_15_15ppt_old_D10_42.csv",
-    "/home/z/github/heartcv_main/validation/data/paleomon/hr_man_15_15ppt_old_E5_15.csv",
-    "/home/z/github/heartcv_main/validation/data/paleomon/hr_man_15_15ppt_old_F4_1.csv",
-    "/home/z/github/heartcv_main/validation/data/paleomon/hr_man_15_15ppt_old_F10_21.csv",
-    "/home/z/github/heartcv_main/validation/data/paleomon/hr_man_15_15ppt_old_H6.csv"
+    "./hcv_data/paleomon/hr_man_15_15ppt_young_1.csv",  
+    "./hcv_data/paleomon/hr_man_15_15ppt_young_A1_37.csv",
+    "./hcv_data/paleomon/hr_man_15_15ppt_young_A1_60.csv",
+    "./hcv_data/paleomon/hr_man_15_15ppt_young_A4_60.csv",  
+    "./hcv_data/paleomon/hr_man_15_15ppt_young_C12_1.csv",  
+    "./hcv_data/paleomon/hr_man_15_15ppt_young_D3_50.csv",  
+    "./hcv_data/paleomon/hr_man_15_15ppt_young_H3_90.csv",  
+    "./hcv_data/paleomon/hr_man_15_15ppt_medium_B2_60.csv",
+    "./hcv_data/paleomon/hr_man_15_15ppt_medium_C2_149.csv",
+    "./hcv_data/paleomon/hr_man_15_15ppt_medium_G2_113.csv",
+    "./hcv_data/paleomon/hr_man_15_15ppt_medium_G5_1.csv",
+    "./hcv_data/paleomon/hr_man_15_15ppt_medium_G1_82.csv",
+    "./hcv_data/paleomon/hr_man_15_15ppt_old_B5_26.csv",
+    "./hcv_data/paleomon/hr_man_15_15ppt_old_B8_1.csv",
+    "./hcv_data/paleomon/hr_man_15_15ppt_old_D10_42.csv",
+    "./hcv_data/paleomon/hr_man_15_15ppt_old_E5_15.csv",
+    "./hcv_data/paleomon/hr_man_15_15ppt_old_F4_1.csv",
+    "./hcv_data/paleomon/hr_man_15_15ppt_old_F10_21.csv",
+    "./hcv_data/paleomon/hr_man_15_15ppt_old_H6.csv"
 ]
 
 hcv_files = [
@@ -124,23 +124,23 @@ for hf, mf in zip(hcv_files, man_files):
 
 # Radix -------------------
 man_files = [
-    "/home/z/github/heartcv_main/validation/data/radix/hr_man_20deg_A1.csv",
-    "/home/z/github/heartcv_main/validation/data/radix/hr_man_20deg_A3.csv",  
-    "/home/z/github/heartcv_main/validation/data/radix/hr_man_20deg_A4.csv",  
-    "/home/z/github/heartcv_main/validation/data/radix/hr_man_20deg_A6.csv",
-    "/home/z/github/heartcv_main/validation/data/radix/hr_man_20deg_B1.csv",
-    "/home/z/github/heartcv_main/validation/data/radix/hr_man_20deg_B2.csv",  
-    "/home/z/github/heartcv_main/validation/data/radix/hr_man_20deg_B3.csv",  
-    "/home/z/github/heartcv_main/validation/data/radix/hr_man_25deg_A1.csv",  
-    "/home/z/github/heartcv_main/validation/data/radix/hr_man_25deg_A4.csv",  
-    "/home/z/github/heartcv_main/validation/data/radix/hr_man_25deg_A5.csv",
-    "/home/z/github/heartcv_main/validation/data/radix/hr_man_25deg_A7.csv",
-    "/home/z/github/heartcv_main/validation/data/radix/hr_man_25deg_B1.csv",
-    "/home/z/github/heartcv_main/validation/data/radix/hr_man_30deg_B1.csv",
-    "/home/z/github/heartcv_main/validation/data/radix/hr_man_30deg_B5.csv",
-    "/home/z/github/heartcv_main/validation/data/radix/hr_man_unknown_C1.csv",
-    "/home/z/github/heartcv_main/validation/data/radix/hr_man_unknown_C8.csv",
-    "/home/z/github/heartcv_main/validation/data/radix/hr_man_unknown_D1.csv"
+    "./hcv_data/radix/hr_man_20deg_A1.csv",
+    "./hcv_data/radix/hr_man_20deg_A3.csv",  
+    "./hcv_data/radix/hr_man_20deg_A4.csv",  
+    "./hcv_data/radix/hr_man_20deg_A6.csv",
+    "./hcv_data/radix/hr_man_20deg_B1.csv",
+    "./hcv_data/radix/hr_man_20deg_B2.csv",  
+    "./hcv_data/radix/hr_man_20deg_B3.csv",  
+    "./hcv_data/radix/hr_man_25deg_A1.csv",  
+    "./hcv_data/radix/hr_man_25deg_A4.csv",  
+    "./hcv_data/radix/hr_man_25deg_A5.csv",
+    "./hcv_data/radix/hr_man_25deg_A7.csv",
+    "./hcv_data/radix/hr_man_25deg_B1.csv",
+    "./hcv_data/radix/hr_man_30deg_B1.csv",
+    "./hcv_data/radix/hr_man_30deg_B5.csv",
+    "./hcv_data/radix/hr_man_unknown_C1.csv",
+    "./hcv_data/radix/hr_man_unknown_C8.csv",
+    "./hcv_data/radix/hr_man_unknown_D1.csv"
 ]
 
 hcv_files = [
@@ -203,19 +203,19 @@ for hf, mf in zip(hcv_files, man_files):
 
 # Ciona -------------------
 man_files = [
-    '/home/z/github/heartcv_main/validation/data/ciona/hr2_man_MAH03784.csv',
-    '/home/z/github/heartcv_main/validation/data/ciona/hr2_man_MAH03785.csv', 
-    "/home/z/github/heartcv_main/validation/data/ciona/hr2_man_MAH03786.csv",
-    "/home/z/github/heartcv_main/validation/data/ciona/hr2_man_MAH03787.csv",
-    "/home/z/github/heartcv_main/validation/data/ciona/hr2_man_MAH03788.csv",
-    "/home/z/github/heartcv_main/validation/data/ciona/hr2_man_MAH03789.csv",  
-    "/home/z/github/heartcv_main/validation/data/ciona/hr2_man_MAH03790.csv",  
-    "/home/z/github/heartcv_main/validation/data/ciona/hr2_man_MAH03791.csv",  
-    "/home/z/github/heartcv_main/validation/data/ciona/hr2_man_MAH03794.csv",
-    "/home/z/github/heartcv_main/validation/data/ciona/hr2_man_MAH03795.csv",
-    "/home/z/github/heartcv_main/validation/data/ciona/hr2_man_MAH03798.csv",
-    "/home/z/github/heartcv_main/validation/data/ciona/hr2_man_MAH03799.csv",
-    "/home/z/github/heartcv_main/validation/data/ciona/hr2_man_MAH03800.csv"
+    './hcv_data/ciona/hr2_man_MAH03784.csv',
+    './hcv_data/ciona/hr2_man_MAH03785.csv', 
+    "./hcv_data/ciona/hr2_man_MAH03786.csv",
+    "./hcv_data/ciona/hr2_man_MAH03787.csv",
+    "./hcv_data/ciona/hr2_man_MAH03788.csv",
+    "./hcv_data/ciona/hr2_man_MAH03789.csv",  
+    "./hcv_data/ciona/hr2_man_MAH03790.csv",  
+    "./hcv_data/ciona/hr2_man_MAH03791.csv",  
+    "./hcv_data/ciona/hr2_man_MAH03794.csv",
+    "./hcv_data/ciona/hr2_man_MAH03795.csv",
+    "./hcv_data/ciona/hr2_man_MAH03798.csv",
+    "./hcv_data/ciona/hr2_man_MAH03799.csv",
+    "./hcv_data/ciona/hr2_man_MAH03800.csv"
 ]
 
 hcv_files = [
@@ -274,11 +274,11 @@ for hf, mf in zip(hcv_files, man_files):
 # Plot
 fig, ((ax1, ax2, ax3), (ax4, ax5, ax6)) = plt.subplots(2, 3)
 
-ax1.text(-0.1, 1.1, "a)", transform=ax1.transAxes, size=12)
+ax1.text(-0.1, 1.1, "A", transform=ax1.transAxes, size=14, weight='bold')
 ax1.set_title('BPM', fontsize=10)
-ax1.scatter(paleomon_man_stats['bpm'], paleomon_hcv_stats['bpm'], label='$C. intestinalis$')
+ax1.scatter(paleomon_man_stats['bpm'], paleomon_hcv_stats['bpm'], label='$P. serratus$')
 ax1.scatter(radix_man_stats['bpm'], radix_hcv_stats['bpm'], label='$R. balthica$')
-ax1.scatter(ciona_man_stats['bpm'], ciona_hcv_stats['bpm'], label='$P. serratus$')
+ax1.scatter(ciona_man_stats['bpm'], ciona_hcv_stats['bpm'], label='$C. intestinalis$')
 lims = [
     np.min([ax1.get_xlim(), ax1.get_ylim()]),
     np.max([ax1.get_xlim(), ax1.get_ylim()]),
@@ -291,16 +291,16 @@ ax1.legend(loc='upper left')
 
 m_bpm = paleomon_man_stats['bpm'] + radix_man_stats['bpm'] + ciona_man_stats['bpm']
 h_bpm = paleomon_hcv_stats['bpm'] + radix_hcv_stats['bpm'] + ciona_hcv_stats['bpm']
-print(len(m_bpm))
+print(m_bpm)
 
 r, p = corr_stats(*pearsonr(m_bpm, h_bpm), len(m_bpm))
 min, max = lims
-ax1.text(max-(0.3*max), max-(max-(0.2*max)), f'{r}', size=6)
-ax1.text(max-(0.3*max), max-(max-(0.15*max)), f'{p}', size=6)
-ax1.set_xlabel('Manual heart rate (bpm)', fontsize=6)
-ax1.set_ylabel('HeartCV heart rate (bpm)', fontsize=6)
+ax1.text(max-(0.3*max), max-(max-(0.2*max)), f'{r}', size=8)
+ax1.text(max-(0.3*max), max-(max-(0.15*max)), f'{p}', size=8)
+ax1.set_xlabel('Manual heart rate (bpm)', fontsize=8)
+ax1.set_ylabel('HeartCV heart rate (bpm)', fontsize=8)
 
-ax2.text(-0.1, 1.1, "b)", transform=ax2.transAxes, size=12)
+ax2.text(-0.1, 1.1, "B", transform=ax2.transAxes, size=14, weight='bold')
 ax2.set_title('Minimum interbeat interval', fontsize=10)
 ax2.scatter(paleomon_man_stats['min_b2b'], paleomon_hcv_stats['min_b2b'])
 ax2.scatter(radix_man_stats['min_b2b'], radix_hcv_stats['min_b2b'])
@@ -318,12 +318,12 @@ h_min_b2b = paleomon_hcv_stats['min_b2b'] + radix_hcv_stats['min_b2b'] + ciona_h
 
 r, p = corr_stats(*pearsonr(m_min_b2b, h_min_b2b), len(m_min_b2b))
 min, max = lims
-ax2.text(max-(0.3*max), max-(max-(0.2*max)), f'{r}', size=6)
-ax2.text(max-(0.3*max), max-(max-(0.15*max)), f'{p}', size=6)
-ax2.set_xlabel('Manual minimum IBI (seconds)', fontsize=6)
-ax2.set_ylabel('HeartCV minimum IBI (seconds)', fontsize=6)
+ax2.text(max-(0.3*max), max-(max-(0.2*max)), f'{r}', size=8)
+ax2.text(max-(0.3*max), max-(max-(0.15*max)), f'{p}', size=8)
+ax2.set_xlabel('Manual minimum IBI (seconds)', fontsize=8)
+ax2.set_ylabel('HeartCV minimum IBI (seconds)', fontsize=8)
 
-ax3.text(-0.1, 1.1, "c)", transform=ax3.transAxes, size=12)
+ax3.text(-0.1, 1.1, "C", transform=ax3.transAxes, size=14, weight='bold')
 ax3.set_title('Mean interbeat interval', fontsize=10)
 ax3.scatter(paleomon_man_stats['mean_b2b'], paleomon_hcv_stats['mean_b2b'])
 ax3.scatter(radix_man_stats['mean_b2b'], radix_hcv_stats['mean_b2b'])
@@ -341,12 +341,12 @@ h_mean_b2b = paleomon_hcv_stats['mean_b2b'] + radix_hcv_stats['mean_b2b'] + cion
 
 r, p = corr_stats(*pearsonr(m_mean_b2b, h_mean_b2b), len(m_mean_b2b))
 min, max = lims
-ax3.text(max-(0.3*max), max-(max-(0.2*max)), f'{r}', size=6)
-ax3.text(max-(0.3*max), max-(max-(0.15*max)), f'{p}', size=6)
-ax3.set_xlabel('Manual mean IBI (seconds)', fontsize=6)
-ax3.set_ylabel('HeartCV mean IBI (seconds)', fontsize=6)
+ax3.text(max-(0.3*max), max-(max-(0.2*max)), f'{r}', size=8)
+ax3.text(max-(0.3*max), max-(max-(0.15*max)), f'{p}', size=8)
+ax3.set_xlabel('Manual mean IBI (seconds)', fontsize=8)
+ax3.set_ylabel('HeartCV mean IBI (seconds)', fontsize=8)
 
-ax4.text(-0.1, 1.1, "d)", transform=ax4.transAxes, size=12)
+ax4.text(-0.1, 1.1, "D", transform=ax4.transAxes, size=14, weight='bold')
 ax4.set_title('Maximum interbeat interval', fontsize=10)
 ax4.scatter(paleomon_man_stats['max_b2b'], paleomon_hcv_stats['max_b2b'])
 ax4.scatter(radix_man_stats['max_b2b'], radix_hcv_stats['max_b2b'])
@@ -364,12 +364,12 @@ h_max_b2b = paleomon_hcv_stats['max_b2b'] + radix_hcv_stats['max_b2b'] + ciona_h
 
 r, p = corr_stats(*pearsonr(m_max_b2b, h_max_b2b), len(m_max_b2b))
 min, max = lims
-ax4.text(max-(0.3*max), max-(max-(0.2*max)), f'{r}', size=6)
-ax4.text(max-(0.3*max), max-(max-(0.15*max)), f'{p}', size=6)
-ax4.set_xlabel('Manual maximum IBI (seconds)', fontsize=6)
-ax4.set_ylabel('HeartCV maximum IBI (seconds)', fontsize=6)
+ax4.text(max-(0.3*max), max-(max-(0.2*max)), f'{r}', size=8)
+ax4.text(max-(0.3*max), max-(max-(0.15*max)), f'{p}', size=8)
+ax4.set_xlabel('Manual maximum IBI (seconds)', fontsize=8)
+ax4.set_ylabel('HeartCV maximum IBI (seconds)', fontsize=8)
 
-ax5.text(-0.1, 1.1, "e)", transform=ax5.transAxes, size=12)
+ax5.text(-0.1, 1.1, "E", transform=ax5.transAxes, size=14, weight='bold')
 ax5.set_title('σ in interbeat interval', fontsize=10)
 ax5.scatter(paleomon_man_stats['sd_b2b'], paleomon_hcv_stats['sd_b2b'])
 ax5.scatter(radix_man_stats['sd_b2b'], radix_hcv_stats['sd_b2b'])
@@ -387,12 +387,12 @@ h_sd_b2b = paleomon_hcv_stats['sd_b2b'] + radix_hcv_stats['sd_b2b'] + ciona_hcv_
 
 r, p = corr_stats(*pearsonr(m_sd_b2b, h_sd_b2b), len(m_sd_b2b))
 min, max = lims
-ax5.text(max-(0.3*max), max-(max-(0.2*max)), f'{r}', size=6)
-ax5.text(max-(0.3*max), max-(max-(0.15*max)), f'{p}', size=6)
-ax5.set_xlabel('Manual σ IBI (seconds)', fontsize=6)
-ax5.set_ylabel('HeartCV σ IBI (seconds)', fontsize=6)
+ax5.text(max-(0.3*max), max-(max-(0.2*max)), f'{r}', size=8)
+ax5.text(max-(0.3*max), max-(max-(0.15*max)), f'{p}', size=8)
+ax5.set_xlabel('Manual σ IBI (seconds)', fontsize=8)
+ax5.set_ylabel('HeartCV σ IBI (seconds)', fontsize=8)
 
-ax6.text(-0.1, 1.1, "f)", transform=ax6.transAxes, size=12)
+ax6.text(-0.1, 1.1, "F", transform=ax6.transAxes, size=14, weight='bold')
 ax6.set_title('RMSSD', fontsize=10)
 ax6.scatter(paleomon_man_stats['rmssd'], paleomon_hcv_stats['rmssd'])
 ax6.scatter(radix_man_stats['rmssd'], radix_hcv_stats['rmssd'])
@@ -411,9 +411,9 @@ h_rmssd = paleomon_hcv_stats['rmssd'] + radix_hcv_stats['rmssd'] + ciona_hcv_sta
 r, p = corr_stats(*pearsonr(m_rmssd, h_rmssd), len(m_rmssd))
 
 min, max = lims
-ax6.text(max-(0.3*max), max-(max-(0.2*max)), f'{r}', size=6)
-ax6.text(max-(0.3*max), max-(max-(0.15*max)), f'{p}', size=6)
-ax6.set_xlabel('Manual RMSSD (seconds)', fontsize=6)
-ax6.set_ylabel('HeartCV RMSSD (seconds)', fontsize=6)
+ax6.text(max-(0.3*max), max-(max-(0.2*max)), f'{r}', size=8)
+ax6.text(max-(0.3*max), max-(max-(0.15*max)), f'{p}', size=8)
+ax6.set_xlabel('Manual RMSSD (seconds)', fontsize=8)
+ax6.set_ylabel('HeartCV RMSSD (seconds)', fontsize=8)
 
 plt.show()
