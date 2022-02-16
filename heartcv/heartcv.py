@@ -10,7 +10,7 @@ from numba import njit
 import matplotlib.pyplot as plt
 from matplotlib.gridspec import GridSpec
 from mpl_toolkits.axes_grid1 import make_axes_locatable
-import wget
+import pkg_resources
 
 
 def load_example_video():
@@ -23,9 +23,8 @@ def load_example_video():
         Video instance of example video
 
     """
-    path = "https://zenodo.org/record/4645805/files/20C_E3_10d.avi?download=1"
-    fn = wget.download(path)
-    return vuba.Video(f"./{fn}")
+    fn = pkg_resources.resource_filename('heartcv', 'data/sample.avi')
+    return vuba.Video(fn)
 
 
 def mpx_grid(frames, binsize):
