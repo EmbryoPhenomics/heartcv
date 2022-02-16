@@ -251,7 +251,7 @@ def identify_frequencies(video, epts, rotate=True, indices=(None, None)):
             vuba.draw_contours(frame, c, 0, (0, 255, 0), 1)
             gui.roi = c
         else:
-            vuba.draw_rectangles(frames, rect, (0, 255, 0), 1)
+            vuba.draw_rectangles(frame, rect, (0, 255, 0), 1)
             gui.roi = rect
 
         both = np.hstack((frame, vuba.bgr(power_map)))
@@ -539,9 +539,9 @@ def b2b_intervals(peaks, fs):
     return (peaks[1:] - peaks[:-1]) / fs
 
 
-def stats(peaks, sample_length, fs):
+def stats(peaks, sample_length, fs, windows=1):
     """
-    Calculate cardiac stats for the peaks detected.
+    Calculate cardiac statistics for the peaks detected.
 
     Parameters
     ----------
@@ -569,15 +569,27 @@ def stats(peaks, sample_length, fs):
            to beat intervals.
 
     """
-    b2b = b2b_intervals(peaks, fs)
+    steps = int(sample_length/windows)
 
-    return dict(
-        bpm=[bpm(len(peaks), sample_length, fs)],
-        min_b2b=[b2b.min()],
-        mean_b2b=[b2b.mean()],
-        median_b2b=[np.median(b2b)],
-        max_b2b=[b2b.max()],
-        sd_b2b=[np.std(b2b)],
-        range_b2b=[b2b.max() - b2b.min()],
-        rmssd=[np.sqrt(np.nanmean((b2b[1:] - b2b[:-1]) ** 2))],
-    )
+    stats = []
+    for i in range(0, sample_length, steps):
+        peaks_in_window = peaks[(peaks >= i) & (peaks <= (i+steps))]
+        b2b = b2b_intervals(peaks_in_window, fs)
+        stats.append([
+                    bpm(len(peaks_in_window), sample_length, fs),
+                    b2b.min(),
+                    b2b.mean(),
+                    np.median(b2b),
+                    b2b.max(),
+                    np.std(b2b),
+                    b2b.max() - b2b.min(),
+                    np.sqrt(np.nanmean((b2b[1:] - b2b[:-1]) ** 2))
+                ]
+            )
+
+    keys = ['bpm', 'min_b2b', 'mean_b2b', 'median_b2b', 'max_b2b', 'sd_b2b', 'range_b2b', 'rmssd']
+    avg_stats = {}
+    for key, stat in zip(keys, zip(*stats)):
+        avg_stats[key] = np.asarray(stat).mean(axis=0)
+
+    return avg_stats
