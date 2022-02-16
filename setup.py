@@ -49,5 +49,5 @@ setup(
     ],
     project_urls={
         "Source": "https://github.com/EmbryoPhenomics/heartcv/tree/main/heartcv"
-    },
+    }
 )

@@ -41,7 +41,7 @@ The first step of HeartCV involves the computation of a mean pixel value blockwi
 
 	mpx = hcv.mpx_grid(frames, binsize=2)
 
-Here we are binning each frame in the video by a factor of 2, i.e. 2 x 2 blocks of pixels are averaged. We can change this binning factor to as little or as much as we want - this will largely be dependent on what resolution you require and/or the speed you need for your application, respectively. 
+Here we are downsampling each frame in the video by a factor of 2, i.e. 2 x 2 blocks of pixels are averaged. We can change this binning factor to as little or as much as we want - this will largely be dependent on what resolution you require and/or the speed you need for your application, respectively. 
 
 Once we've computed our mean pixel value grid for our video, we can compute the energy proxy traits present within the footage. Energy proxy traits (EPTs) are essentially power spectra derived from mean pixel value time-series present within video of live biological material. They are a holistic measure of the observable phenotype that animals exhibit (see Tills et al., 2021). However, here we are using EPTs for a different purpose: localising regions of cardiac activity. Because mean pixel value time-series of cardiac regions are quasi-periodic, they can be detected at specific frequency bands when such time-series are transformed to the frequency domain. To compute EPTs from the mean pixel value grid above we can use the following:
 
