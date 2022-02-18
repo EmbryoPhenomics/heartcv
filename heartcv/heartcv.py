@@ -550,6 +550,8 @@ def stats(peaks, sample_length, fs, windows=1):
         Length of time-series data.
     fs : int or float
         Sampling frequency of footage.
+    windows : int
+        Number of windows to subsample the signal and average the resultant statistics over.
 
     Returns
     -------
