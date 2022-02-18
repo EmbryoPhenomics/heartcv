@@ -573,9 +573,15 @@ def stats(peaks, sample_length, fs, windows=1):
     stats = []
     for i in range(0, sample_length, steps):
         peaks_in_window = peaks[(peaks >= i) & (peaks <= (i+steps))]
+
+        if len(peaks) <= 1:
+            stats.append([np.nan for n in range(0,8)])
+            print(f'Warning: Sample window {i} has {peaks} peaks so cardiac statistics cannot be computed.')
+            continue
+
         b2b = b2b_intervals(peaks_in_window, fs)
         stats.append([
-                    bpm(len(peaks_in_window), sample_length, fs),
+                    bpm(len(peaks_in_window), steps, fs),
                     b2b.min(),
                     b2b.mean(),
                     np.median(b2b),
@@ -589,6 +595,6 @@ def stats(peaks, sample_length, fs, windows=1):
     keys = ['bpm', 'min_b2b', 'mean_b2b', 'median_b2b', 'max_b2b', 'sd_b2b', 'range_b2b', 'rmssd']
     avg_stats = {}
     for key, stat in zip(keys, zip(*stats)):
-        avg_stats[key] = np.asarray(stat).mean(axis=0)
+        avg_stats[key] = np.nanmean(np.asarray(stat), axis=0)
 
     return avg_stats
