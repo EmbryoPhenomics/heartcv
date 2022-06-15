@@ -165,7 +165,6 @@ Because this signal is oscillatory in nature, we can leverage a multitude of pea
 
 .. ipython:: python
 
-	v = v.max() - v # invert signal
     v = np.interp([i/3 for i in range(len(v)*3)], np.arange(0, len(v)), v) # upsample by a factor of 3 to improve peak detection
 
     peaks = hcv.find_peaks(v)
@@ -181,7 +180,7 @@ Because this signal is oscillatory in nature, we can leverage a multitude of pea
 	@savefig detected_peaks.png width=8in
 	plt.draw()
 
-Note that we invert and upsample the mean pixel value signal, this both improves peak detection performance but has also provided much more accurate results in comparison to manual quantification. 
+Note that we upsample the mean pixel value signal, this both improves peak detection performance but has also provided much more accurate results in comparison to manual quantification. 
 
 We can now use these peaks to compute various metrics of cardiac function as follows:
 
@@ -198,6 +197,11 @@ Exporting such statistics can be done easily using ``pandas`` like so:
 .. ipython:: python
 
 	data = hcv.stats(peaks, len(video)*3, video.fps*3)
+
+	# Convert data stats to list format for pandas below:
+	for key, value in data.items():
+		data[key] = [value]
+
 	df = pd.DataFrame(data=data)
 	df.to_csv('./output.csv')
 
