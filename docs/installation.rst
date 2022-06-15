@@ -46,8 +46,6 @@ HeartCV is a pure Python package and can be installed from PyPi_ using ``pip``::
 
     $ pip install heartcv
 
-Note that OpenCV is not declared as a required dependency due to the variety of ways one may need to go about installing it on different platforms, and so you will need to install separately if don't already have it. 
-
 If you would like to install the latest development version, you will need to clone the repository on GitHub and install it as follows::
 
     $ git clone https://github.com/EmbryoPhenomics/heartcv.git
