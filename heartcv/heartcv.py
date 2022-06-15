@@ -361,7 +361,7 @@ def _ampd(x):
     # Linearly detrend signal
     x_dtr = signal.detrend(x)
 
-    # Compute LSM
+    # Compute LMS
     LMS = _lms(x_dtr)
 
     # Find scale with most local maxima
