@@ -1,3 +1,4 @@
+
 from heartcv import *
 import pandas as pd
 import numpy as np
@@ -22,7 +23,7 @@ def corr_stats(r, p, n):
         p_str = 'p > 0.05'
 
     n_ = n-2    
-    r_str = f'$r_{{47}}$ = {round(r, 3)}'
+    r_str = f'$r_{{65}}$ = {round(r, 3)}' # 65 is number of samples - 2.
 
     return r_str, p_str
 
@@ -41,47 +42,57 @@ def parse_man(file, column, upto):
     return np.asarray(d_peaks)
 
 man_files = [
-    "./hcv_data/paleomon/hr_man_15_15ppt_young_1.csv",  
-    "./hcv_data/paleomon/hr_man_15_15ppt_young_A1_37.csv",
-    "./hcv_data/paleomon/hr_man_15_15ppt_young_A1_60.csv",
-    "./hcv_data/paleomon/hr_man_15_15ppt_young_A4_60.csv",  
-    "./hcv_data/paleomon/hr_man_15_15ppt_young_C12_1.csv",  
-    "./hcv_data/paleomon/hr_man_15_15ppt_young_D3_50.csv",  
-    "./hcv_data/paleomon/hr_man_15_15ppt_young_H3_90.csv",  
-    "./hcv_data/paleomon/hr_man_15_15ppt_medium_B2_60.csv",
-    "./hcv_data/paleomon/hr_man_15_15ppt_medium_C2_149.csv",
-    "./hcv_data/paleomon/hr_man_15_15ppt_medium_G2_113.csv",
-    "./hcv_data/paleomon/hr_man_15_15ppt_medium_G5_1.csv",
-    "./hcv_data/paleomon/hr_man_15_15ppt_medium_G1_82.csv",
-    "./hcv_data/paleomon/hr_man_15_15ppt_old_B5_26.csv",
-    "./hcv_data/paleomon/hr_man_15_15ppt_old_B8_1.csv",
-    "./hcv_data/paleomon/hr_man_15_15ppt_old_D10_42.csv",
-    "./hcv_data/paleomon/hr_man_15_15ppt_old_E5_15.csv",
-    "./hcv_data/paleomon/hr_man_15_15ppt_old_F4_1.csv",
-    "./hcv_data/paleomon/hr_man_15_15ppt_old_F10_21.csv",
-    "./hcv_data/paleomon/hr_man_15_15ppt_old_H6.csv"
+    '/home/ziad/Documents/paleomon_validate/manual_young_C3.csv',
+    '/home/ziad/Documents/paleomon_validate/manual_old_G4.csv',
+    '/home/ziad/Documents/paleomon_validate/manual_medium_C10.csv',
+    '/home/ziad/Documents/paleomon_validate/manual_old_D7.csv',
+    '/home/ziad/Documents/paleomon_validate/manual_old_H2.csv',
+    '/home/ziad/Documents/paleomon_validate/manual_medium_E4.csv',
+    '/home/ziad/Documents/paleomon_validate/manual_old_G10.csv',
+    '/home/ziad/Documents/paleomon_validate/manual_young_A8.csv',
+    '/home/ziad/Documents/paleomon_validate/manual_medium_E1.csv',
+    '/home/ziad/Documents/paleomon_validate/manual_medium_A3.csv',
+    '/home/ziad/Documents/paleomon_validate/manual_medium_F2.csv',
+    '/home/ziad/Documents/paleomon_validate/manual_medium_H5.csv',
+    '/home/ziad/Documents/paleomon_validate/manual_young_E6.csv',
+    '/home/ziad/Documents/paleomon_validate/manual_young_B7.csv',
+    '/home/ziad/Documents/paleomon_validate/manual_old_B1.csv',
+    '/home/ziad/Documents/paleomon_validate/manual_medium_A6.csv',
+    '/home/ziad/Documents/paleomon_validate/manual_old_D8.csv',
+    '/home/ziad/Documents/paleomon_validate/manual_old_B11.csv',
+    '/home/ziad/Documents/paleomon_validate/manual_young_H8.csv',
+    '/home/ziad/Documents/paleomon_validate/manual_young_D5.csv',
+    '/home/ziad/Documents/paleomon_validate/manual_young_G7.csv',
+    '/home/ziad/Documents/paleomon_validate/manual_old_B4.csv',
+    '/home/ziad/Documents/paleomon_validate/manual_young_A4.csv',
+    '/home/ziad/Documents/paleomon_validate/manual_medium_F11.csv',
 ]
 
 hcv_files = [
-    "./hcv_data/paleomon/15_15ppt_young_1.csv",  
-    "./hcv_data/paleomon/15_15ppt_young_A1_37.csv",
-    "./hcv_data/paleomon/15_15ppt_young_A1_60.csv",
-    "./hcv_data/paleomon/15_15ppt_young_A4_60.csv",  
-    "./hcv_data/paleomon/15_15ppt_young_C12_1.csv",  
-    "./hcv_data/paleomon/15_15ppt_young_D3_50.csv",  
-    "./hcv_data/paleomon/15_15ppt_young_H3_90.csv",  
-    "./hcv_data/paleomon/15_15ppt_medium_B2_60.csv",
-    "./hcv_data/paleomon/15_15ppt_medium_C2_149.csv",
-    "./hcv_data/paleomon/15_15ppt_medium_G2_113.csv",
-    "./hcv_data/paleomon/15_15ppt_medium_G5_1.csv",
-    "./hcv_data/paleomon/15_15ppt_medium_G1_82.csv",
-    "./hcv_data/paleomon/15_15ppt_old_B5_26.csv",
-    "./hcv_data/paleomon/15_15ppt_old_B8_1.csv",
-    "./hcv_data/paleomon/15_15ppt_old_D10_42.csv",
-    "./hcv_data/paleomon/15_15ppt_old_E5_15.csv",
-    "./hcv_data/paleomon/15_15ppt_old_F4_1.csv",
-    "./hcv_data/paleomon/15_15ppt_old_F10_21.csv",
-    "./hcv_data/paleomon/15_15ppt_old_H6.csv"
+    '/home/ziad/Documents/paleomon_validate/young_C3.csv', 
+    '/home/ziad/Documents/paleomon_validate/old_G4.csv', 
+    '/home/ziad/Documents/paleomon_validate/medium_C10.csv',
+    '/home/ziad/Documents/paleomon_validate/old_D7.csv',
+    '/home/ziad/Documents/paleomon_validate/old_H2.csv',
+    '/home/ziad/Documents/paleomon_validate/medium_E4.csv',
+    '/home/ziad/Documents/paleomon_validate/old_G10.csv',
+    '/home/ziad/Documents/paleomon_validate/young_A8.csv',
+    '/home/ziad/Documents/paleomon_validate/medium_E1.csv',
+    '/home/ziad/Documents/paleomon_validate/medium_A3.csv',
+    '/home/ziad/Documents/paleomon_validate/medium_F2.csv',
+    '/home/ziad/Documents/paleomon_validate/medium_H5.csv',
+    '/home/ziad/Documents/paleomon_validate/young_E6.csv',
+    '/home/ziad/Documents/paleomon_validate/young_B7.csv',
+    '/home/ziad/Documents/paleomon_validate/old_B1.csv',
+    '/home/ziad/Documents/paleomon_validate/medium_A6.csv',
+    '/home/ziad/Documents/paleomon_validate/old_D8.csv',
+    '/home/ziad/Documents/paleomon_validate/old_B11.csv',
+    '/home/ziad/Documents/paleomon_validate/young_H8.csv',
+    '/home/ziad/Documents/paleomon_validate/young_D5.csv',
+    '/home/ziad/Documents/paleomon_validate/young_G7.csv',
+    '/home/ziad/Documents/paleomon_validate/old_B4.csv',
+    '/home/ziad/Documents/paleomon_validate/young_A4.csv',
+    '/home/ziad/Documents/paleomon_validate/medium_F11.csv',
 ]
 
 # Analyse
@@ -106,14 +117,18 @@ paleomon_man_stats = dict(
         rmssd=[])
 
 for hf, mf in zip(hcv_files, man_files):
-    hf_data = np.asarray(parse(hf, 'area', 250))
-    hf_data = np.interp([i/3 for i in range(250*3)], np.arange(0, 250), hf_data)
-    hf_data = hf_data.max() - hf_data
-    hf_peaks = find_peaks(hf_data)
-    hf_stats = stats(hf_peaks, 250*3, 25*3)
 
-    mf_peaks = parse_man(mf, 'EndDiastoleFrame', 250)
-    mf_stats = stats(mf_peaks, sample_length=250, fs=25)
+    hf_df = pd.read_csv(hf)
+    hf_stats = {}
+    for key in paleomon_hcv_stats.keys():
+        hf_stats[key] = hf_df[key][0]
+
+    try:
+        mf_peaks = parse_man(mf, 'end_diastole_frame', 300)
+    except:
+        mf_peaks = parse_man(mf, 'EndDiastoleFrame', 300)
+
+    mf_stats = stats(mf_peaks, sample_length=300, fs=25)
 
     for key in paleomon_hcv_stats.keys():
         if key == 'rmssd':
@@ -124,43 +139,65 @@ for hf, mf in zip(hcv_files, man_files):
 
 # Radix -------------------
 man_files = [
-    "./hcv_data/radix/hr_man_20deg_A1.csv",
-    "./hcv_data/radix/hr_man_20deg_A3.csv",  
-    "./hcv_data/radix/hr_man_20deg_A4.csv",  
-    "./hcv_data/radix/hr_man_20deg_A6.csv",
-    "./hcv_data/radix/hr_man_20deg_B1.csv",
-    "./hcv_data/radix/hr_man_20deg_B2.csv",  
-    "./hcv_data/radix/hr_man_20deg_B3.csv",  
-    "./hcv_data/radix/hr_man_25deg_A1.csv",  
-    "./hcv_data/radix/hr_man_25deg_A4.csv",  
-    "./hcv_data/radix/hr_man_25deg_A5.csv",
-    "./hcv_data/radix/hr_man_25deg_A7.csv",
-    "./hcv_data/radix/hr_man_25deg_B1.csv",
-    "./hcv_data/radix/hr_man_30deg_B1.csv",
-    "./hcv_data/radix/hr_man_30deg_B5.csv",
-    "./hcv_data/radix/hr_man_unknown_C1.csv",
-    "./hcv_data/radix/hr_man_unknown_C8.csv",
-    "./hcv_data/radix/hr_man_unknown_D1.csv"
+    '/home/ziad/Documents/validate/20C_manual_20C__A1.csv',
+    '/home/ziad/Documents/validate/20C_manual_20C__A2_10d.csv',
+    '/home/ziad/Documents/validate/20C_manual_20C__B6_124801.csv',
+    '/home/ziad/Documents/validate/20C_manual_20C__E3_10d.csv',
+    '/home/ziad/Documents/validate/20C_manual_20C__F1_10d.csv',
+    '/home/ziad/Documents/validate/20C_manual_D6_hippo_247_out.csv',
+    '/home/ziad/Documents/validate/20C_manual_E2_hippo_225_out.csv',
+    '/home/ziad/Documents/validate/20C_manual_E8_hippo_231_out.csv',
+    '/home/ziad/Documents/validate/20C_manual_F5_hippo_241_out.csv',
+    '/home/ziad/Documents/validate/20C_manual_F7_hippo_243_out.csv',
+    '/home/ziad/Documents/validate/25C_manual_25C_A5_7d.csv',
+    '/home/ziad/Documents/validate/25C_manual_25C_B6_6d.csv',
+    '/home/ziad/Documents/validate/25C_manual_25C_D2_80401.csv',
+    '/home/ziad/Documents/validate/25C_manual_25C_D5_7d.csv',
+    '/home/ziad/Documents/validate/25C_manual_25C_E8_7d.csv',
+    '/home/ziad/Documents/validate/25C_manual_C3_hippo_166_out.csv',
+    '/home/ziad/Documents/validate/25C_manual_C8_hippo_163_out.csv',
+    '/home/ziad/Documents/validate/25C_manual_D5_hippo_167_out.csv',
+    '/home/ziad/Documents/validate/25C_manual_E7_hippo_173_out.csv',
+    '/home/ziad/Documents/validate/25C_manual_F4_hippo_164_out.csv',
+    '/home/ziad/Documents/validate/30C_manual_30C_A6_6d.csv',
+    '/home/ziad/Documents/validate/30C_manual_30C_B1_6d.csv',
+    '/home/ziad/Documents/validate/30C_manual_30C_D8_6d.csv',
+    '/home/ziad/Documents/validate/30C_manual_30C_E1_55201.csv',
+    '/home/ziad/Documents/validate/30C_manual_D1_hippo_173_out.csv',
+    '/home/ziad/Documents/validate/30C_manual_D7_hippo_135_out.csv',
+    '/home/ziad/Documents/validate/30C_manual_E6_hippo_163_out.csv',
+    '/home/ziad/Documents/validate/30C_manual_F7_hippo_153_out.csv',
 ]
 
 hcv_files = [
-    "./hcv_data/radix/20deg_A1.csv",
-    "./hcv_data/radix/20deg_A3.csv",  
-    "./hcv_data/radix/20deg_A4.csv",
-    "./hcv_data/radix/20deg_A6.csv",
-    "./hcv_data/radix/20deg_B1.csv",
-    "./hcv_data/radix/20deg_B2.csv",  
-    "./hcv_data/radix/20deg_B3.csv",
-    "./hcv_data/radix/25deg_A1.csv",  
-    "./hcv_data/radix/25deg_A4.csv",  
-    "./hcv_data/radix/25deg_A5.csv",
-    "./hcv_data/radix/25deg_A7.csv",
-    "./hcv_data/radix/25deg_B1.csv",
-    "./hcv_data/radix/30deg_B1.csv",
-    "./hcv_data/radix/30deg_B5.csv",
-    "./hcv_data/radix/unknown_C1.csv",
-    "./hcv_data/radix/unknown_C8.csv",
-    "./hcv_data/radix/unknown_D1.csv"
+    '/home/ziad/Documents/validate/20C_A1.csv',
+    '/home/ziad/Documents/validate/20C_A2_10d.csv',
+    '/home/ziad/Documents/validate/20C_B6_124801.csv',
+    '/home/ziad/Documents/validate/20C_E3_10d.csv',
+    '/home/ziad/Documents/validate/20C_F1_10d.csv',
+    '/home/ziad/Documents/validate/20C_D6_hippo_247_out.csv',
+    '/home/ziad/Documents/validate/20C_E2_hippo_225_out.csv',
+    '/home/ziad/Documents/validate/20C_E8_hippo_231_out.csv',
+    '/home/ziad/Documents/validate/20C_F5_hippo_241_out.csv',
+    '/home/ziad/Documents/validate/20C_F7_hippo_243_out.csv',
+    '/home/ziad/Documents/validate/25C_A5_7d.csv',
+    '/home/ziad/Documents/validate/25C_B6_6d.csv',
+    '/home/ziad/Documents/validate/25C_D2_80401.csv',
+    '/home/ziad/Documents/validate/25C_D5_7d.csv',
+    '/home/ziad/Documents/validate/25C_E8_7d.csv',
+    '/home/ziad/Documents/validate/25C_C3_hippo_166_out.csv',
+    '/home/ziad/Documents/validate/25C_C8_hippo_163_out.csv',
+    '/home/ziad/Documents/validate/25C_D5_hippo_167_out.csv',
+    '/home/ziad/Documents/validate/25C_E7_hippo_173_out.csv',
+    '/home/ziad/Documents/validate/25C_F4_hippo_164_out.csv',
+    '/home/ziad/Documents/validate/30C_A6_6d.csv',
+    '/home/ziad/Documents/validate/30C_B1_6d.csv',
+    '/home/ziad/Documents/validate/30C_D8_6d.csv',
+    '/home/ziad/Documents/validate/30C_E1_55201.csv',
+    '/home/ziad/Documents/validate/30C_D1_hippo_173_out.csv',
+    '/home/ziad/Documents/validate/30C_D7_hippo_135_out.csv',
+    '/home/ziad/Documents/validate/30C_E6_hippo_163_out.csv',
+    '/home/ziad/Documents/validate/30C_F7_hippo_153_out.csv',
 ]
 
 # Analyse
@@ -185,14 +222,17 @@ radix_man_stats = dict(
         rmssd=[])
 
 for hf, mf in zip(hcv_files, man_files):
-    hf_data = np.asarray(parse(hf, 'area', 200))
-    hf_data = np.interp([i/3 for i in range(200*3)], np.arange(0, 200), hf_data)
-    hf_data = hf_data.max() - hf_data
-    hf_peaks = find_peaks(hf_data)
-    hf_stats = stats(hf_peaks, 200*3, 20*3)
 
-    mf_peaks = parse_man(mf, 'EndDiastoleFrame', 200)
-    mf_stats = stats(mf_peaks, sample_length=200, fs=20)
+    hf_df = pd.read_csv(hf)
+    hf_stats = {}
+    for key in radix_hcv_stats.keys():
+        hf_stats[key] = hf_df[key][0]
+
+    try:
+        mf_peaks = parse_man(mf, 'end_diastole_frame', 300)
+    except:
+        mf_peaks = parse_man(mf, 'EndDiastoleFrame', 300)
+    mf_stats = stats(mf_peaks, sample_length=300, fs=20)
 
     for key in radix_hcv_stats.keys():
         if key == 'rmssd':
@@ -258,20 +298,28 @@ ciona_man_stats = dict(
 
 for hf, mf in zip(hcv_files, man_files):
 
-    hf_data = np.asarray(parse(hf, 'area', 250))
-    hf_data = np.interp([i/3 for i in range(250*3)], np.arange(0, 250), hf_data)
-    hf_data = hf_data.max() - hf_data
-    hf_peaks = find_peaks(hf_data)
-    hf_stats = stats(hf_peaks, 250*3, 25*3)
+    hf_df = pd.read_csv(hf)
+    hf_stats = {}
+    for key in radix_hcv_stats.keys():
+        hf_stats[key] = hf_df[key][0]
 
     mf_peaks = parse_man(mf, 'EndDiastoleFrame', 250)
     mf_stats = stats(mf_peaks, sample_length=250, fs=25)
 
     for key in ciona_hcv_stats.keys():
+        if key == 'rmssd':
+            print(hf)
+            print(hf_stats[key], mf_stats[key])
         ciona_hcv_stats[key].append(hf_stats[key])
         ciona_man_stats[key].append(mf_stats[key])
 
-# Plot
+
+# df_man = pd.DataFrame(data=ciona_man_stats)
+# df_hcv = pd.DataFrame(data=ciona_hcv_stats)
+
+# df_man.to_csv(f'{out_dir}/{result}_manual.csv')
+# df_hcv.to_csv(f'{out_dir}/{result}_hcv.csv')
+
 fig, ((ax1, ax2, ax3), (ax4, ax5, ax6)) = plt.subplots(2, 3)
 
 ax1.text(-0.1, 1.1, "A", transform=ax1.transAxes, size=14, weight='bold')
@@ -417,3 +465,5 @@ ax6.set_xlabel('Manual RMSSD (seconds)', fontsize=8)
 ax6.set_ylabel('HeartCV RMSSD (seconds)', fontsize=8)
 
 plt.show()
+# plt.savefig(f'{out_dir}/{result}.png')
+# plt.clf()
