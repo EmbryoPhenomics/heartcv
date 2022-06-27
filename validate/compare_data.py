@@ -343,10 +343,10 @@ print(m_bpm)
 
 r, p = corr_stats(*pearsonr(m_bpm, h_bpm), len(m_bpm))
 min, max = lims
-ax1.text(max-(0.3*max), max-(max-(0.2*max)), f'{r}', size=8)
-ax1.text(max-(0.3*max), max-(max-(0.15*max)), f'{p}', size=8)
-ax1.set_xlabel('Manual heart rate (bpm)', fontsize=8)
-ax1.set_ylabel('HeartCV heart rate (bpm)', fontsize=8)
+ax1.text(max-(0.4*max), max-(max-(0.3*max)), f'{r}', size=10)
+ax1.text(max-(0.4*max), max-(max-(0.225*max)), f'{p}', size=10)
+ax1.set_xlabel('Manual heart rate (bpm)', fontsize=10)
+ax1.set_ylabel('HeartCV heart rate (bpm)', fontsize=10)
 
 ax2.text(-0.1, 1.1, "B", transform=ax2.transAxes, size=14, weight='bold')
 ax2.set_title('Minimum interbeat interval', fontsize=10)
@@ -366,10 +366,10 @@ h_min_b2b = paleomon_hcv_stats['min_b2b'] + radix_hcv_stats['min_b2b'] + ciona_h
 
 r, p = corr_stats(*pearsonr(m_min_b2b, h_min_b2b), len(m_min_b2b))
 min, max = lims
-ax2.text(max-(0.3*max), max-(max-(0.2*max)), f'{r}', size=8)
-ax2.text(max-(0.3*max), max-(max-(0.15*max)), f'{p}', size=8)
-ax2.set_xlabel('Manual minimum IBI (seconds)', fontsize=8)
-ax2.set_ylabel('HeartCV minimum IBI (seconds)', fontsize=8)
+ax2.text(max-(0.4*max), max-(max-(0.3*max)), f'{r}', size=10)
+ax2.text(max-(0.4*max), max-(max-(0.225*max)), f'{p}', size=10)
+ax2.set_xlabel('Manual minimum IBI (seconds)', fontsize=10)
+ax2.set_ylabel('HeartCV minimum IBI (seconds)', fontsize=10)
 
 ax3.text(-0.1, 1.1, "C", transform=ax3.transAxes, size=14, weight='bold')
 ax3.set_title('Mean interbeat interval', fontsize=10)
@@ -389,10 +389,10 @@ h_mean_b2b = paleomon_hcv_stats['mean_b2b'] + radix_hcv_stats['mean_b2b'] + cion
 
 r, p = corr_stats(*pearsonr(m_mean_b2b, h_mean_b2b), len(m_mean_b2b))
 min, max = lims
-ax3.text(max-(0.3*max), max-(max-(0.2*max)), f'{r}', size=8)
-ax3.text(max-(0.3*max), max-(max-(0.15*max)), f'{p}', size=8)
-ax3.set_xlabel('Manual mean IBI (seconds)', fontsize=8)
-ax3.set_ylabel('HeartCV mean IBI (seconds)', fontsize=8)
+ax3.text(max-(0.4*max), max-(max-(0.3*max)), f'{r}', size=10)
+ax3.text(max-(0.4*max), max-(max-(0.225*max)), f'{p}', size=10)
+ax3.set_xlabel('Manual mean IBI (seconds)', fontsize=10)
+ax3.set_ylabel('HeartCV mean IBI (seconds)', fontsize=10)
 
 ax4.text(-0.1, 1.1, "D", transform=ax4.transAxes, size=14, weight='bold')
 ax4.set_title('Maximum interbeat interval', fontsize=10)
@@ -412,10 +412,10 @@ h_max_b2b = paleomon_hcv_stats['max_b2b'] + radix_hcv_stats['max_b2b'] + ciona_h
 
 r, p = corr_stats(*pearsonr(m_max_b2b, h_max_b2b), len(m_max_b2b))
 min, max = lims
-ax4.text(max-(0.3*max), max-(max-(0.2*max)), f'{r}', size=8)
-ax4.text(max-(0.3*max), max-(max-(0.15*max)), f'{p}', size=8)
-ax4.set_xlabel('Manual maximum IBI (seconds)', fontsize=8)
-ax4.set_ylabel('HeartCV maximum IBI (seconds)', fontsize=8)
+ax4.text(max-(0.4*max), max-(max-(0.3*max)), f'{r}', size=10)
+ax4.text(max-(0.4*max), max-(max-(0.225*max)), f'{p}', size=10)
+ax4.set_xlabel('Manual maximum IBI (seconds)', fontsize=10)
+ax4.set_ylabel('HeartCV maximum IBI (seconds)', fontsize=10)
 
 ax5.text(-0.1, 1.1, "E", transform=ax5.transAxes, size=14, weight='bold')
 ax5.set_title('σ in interbeat interval', fontsize=10)
@@ -435,10 +435,10 @@ h_sd_b2b = paleomon_hcv_stats['sd_b2b'] + radix_hcv_stats['sd_b2b'] + ciona_hcv_
 
 r, p = corr_stats(*pearsonr(m_sd_b2b, h_sd_b2b), len(m_sd_b2b))
 min, max = lims
-ax5.text(max-(0.3*max), max-(max-(0.2*max)), f'{r}', size=8)
-ax5.text(max-(0.3*max), max-(max-(0.15*max)), f'{p}', size=8)
-ax5.set_xlabel('Manual σ IBI (seconds)', fontsize=8)
-ax5.set_ylabel('HeartCV σ IBI (seconds)', fontsize=8)
+ax5.text(max-(0.4*max), max-(max-(0.3*max)), f'{r}', size=10)
+ax5.text(max-(0.4*max), max-(max-(0.225*max)), f'{p}', size=10)
+ax5.set_xlabel('Manual σ IBI (seconds)', fontsize=10)
+ax5.set_ylabel('HeartCV σ IBI (seconds)', fontsize=10)
 
 ax6.text(-0.1, 1.1, "F", transform=ax6.transAxes, size=14, weight='bold')
 ax6.set_title('RMSSD', fontsize=10)
@@ -459,10 +459,10 @@ h_rmssd = paleomon_hcv_stats['rmssd'] + radix_hcv_stats['rmssd'] + ciona_hcv_sta
 r, p = corr_stats(*pearsonr(m_rmssd, h_rmssd), len(m_rmssd))
 
 min, max = lims
-ax6.text(max-(0.3*max), max-(max-(0.2*max)), f'{r}', size=8)
-ax6.text(max-(0.3*max), max-(max-(0.15*max)), f'{p}', size=8)
-ax6.set_xlabel('Manual RMSSD (seconds)', fontsize=8)
-ax6.set_ylabel('HeartCV RMSSD (seconds)', fontsize=8)
+ax6.text(max-(0.4*max), max-(max-(0.3*max)), f'{r}', size=10)
+ax6.text(max-(0.4*max), max-(max-(0.225*max)), f'{p}', size=10)
+ax6.set_xlabel('Manual RMSSD (seconds)', fontsize=10)
+ax6.set_ylabel('HeartCV RMSSD (seconds)', fontsize=10)
 
 plt.show()
 # plt.savefig(f'{out_dir}/{result}.png')
