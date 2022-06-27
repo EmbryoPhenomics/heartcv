@@ -1,0 +1,16 @@
+vuba
+numpy
+scipy
+more_itertools
+numba
+tqdm
+pytest
+scikit-image
+wget
+opencv-python
+
+sphinx>=3.4.1
+IPython>=7.19.0
+matplotlib>=3.3.0
+
+sphinx_autodoc_typehints
