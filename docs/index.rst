@@ -6,14 +6,11 @@
 HeartCV
 =======
 
-HeartCV is an easy to use library for automated, noninvasive quantification of cardiac traits from bioimaging footage of transparent animals. We developed this library to primarily reduce the barrier to entry for researchers seeking to assess the cardiac physiology of their animals through bioimaging. For a more thorough overview of this library, please see the following paper:
-
-*link here*
+HeartCV is an easy to use library for automated, noninvasive quantification of cardiac traits from bioimaging footage of transparent animals. We developed this library to primarily reduce the barrier to entry for researchers seeking to assess the cardiac physiology of their animals through bioimaging. 
 
 * :doc:`installation`
 * :doc:`in-depth-example`
 * :doc:`api-reference`
-.. * :doc:`contributing`
 
 .. toctree::
    :maxdepth: 1
@@ -23,7 +20,6 @@ HeartCV is an easy to use library for automated, noninvasive quantification of c
    installation
    api-reference
    in-depth-example
-   .. contributing
 
 See also
 --------
