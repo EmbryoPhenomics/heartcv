@@ -8,8 +8,7 @@ import heartcv as hcv
 @pytest.fixture
 def data():
     arr = np.random.randint(0, 255, size=(300, 600, 600), dtype=np.uint8)
-    mpx = hcv.mpx_grid(arr, binsize=16)
-    ept = hcv.epts(mpx, fs=30)  # example fps
+    ept = hcv.epts(arr, fs=30, binsize=16)  # example fps
     return ept
 
 

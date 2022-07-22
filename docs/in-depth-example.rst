@@ -39,7 +39,8 @@ The first step of HeartCV involves the computation of a mean pixel value blockwi
 
 .. ipython:: python
 
-	mpx = hcv.mpx_grid(frames, binsize=2)
+	mpx = hcv.downsample(frames, binsize=2)
+	
 
 Here we are downsampling each frame in the video by a factor of 2, i.e. 2 x 2 blocks of pixels are averaged. We can change this binning factor to as little or as much as we want - this will largely be dependent on what resolution you require and/or the speed you need for your application, respectively. 
 

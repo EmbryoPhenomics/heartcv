@@ -14,7 +14,7 @@ Localisation
 .. autosummary::
    :toctree: generated/
 
-   mpx_grid
+   downsample
    epts
    spectral_map
    identify_frequencies

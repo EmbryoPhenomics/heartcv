@@ -22,6 +22,6 @@ def expected_shapes():
 
 @pytest.mark.parametrize("binsize", [4, 6, 8, 16])
 def test_mpx_grid(data, expected_shapes, binsize) -> None:
-    out = hcv.mpx_grid(data, binsize=binsize)
+    out = hcv.downsample(data, binsize=binsize)
 
     assert expected_shapes[binsize] == out.shape

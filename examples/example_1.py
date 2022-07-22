@@ -34,8 +34,7 @@ frames = video.read(
 )  # Grayscale images upon reading them into memory
 
 # Localisation
-mpx = hcv.mpx_grid(frames, binsize=16)  # Downsample images
-ept = hcv.epts(mpx, fs=video.fps)  # Compute energy proxy traits (EPTs)
+ept = hcv.epts(frames, fs=video.fps, binsize=16)  # Compute energy proxy traits (EPTs) - video is downsampled in this function.
 roi, _ = hcv.identify_frequencies(video, ept)  # Supervision of localisation
 
 # Segment all images to this cardiac region
@@ -63,5 +62,5 @@ cardiac_measures = hcv.stats(
     peaks, len(video) * 3, video.fps * 3
 )  # Length and fps multiplied by 3 to match upsampling of the MPV signal
 
-df = pd.DataFrame(data=cardiac_measures)
-df.to_csv(output_filename)
+# df = pd.DataFrame(data=cardiac_measures)
+# df.to_csv(output_filename)

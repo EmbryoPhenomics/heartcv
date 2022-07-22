@@ -27,9 +27,9 @@ def load_example_video():
     return vuba.Video(fn)
 
 
-def mpx_grid(frames, binsize):
+def downsample(frames, binsize):
     """
-    Compute a mean pixel value grid for a sequence of frames at a given binsize.
+    Downsample a sequence of frames at a given binsize for Energy Proxy Trait calculation.
 
     This function is a required step in calculating energy proxy traits as per the
     method outlined in Tills et al., 2021.
@@ -43,8 +43,8 @@ def mpx_grid(frames, binsize):
 
     Returns
     -------
-    mpxs : ndarray
-        Array of the mean pixel value grid.
+    out : ndarray
+        Downsampled image sequence.
 
     Notes
     -----
@@ -69,20 +69,22 @@ def mpx_grid(frames, binsize):
     first_frame = vuba.take_first(frames)
     new_x, new_y = map(lambda v: math.floor(v / binsize) * binsize, first_frame.shape)
 
-    mpxs = [block_reduce(frame, block_size=(binsize, binsize), func=np.mean) for frame in frames]
-    return np.asarray(mpxs)
+    out = [block_reduce(frame, block_size=(binsize, binsize), func=np.mean) for frame in frames]
+    return np.asarray(out)
 
 
-def epts(mpx, fs):
+def epts(frames, fs, binsize=1):
     """
     Compute the energy proxy traits for a mean pixel value grid.
 
     Parameters
     ----------
-    mpx : ndarray
-        Mean pixel value grid obtained using ``mpx_grid``.
+    frames : list or ndarray or vuba.Frames
+        Sequence of frames to compute mean pixel values for.
     fs : int or float
         Sampling frequency for video.
+    binsize:
+        Binning resolution to downsample the supplied image frames by. Default is a binning factor of 1, i.e. no downsampling.    
 
     Returns
     -------
@@ -91,7 +93,7 @@ def epts(mpx, fs):
 
     See Also
     --------
-    mpx_grid
+    downsample
     spectral_map
 
     References
@@ -101,6 +103,9 @@ def epts(mpx, fs):
     integrative thermodynamic responses. BMC Bioinformatics 22, 232 (2021). https://doi.org/10.1186/s12859-021-04152-
 
     """
+    print('HeartCV: Computing Energy Proxy Traits (EPTs)')
+    mpx = downsample(frames, binsize)
+
     freq = np.empty((int((mpx.shape[0] / 2) + 1), mpx.shape[1], mpx.shape[2]))
     power = freq.copy()
 
@@ -113,7 +118,6 @@ def epts(mpx, fs):
                 pg.update(1)
 
     return (freq, power)
-
 
 def _parse_args(freq, args):
     """
