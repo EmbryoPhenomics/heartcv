@@ -4,9 +4,9 @@
 
 HeartCV is an easy to use library for automated, noninvasive quantification of cardiac traits in transparent animals. We developed this library to primarily reduce the barrier to entry for researchers seeking to assess the cardiac physiology of their animals through bioimaging. 
 
-* **Documentation**: https://heartcv.readthedocs.io/en/stable/
+* **Documentation**: https://heartcv.readthedocs.io/en/latest/
 * **Example scripts**: [https://github.com/EmbryoPhenomics/heartcv/examples](https://github.com/EmbryoPhenomics/heartcv/tree/main/examples)
-* **Installation**: https://heartcv.readthedocs.io/en/stable/installing.html
+* **Installation**: https://heartcv.readthedocs.io/en/latest/installing.html
 * **Source code**: [https://github.com/EmbryoPhenomics/heartcv/heartcv](https://github.com/EmbryoPhenomics/heartcv/tree/main/heartcv)
 
 
