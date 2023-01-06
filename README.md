@@ -6,7 +6,7 @@ HeartCV is an easy to use library for automated, noninvasive quantification of c
 
 * **Documentation**: https://heartcv.readthedocs.io/en/latest/
 * **Example scripts**: [https://github.com/EmbryoPhenomics/heartcv/examples](https://github.com/EmbryoPhenomics/heartcv/tree/main/examples)
-* **Installation**: https://heartcv.readthedocs.io/en/latest/installing.html
+* **Installation**: https://heartcv.readthedocs.io/en/latest/installation.html
 * **Source code**: [https://github.com/EmbryoPhenomics/heartcv/heartcv](https://github.com/EmbryoPhenomics/heartcv/tree/main/heartcv)
 
 
