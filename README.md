@@ -1,6 +1,6 @@
 # HeartCV
 
-[![pypi](https://img.shields.io/pypi/v/heartcv.svg)](https://pypi.org/project/heartcv/) [![docs](https://readthedocs.org/projects/heartcv/badge/?version=latest)](https://heartcv.readthedocs.io/en/stable/) [![CircleCI](https://circleci.com/gh/EmbryoPhenomics/heartcv.svg?style=shield&circle-token=32e472d51251a951959dee2b3ed7d7eb3c1c585d)](https://app.circleci.com/pipelines/github/EmbryoPhenomics)
+[![pypi](https://img.shields.io/pypi/v/heartcv.svg)](https://pypi.org/project/heartcv/) [![docs](https://readthedocs.org/projects/heartcv/badge/?version=latest)](https://heartcv.readthedocs.io/en/latest/) [![CircleCI](https://circleci.com/gh/EmbryoPhenomics/heartcv.svg?style=shield&circle-token=32e472d51251a951959dee2b3ed7d7eb3c1c585d)](https://app.circleci.com/pipelines/github/EmbryoPhenomics)
 
 HeartCV is an easy to use library for automated, noninvasive quantification of cardiac traits in transparent animals. We developed this library to primarily reduce the barrier to entry for researchers seeking to assess the cardiac physiology of their animals through bioimaging. 
 
