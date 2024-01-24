@@ -320,18 +320,18 @@ for hf, mf in zip(hcv_files, man_files):
 # df_man.to_csv(f'{out_dir}/{result}_manual.csv')
 # df_hcv.to_csv(f'{out_dir}/{result}_hcv.csv')
 
-fig, ((ax1, ax2, ax3), (ax4, ax5, ax6)) = plt.subplots(2, 3)
+from matplotlib import gridspec
 
-ax1.text(-0.1, 1.1, "A", transform=ax1.transAxes, size=14, weight='bold')
-ax1.set_title('BPM', fontsize=10)
-ax1.scatter(paleomon_man_stats['bpm'], paleomon_hcv_stats['bpm'], label='$P. serratus$')
-ax1.scatter(radix_man_stats['bpm'], radix_hcv_stats['bpm'], label='$R. balthica$')
-ax1.scatter(ciona_man_stats['bpm'], ciona_hcv_stats['bpm'], label='$C. intestinalis$')
+fig, (ax1, ax3, ax5) = plt.subplots(1, 3, figsize=(10,4), dpi=200)
+
+ax1.scatter(paleomon_man_stats['bpm'], paleomon_hcv_stats['bpm'], label='Prawn', color='C0')
+ax1.scatter(radix_man_stats['bpm'], radix_hcv_stats['bpm'], label='Snail', color=(172/255,34/255,34/255))
+ax1.scatter(ciona_man_stats['bpm'], ciona_hcv_stats['bpm'], label='Sea Squirt', color=(223/255,179/255,53/255))
 lims = [
     np.min([ax1.get_xlim(), ax1.get_ylim()]),
     np.max([ax1.get_xlim(), ax1.get_ylim()]),
 ]
-ax1.plot(lims, lims, "k-", alpha=0.75, zorder=0)
+ax1.plot(lims, lims, "k-", alpha=0.75, zorder=0, color='white')
 ax1.set_aspect("equal")
 ax1.set_xlim(lims)
 ax1.set_ylim(lims)
@@ -343,44 +343,17 @@ print(m_bpm)
 
 r, p = corr_stats(*pearsonr(m_bpm, h_bpm), len(m_bpm))
 min, max = lims
-ax1.text(max-(0.4*max), max-(max-(0.3*max)), f'{r}', size=10)
-ax1.text(max-(0.4*max), max-(max-(0.225*max)), f'{p}', size=10)
-ax1.set_xlabel('Manual heart rate (bpm)', fontsize=10)
-ax1.set_ylabel('HeartCV heart rate (bpm)', fontsize=10)
+ax1.text(max-(0.4*max), max-(max-(0.3*max)), f'{r}', size=10, color='white')
+ax1.text(max-(0.4*max), max-(max-(0.225*max)), f'{p}', size=10, color='white')
 
-ax2.text(-0.1, 1.1, "B", transform=ax2.transAxes, size=14, weight='bold')
-ax2.set_title('Minimum interbeat interval', fontsize=10)
-ax2.scatter(paleomon_man_stats['min_b2b'], paleomon_hcv_stats['min_b2b'])
-ax2.scatter(radix_man_stats['min_b2b'], radix_hcv_stats['min_b2b'])
-ax2.scatter(ciona_man_stats['min_b2b'], ciona_hcv_stats['min_b2b'])
-lims = [
-    np.min([ax2.get_xlim(), ax2.get_ylim()]),
-    np.max([ax2.get_xlim(), ax2.get_ylim()]),
-]
-ax2.plot(lims, lims, "k-", alpha=0.75, zorder=0)
-ax2.set_aspect("equal")
-ax2.set_xlim(lims)
-ax2.set_ylim(lims)
-m_min_b2b = paleomon_man_stats['min_b2b'] + radix_man_stats['min_b2b'] + ciona_man_stats['min_b2b']
-h_min_b2b = paleomon_hcv_stats['min_b2b'] + radix_hcv_stats['min_b2b'] + ciona_hcv_stats['min_b2b']
-
-r, p = corr_stats(*pearsonr(m_min_b2b, h_min_b2b), len(m_min_b2b))
-min, max = lims
-ax2.text(max-(0.4*max), max-(max-(0.3*max)), f'{r}', size=10)
-ax2.text(max-(0.4*max), max-(max-(0.225*max)), f'{p}', size=10)
-ax2.set_xlabel('Manual minimum IBI (seconds)', fontsize=10)
-ax2.set_ylabel('HeartCV minimum IBI (seconds)', fontsize=10)
-
-ax3.text(-0.1, 1.1, "C", transform=ax3.transAxes, size=14, weight='bold')
-ax3.set_title('Mean interbeat interval', fontsize=10)
-ax3.scatter(paleomon_man_stats['mean_b2b'], paleomon_hcv_stats['mean_b2b'])
-ax3.scatter(radix_man_stats['mean_b2b'], radix_hcv_stats['mean_b2b'])
-ax3.scatter(ciona_man_stats['mean_b2b'], ciona_hcv_stats['mean_b2b'])
+ax3.scatter(paleomon_man_stats['mean_b2b'], paleomon_hcv_stats['mean_b2b'], color='C0')
+ax3.scatter(radix_man_stats['mean_b2b'], radix_hcv_stats['mean_b2b'], color=(172/255,34/255,34/255))
+ax3.scatter(ciona_man_stats['mean_b2b'], ciona_hcv_stats['mean_b2b'], color=(223/255,179/255,53/255))
 lims = [
     np.min([ax3.get_xlim(), ax3.get_ylim()]),
     np.max([ax3.get_xlim(), ax3.get_ylim()]),
 ]
-ax3.plot(lims, lims, "k-", alpha=0.75, zorder=0)
+ax3.plot(lims, lims, "k-", alpha=0.75, zorder=0, color='white')
 ax3.set_aspect("equal")
 ax3.set_xlim(lims)
 ax3.set_ylim(lims)
@@ -389,81 +362,202 @@ h_mean_b2b = paleomon_hcv_stats['mean_b2b'] + radix_hcv_stats['mean_b2b'] + cion
 
 r, p = corr_stats(*pearsonr(m_mean_b2b, h_mean_b2b), len(m_mean_b2b))
 min, max = lims
-ax3.text(max-(0.4*max), max-(max-(0.3*max)), f'{r}', size=10)
-ax3.text(max-(0.4*max), max-(max-(0.225*max)), f'{p}', size=10)
-ax3.set_xlabel('Manual mean IBI (seconds)', fontsize=10)
-ax3.set_ylabel('HeartCV mean IBI (seconds)', fontsize=10)
+ax3.text(max-(0.4*max), max-(max-(0.3*max)), f'{r}', size=10, color='white')
+ax3.text(max-(0.4*max), max-(max-(0.225*max)), f'{p}', size=10, color='white')
 
-ax4.text(-0.1, 1.1, "D", transform=ax4.transAxes, size=14, weight='bold')
-ax4.set_title('Maximum interbeat interval', fontsize=10)
-ax4.scatter(paleomon_man_stats['max_b2b'], paleomon_hcv_stats['max_b2b'])
-ax4.scatter(radix_man_stats['max_b2b'], radix_hcv_stats['max_b2b'])
-ax4.scatter(ciona_man_stats['max_b2b'], ciona_hcv_stats['max_b2b'])
-lims = [
-    np.min([ax4.get_xlim(), ax4.get_ylim()]),
-    np.max([ax4.get_xlim(), ax4.get_ylim()]),
-]
-ax4.plot(lims, lims, "k-", alpha=0.75, zorder=0)
-ax4.set_aspect("equal")
-ax4.set_xlim(lims)
-ax4.set_ylim(lims)
-m_max_b2b = paleomon_man_stats['max_b2b'] + radix_man_stats['max_b2b'] + ciona_man_stats['max_b2b']
-h_max_b2b = paleomon_hcv_stats['max_b2b'] + radix_hcv_stats['max_b2b'] + ciona_hcv_stats['max_b2b']
-
-r, p = corr_stats(*pearsonr(m_max_b2b, h_max_b2b), len(m_max_b2b))
-min, max = lims
-ax4.text(max-(0.4*max), max-(max-(0.3*max)), f'{r}', size=10)
-ax4.text(max-(0.4*max), max-(max-(0.225*max)), f'{p}', size=10)
-ax4.set_xlabel('Manual maximum IBI (seconds)', fontsize=10)
-ax4.set_ylabel('HeartCV maximum IBI (seconds)', fontsize=10)
-
-ax5.text(-0.1, 1.1, "E", transform=ax5.transAxes, size=14, weight='bold')
-ax5.set_title('σ in interbeat interval', fontsize=10)
-ax5.scatter(paleomon_man_stats['sd_b2b'], paleomon_hcv_stats['sd_b2b'])
-ax5.scatter(radix_man_stats['sd_b2b'], radix_hcv_stats['sd_b2b'])
-ax5.scatter(ciona_man_stats['sd_b2b'], ciona_hcv_stats['sd_b2b'])
+ax5.scatter(paleomon_man_stats['rmssd'], paleomon_hcv_stats['rmssd'], color='C0')
+ax5.scatter(radix_man_stats['rmssd'], radix_hcv_stats['rmssd'], color=(172/255,34/255,34/255))
+ax5.scatter(ciona_man_stats['rmssd'], ciona_hcv_stats['rmssd'], color=(223/255,179/255,53/255))
 lims = [
     np.min([ax5.get_xlim(), ax5.get_ylim()]),
     np.max([ax5.get_xlim(), ax5.get_ylim()]),
 ]
-ax5.plot(lims, lims, "k-", alpha=0.75, zorder=0)
+ax5.plot(lims, lims, "k-", alpha=0.75, zorder=0, color='white')
 ax5.set_aspect("equal")
 ax5.set_xlim(lims)
 ax5.set_ylim(lims)
-m_sd_b2b = paleomon_man_stats['sd_b2b'] + radix_man_stats['sd_b2b'] + ciona_man_stats['sd_b2b']
-h_sd_b2b = paleomon_hcv_stats['sd_b2b'] + radix_hcv_stats['sd_b2b'] + ciona_hcv_stats['sd_b2b']
-
-r, p = corr_stats(*pearsonr(m_sd_b2b, h_sd_b2b), len(m_sd_b2b))
-min, max = lims
-ax5.text(max-(0.4*max), max-(max-(0.3*max)), f'{r}', size=10)
-ax5.text(max-(0.4*max), max-(max-(0.225*max)), f'{p}', size=10)
-ax5.set_xlabel('Manual σ IBI (seconds)', fontsize=10)
-ax5.set_ylabel('HeartCV σ IBI (seconds)', fontsize=10)
-
-ax6.text(-0.1, 1.1, "F", transform=ax6.transAxes, size=14, weight='bold')
-ax6.set_title('RMSSD', fontsize=10)
-ax6.scatter(paleomon_man_stats['rmssd'], paleomon_hcv_stats['rmssd'])
-ax6.scatter(radix_man_stats['rmssd'], radix_hcv_stats['rmssd'])
-ax6.scatter(ciona_man_stats['rmssd'], ciona_hcv_stats['rmssd'])
-lims = [
-    np.min([ax6.get_xlim(), ax6.get_ylim()]),
-    np.max([ax6.get_xlim(), ax6.get_ylim()]),
-]
-ax6.plot(lims, lims, "k-", alpha=0.75, zorder=0)
-ax6.set_aspect("equal")
-ax6.set_xlim(lims)
-ax6.set_ylim(lims)
 m_rmssd = paleomon_man_stats['rmssd'] + radix_man_stats['rmssd'] + ciona_man_stats['rmssd']
 h_rmssd = paleomon_hcv_stats['rmssd'] + radix_hcv_stats['rmssd'] + ciona_hcv_stats['rmssd']
 
 r, p = corr_stats(*pearsonr(m_rmssd, h_rmssd), len(m_rmssd))
-
 min, max = lims
-ax6.text(max-(0.4*max), max-(max-(0.3*max)), f'{r}', size=10)
-ax6.text(max-(0.4*max), max-(max-(0.225*max)), f'{p}', size=10)
-ax6.set_xlabel('Manual RMSSD (seconds)', fontsize=10)
-ax6.set_ylabel('HeartCV RMSSD (seconds)', fontsize=10)
+ax5.text(max-(0.4*max), max-(max-(0.3*max)), f'{r}', size=10, color='white')
+ax5.text(max-(0.4*max), max-(max-(0.225*max)), f'{p}', size=10, color='white')
+
+for ax in [ax1, ax3, ax5]:
+    ax.spines['bottom'].set_color('white')
+    ax.spines['left'].set_color('white')
+    ax.spines['top'].set_color('white')
+    ax.spines['right'].set_color('white')
+    ax.xaxis.label.set_color('white')
+    ax.yaxis.label.set_color('white')
+    ax.tick_params(axis='x', colors='white')
+    ax.tick_params(axis='y', colors='white')
+
+plt.subplots_adjust(
+    top=0.88,
+    bottom=0.11,
+    left=0.06,
+    right=0.97,
+    hspace=0.2,
+    wspace=0.405
+)
+
+plt.savefig('/home/z/Pictures/validation_sicb.png', transparent=True)
 
 plt.show()
-# plt.savefig(f'{out_dir}/{result}.png')
-# plt.clf()
+
+
+
+
+
+
+
+
+# fig, ((ax1, ax2, ax3), (ax4, ax5, ax6)) = plt.subplots(2, 3)
+
+# ax1.text(-0.1, 1.1, "A", transform=ax1.transAxes, size=14, weight='bold')
+# ax1.set_title('BPM', fontsize=10)
+# ax1.scatter(paleomon_man_stats['bpm'], paleomon_hcv_stats['bpm'], label='$P. serratus$')
+# ax1.scatter(radix_man_stats['bpm'], radix_hcv_stats['bpm'], label='$R. balthica$')
+# ax1.scatter(ciona_man_stats['bpm'], ciona_hcv_stats['bpm'], label='$C. intestinalis$')
+# lims = [
+#     np.min([ax1.get_xlim(), ax1.get_ylim()]),
+#     np.max([ax1.get_xlim(), ax1.get_ylim()]),
+# ]
+# ax1.plot(lims, lims, "k-", alpha=0.75, zorder=0)
+# ax1.set_aspect("equal")
+# ax1.set_xlim(lims)
+# ax1.set_ylim(lims)
+# ax1.legend(loc='upper left')
+
+# m_bpm = paleomon_man_stats['bpm'] + radix_man_stats['bpm'] + ciona_man_stats['bpm']
+# h_bpm = paleomon_hcv_stats['bpm'] + radix_hcv_stats['bpm'] + ciona_hcv_stats['bpm']
+# print(m_bpm)
+
+# r, p = corr_stats(*pearsonr(m_bpm, h_bpm), len(m_bpm))
+# min, max = lims
+# ax1.text(max-(0.4*max), max-(max-(0.3*max)), f'{r}', size=10)
+# ax1.text(max-(0.4*max), max-(max-(0.225*max)), f'{p}', size=10)
+# ax1.set_xlabel('Manual heart rate (bpm)', fontsize=10)
+# ax1.set_ylabel('HeartCV heart rate (bpm)', fontsize=10)
+
+# ax2.text(-0.1, 1.1, "B", transform=ax2.transAxes, size=14, weight='bold')
+# ax2.set_title('Minimum interbeat interval', fontsize=10)
+# ax2.scatter(paleomon_man_stats['min_b2b'], paleomon_hcv_stats['min_b2b'])
+# ax2.scatter(radix_man_stats['min_b2b'], radix_hcv_stats['min_b2b'])
+# ax2.scatter(ciona_man_stats['min_b2b'], ciona_hcv_stats['min_b2b'])
+# lims = [
+#     np.min([ax2.get_xlim(), ax2.get_ylim()]),
+#     np.max([ax2.get_xlim(), ax2.get_ylim()]),
+# ]
+# ax2.plot(lims, lims, "k-", alpha=0.75, zorder=0)
+# ax2.set_aspect("equal")
+# ax2.set_xlim(lims)
+# ax2.set_ylim(lims)
+# m_min_b2b = paleomon_man_stats['min_b2b'] + radix_man_stats['min_b2b'] + ciona_man_stats['min_b2b']
+# h_min_b2b = paleomon_hcv_stats['min_b2b'] + radix_hcv_stats['min_b2b'] + ciona_hcv_stats['min_b2b']
+
+# r, p = corr_stats(*pearsonr(m_min_b2b, h_min_b2b), len(m_min_b2b))
+# min, max = lims
+# ax2.text(max-(0.4*max), max-(max-(0.3*max)), f'{r}', size=10)
+# ax2.text(max-(0.4*max), max-(max-(0.225*max)), f'{p}', size=10)
+# ax2.set_xlabel('Manual minimum IBI (seconds)', fontsize=10)
+# ax2.set_ylabel('HeartCV minimum IBI (seconds)', fontsize=10)
+
+# ax3.text(-0.1, 1.1, "C", transform=ax3.transAxes, size=14, weight='bold')
+# ax3.set_title('Mean interbeat interval', fontsize=10)
+# ax3.scatter(paleomon_man_stats['mean_b2b'], paleomon_hcv_stats['mean_b2b'])
+# ax3.scatter(radix_man_stats['mean_b2b'], radix_hcv_stats['mean_b2b'])
+# ax3.scatter(ciona_man_stats['mean_b2b'], ciona_hcv_stats['mean_b2b'])
+# lims = [
+#     np.min([ax3.get_xlim(), ax3.get_ylim()]),
+#     np.max([ax3.get_xlim(), ax3.get_ylim()]),
+# ]
+# ax3.plot(lims, lims, "k-", alpha=0.75, zorder=0)
+# ax3.set_aspect("equal")
+# ax3.set_xlim(lims)
+# ax3.set_ylim(lims)
+# m_mean_b2b = paleomon_man_stats['mean_b2b'] + radix_man_stats['mean_b2b'] + ciona_man_stats['mean_b2b']
+# h_mean_b2b = paleomon_hcv_stats['mean_b2b'] + radix_hcv_stats['mean_b2b'] + ciona_hcv_stats['mean_b2b']
+
+# r, p = corr_stats(*pearsonr(m_mean_b2b, h_mean_b2b), len(m_mean_b2b))
+# min, max = lims
+# ax3.text(max-(0.4*max), max-(max-(0.3*max)), f'{r}', size=10)
+# ax3.text(max-(0.4*max), max-(max-(0.225*max)), f'{p}', size=10)
+# ax3.set_xlabel('Manual mean IBI (seconds)', fontsize=10)
+# ax3.set_ylabel('HeartCV mean IBI (seconds)', fontsize=10)
+
+# ax4.text(-0.1, 1.1, "D", transform=ax4.transAxes, size=14, weight='bold')
+# ax4.set_title('Maximum interbeat interval', fontsize=10)
+# ax4.scatter(paleomon_man_stats['max_b2b'], paleomon_hcv_stats['max_b2b'])
+# ax4.scatter(radix_man_stats['max_b2b'], radix_hcv_stats['max_b2b'])
+# ax4.scatter(ciona_man_stats['max_b2b'], ciona_hcv_stats['max_b2b'])
+# lims = [
+#     np.min([ax4.get_xlim(), ax4.get_ylim()]),
+#     np.max([ax4.get_xlim(), ax4.get_ylim()]),
+# ]
+# ax4.plot(lims, lims, "k-", alpha=0.75, zorder=0)
+# ax4.set_aspect("equal")
+# ax4.set_xlim(lims)
+# ax4.set_ylim(lims)
+# m_max_b2b = paleomon_man_stats['max_b2b'] + radix_man_stats['max_b2b'] + ciona_man_stats['max_b2b']
+# h_max_b2b = paleomon_hcv_stats['max_b2b'] + radix_hcv_stats['max_b2b'] + ciona_hcv_stats['max_b2b']
+
+# r, p = corr_stats(*pearsonr(m_max_b2b, h_max_b2b), len(m_max_b2b))
+# min, max = lims
+# ax4.text(max-(0.4*max), max-(max-(0.3*max)), f'{r}', size=10)
+# ax4.text(max-(0.4*max), max-(max-(0.225*max)), f'{p}', size=10)
+# ax4.set_xlabel('Manual maximum IBI (seconds)', fontsize=10)
+# ax4.set_ylabel('HeartCV maximum IBI (seconds)', fontsize=10)
+
+# ax5.text(-0.1, 1.1, "E", transform=ax5.transAxes, size=14, weight='bold')
+# ax5.set_title('σ in interbeat interval', fontsize=10)
+# ax5.scatter(paleomon_man_stats['sd_b2b'], paleomon_hcv_stats['sd_b2b'])
+# ax5.scatter(radix_man_stats['sd_b2b'], radix_hcv_stats['sd_b2b'])
+# ax5.scatter(ciona_man_stats['sd_b2b'], ciona_hcv_stats['sd_b2b'])
+# lims = [
+#     np.min([ax5.get_xlim(), ax5.get_ylim()]),
+#     np.max([ax5.get_xlim(), ax5.get_ylim()]),
+# ]
+# ax5.plot(lims, lims, "k-", alpha=0.75, zorder=0)
+# ax5.set_aspect("equal")
+# ax5.set_xlim(lims)
+# ax5.set_ylim(lims)
+# m_sd_b2b = paleomon_man_stats['sd_b2b'] + radix_man_stats['sd_b2b'] + ciona_man_stats['sd_b2b']
+# h_sd_b2b = paleomon_hcv_stats['sd_b2b'] + radix_hcv_stats['sd_b2b'] + ciona_hcv_stats['sd_b2b']
+
+# r, p = corr_stats(*pearsonr(m_sd_b2b, h_sd_b2b), len(m_sd_b2b))
+# min, max = lims
+# ax5.text(max-(0.4*max), max-(max-(0.3*max)), f'{r}', size=10)
+# ax5.text(max-(0.4*max), max-(max-(0.225*max)), f'{p}', size=10)
+# ax5.set_xlabel('Manual σ IBI (seconds)', fontsize=10)
+# ax5.set_ylabel('HeartCV σ IBI (seconds)', fontsize=10)
+
+# ax6.text(-0.1, 1.1, "F", transform=ax6.transAxes, size=14, weight='bold')
+# ax6.set_title('RMSSD', fontsize=10)
+# ax6.scatter(paleomon_man_stats['rmssd'], paleomon_hcv_stats['rmssd'])
+# ax6.scatter(radix_man_stats['rmssd'], radix_hcv_stats['rmssd'])
+# ax6.scatter(ciona_man_stats['rmssd'], ciona_hcv_stats['rmssd'])
+# lims = [
+#     np.min([ax6.get_xlim(), ax6.get_ylim()]),
+#     np.max([ax6.get_xlim(), ax6.get_ylim()]),
+# ]
+# ax6.plot(lims, lims, "k-", alpha=0.75, zorder=0)
+# ax6.set_aspect("equal")
+# ax6.set_xlim(lims)
+# ax6.set_ylim(lims)
+# m_rmssd = paleomon_man_stats['rmssd'] + radix_man_stats['rmssd'] + ciona_man_stats['rmssd']
+# h_rmssd = paleomon_hcv_stats['rmssd'] + radix_hcv_stats['rmssd'] + ciona_hcv_stats['rmssd']
+
+# r, p = corr_stats(*pearsonr(m_rmssd, h_rmssd), len(m_rmssd))
+
+# min, max = lims
+# ax6.text(max-(0.4*max), max-(max-(0.3*max)), f'{r}', size=10)
+# ax6.text(max-(0.4*max), max-(max-(0.225*max)), f'{p}', size=10)
+# ax6.set_xlabel('Manual RMSSD (seconds)', fontsize=10)
+# ax6.set_ylabel('HeartCV RMSSD (seconds)', fontsize=10)
+
+# plt.show()
+# # plt.savefig(f'{out_dir}/{result}.png')
+# # plt.clf()

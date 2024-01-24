@@ -109,13 +109,13 @@ def epts(frames, fs, binsize=1):
     freq = np.empty((int((mpx.shape[0] / 2) + 1), mpx.shape[1], mpx.shape[2]))
     power = freq.copy()
 
-    with tqdm(total=mpx.shape[1] * mpx.shape[2]) as pg:
-        for i in range(mpx.shape[1]):
-            for j in range(mpx.shape[2]):
-                freq[:, i, j], power[:, i, j] = signal.welch(
-                    mpx[:, i, j], fs=fs, scaling="spectrum", nfft=len(mpx[:, i, j])
-                )
-                pg.update(1)
+    # with tqdm(total=mpx.shape[1] * mpx.shape[2]) as pg:
+    for i in range(mpx.shape[1]):
+        for j in range(mpx.shape[2]):
+            freq[:, i, j], power[:, i, j] = signal.welch(
+                mpx[:, i, j], fs=fs, scaling="spectrum", nfft=len(mpx[:, i, j])
+            )
+                # pg.update(1)
 
     return (freq, power)
 
