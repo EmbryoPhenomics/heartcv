@@ -18,7 +18,7 @@ import heartcv as hcv
 # Input parameters to change --
 use_example_video = True  # Change to False and add file path to source_video below to use your own video
 source_video = "/path/to/video.avi"
-output_filename = "./output.csv"
+output_filename = "./output.csv" # Cardiac statistics
 # -----------------------------
 
 # Import video
