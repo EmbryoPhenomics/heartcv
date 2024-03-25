@@ -235,6 +235,7 @@ def identify_frequencies(video, epts, rotate=True, indices=(None, None)):
 
     gui = vuba.VideoGUI(video=video, indices=indices, title="EPT GUI")
     gui.roi = None
+    gui.localisation_map = None
 
     @gui.method
     def locate(gui):
@@ -258,13 +259,14 @@ def identify_frequencies(video, epts, rotate=True, indices=(None, None)):
             gui.roi = rect
 
         both = np.hstack((frame, vuba.bgr(power_map)))
+        gui.localisation_map = both
 
         return both
 
     gui.trackbar("Frequency index", id="freq_ind", min=0, max=length)(None)
 
     gui.run()
-    return gui.roi, freq[:, 0, 0][gui["freq_ind"]]
+    return gui.roi, freq[:, 0, 0][gui["freq_ind"]], gui.localisation_map
 
 
 def detect_largest(map):
