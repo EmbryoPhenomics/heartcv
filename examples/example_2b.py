@@ -12,7 +12,7 @@ import heartcv as hcv
 
 # Input parameters to change ---------
 use_example_video = False  # Change to False and add file path to source_video below to use your own video
-source_video = "/run/media/z/fast2/lymnaea_backup_mjpg/20C/A_A2.avi" # Path to multi-timepoint concatenated video
+source_video = "/run/media/z/fast1/hourly_mean/hourly_mean_low_exp2/D2_A1.avi" # Path to multi-timepoint concatenated video
 output_filename = "./output.csv" # Cardiac statistics
 timepoint_interval = 600
 # ------------------------------------
@@ -61,7 +61,7 @@ for i in range(0, len(video), timepoint_interval):
 
     # Supervision of localisation
     roi, _, lmap = hcv.identify_frequencies(
-        video, ept, (i, i + timepoint_interval)
+        video, ept, indices=(i, i + timepoint_interval)
     )
 
     ext = str.split(source_video, '.')[-1]
