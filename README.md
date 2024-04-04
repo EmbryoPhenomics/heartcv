@@ -4,9 +4,7 @@
 
 Official source code of HeartCV, from the following paper:
 
-[HeartCV: a tool for transferrable, automated measurement of heart rate and heart rate variability in transparent animals](https://doi.org/10.1242/jeb.244729). 
-
-Journal of Experimental Biology 2022.
+[HeartCV: a tool for transferrable, automated measurement of heart rate and heart rate variability in transparent animals](https://doi.org/10.1242/jeb.244729). Journal of Experimental Biology 2022.
 
 [Ziad Ibbini](https://www.plymouth.ac.uk/staff/ziad-ibbini), [John I. Spicer](https://www.plymouth.ac.uk/staff/john-spicer), [Manuela Truebano](https://www.plymouth.ac.uk/staff/manuela-truebano), [John Bishop](https://www.mba.ac.uk/staff/dr-john-bishop/) and [Oliver Tills](https://www.plymouth.ac.uk/staff/oliver-tills).
 
