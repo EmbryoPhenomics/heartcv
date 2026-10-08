@@ -251,7 +251,7 @@ def identify_frequencies(video, epts, rotate=True, indices=(None, None)):
 
         if rotate:
             c = cv2.boxPoints(rect)
-            c = np.int0(c)
+            c = np.intp(c)
             vuba.draw_contours(frame, c, 0, (0, 255, 0), 1)
             gui.roi = c
         else:
@@ -259,7 +259,7 @@ def identify_frequencies(video, epts, rotate=True, indices=(None, None)):
             gui.roi = rect
 
         both = np.hstack((frame, vuba.bgr(power_map)))
-        gui.localisation_map = both
+        gui.localisation_map = power_map
 
         return both
 
@@ -603,6 +603,6 @@ def stats(peaks, sample_length, fs, windows=1):
     keys = ['bpm', 'min_b2b', 'mean_b2b', 'median_b2b', 'max_b2b', 'sd_b2b', 'range_b2b', 'rmssd']
     avg_stats = {}
     for key, stat in zip(keys, zip(*stats)):
-        avg_stats[key] = np.nanmean(np.asarray(stat), axis=0)
+        avg_stats[key] = [np.nanmean(np.asarray(stat), axis=0)]
 
     return avg_stats
