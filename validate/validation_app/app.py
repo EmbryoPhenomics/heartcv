@@ -25,12 +25,12 @@ vstore = app_utils.VideoStore()
 
 
 # For callbacks where no return is needed
-trigger = {"dummydata": True}
+trigger = ''
 
 
 @app.callback(
-    Output("filepath-check", "children"), 
-    [Input("filename-input", "value")])
+    output=Output("filepath-check", "children"), 
+    inputs=[Input("filename-input", "value")])
 def check_raw_path(path):
     if path:
         if not os.path.exists(path):
@@ -41,8 +41,8 @@ def check_raw_path(path):
 
 
 @app.callback(
-    Output("recorded-data", "children"),
-    [Input("cardiac-frame-recorder", "n_clicks")],
+    output=Output("recorded-data", "children"),
+    inputs=[Input("cardiac-frame-recorder", "n_clicks")],
     state=[
         State("filename-input", "value"),
         State("filepath-check", "children"),
@@ -74,8 +74,8 @@ def init_frame_recorder(n_clicks, filename, check, switch):
 
 
 @app.callback(
-    Output("data-load-div", "children"),
-    [Input("load-data", "n_clicks")],
+    output=Output("data-load-div", "children"),
+    inputs=[Input("load-data", "n_clicks")],
     state=[State("output-filename", "value")],
 )
 def load_data(n_clicks, filename):
@@ -89,8 +89,8 @@ def load_data(n_clicks, filename):
 
 
 @app.callback(
-    Output("data-save-div", "children"),
-    [Input("save-data", "n_clicks")],
+    output=Output("data-save-div", "children"),
+    inputs=[Input("save-data", "n_clicks")],
     state=[State("output-filename", "value")],
 )
 def save_data(n_clicks, filename):
@@ -107,8 +107,8 @@ def save_data(n_clicks, filename):
 
 
 @app.callback(
-    Output("frame-table", "data"),
-    [
+    output=Output("frame-table", "data"),
+    inputs=[
         Input("recorded-data", "children"),
         Input("data-load-div", "children"),
     ],
@@ -124,7 +124,10 @@ def update_data_table(data, loaded_data):
     return data
 
 
-@app.callback(Output("close-app-div", "children"), [Input("close-app", "n_clicks")])
+@app.callback(
+    output=Output("close-app-div", "children"), 
+    inputs=[Input("close-app", "n_clicks")]
+)
 def shutdown_app(n_clicks):
     if n_clicks:
         vstore.close()

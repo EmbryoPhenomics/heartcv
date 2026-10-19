@@ -125,6 +125,7 @@ def frame_recorder(filename, queue):
     display(current)
     while True:
         key = cv2.waitKey(1)
+        print('key', key)
 
         val = 0
         if key is Keys.right:
