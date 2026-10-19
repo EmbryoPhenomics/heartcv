@@ -71,7 +71,7 @@ After you have opened the WebApp then you will be met with the following interfa
 ![Alt Text](https://github.com/EmbryoPhenomics/heartcv/blob/main/validate/validation_app/assets/interface_initial.png)
 
 
-To use the app, the first step you should take is to type in the full file path to the text input at the top left. Once you have you can click `Record Cardiac Cycle`. This should open up video interface, separate to the WebApp that will look somewhat like this:
+To use the app, the first step you should take is to type in the full file path to the text input at the top left. Once you have, you can click `Record Cardiac Cycle`. This should open up a video interface, separate to the WebApp that will look somewhat like this:
 
 ![Alt Text](https://github.com/EmbryoPhenomics/heartcv/blob/main/validate/validation_app/assets/interface.png)
 
