@@ -9,3 +9,4 @@ pytest
 scikit-image
 wget
 opencv-python
+importlib_resources>=1.3; python_version < "3.9"

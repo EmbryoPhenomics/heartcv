@@ -10,7 +10,17 @@ from numba import njit
 import matplotlib.pyplot as plt
 from matplotlib.gridspec import GridSpec
 from mpl_toolkits.axes_grid1 import make_axes_locatable
-import pkg_resources
+import atexit
+from contextlib import ExitStack
+try:
+    from importlib.resources import files, as_file
+except ImportError:  # Python < 3.9
+    from importlib_resources import files, as_file
+
+
+# Keep extracted resources available while video objects may still use them.
+_example_resources = ExitStack()
+atexit.register(_example_resources.close)
 
 
 def load_example_video():
@@ -23,8 +33,9 @@ def load_example_video():
         Video instance of example video
 
     """
-    fn = pkg_resources.resource_filename('heartcv', 'data/sample.avi')
-    return vuba.Video(fn)
+    resource = files('heartcv').joinpath('data').joinpath('sample.avi')
+    fn = _example_resources.enter_context(as_file(resource))
+    return vuba.Video(str(fn))
 
 
 def downsample(frames, binsize):
@@ -290,9 +301,10 @@ def detect_largest(map):
     """
     ret, thresh = cv2.threshold(map, 0, 255, cv2.THRESH_BINARY + cv2.THRESH_OTSU)
 
-    contours, hierarchy = vuba.find_contours(
+    # OpenCV returns (contours, hierarchy), with an extra image in older versions.
+    contours, hierarchy = cv2.findContours(
         thresh, cv2.RETR_TREE, cv2.CHAIN_APPROX_NONE
-    )
+    )[-2:]
     largest = vuba.largest(contours)
 
     return largest

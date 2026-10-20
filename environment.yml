@@ -1,0 +1,21 @@
+name: heartcv
+
+channels:
+  - conda-forge
+
+dependencies:
+  - python=3.11
+  - pip
+  - numpy
+  - scipy
+  - numba
+  - matplotlib
+  - tqdm
+  - pytest
+  - scikit-image
+  - opencv
+  - pandas
+  - pip:
+      - more-itertools
+      - wget
+      - vuba
