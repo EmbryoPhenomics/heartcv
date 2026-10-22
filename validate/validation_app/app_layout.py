@@ -114,6 +114,15 @@ def app_layout():
 
                             html.Hr(),
 
+                            html.Label('Cardiac statistics:'),
+                            dcc.Markdown(
+                                """
+                                **HR (bpm)**: _ **Mean beat-to-beat (sec)**: _
+                                """, 
+                                id='cardiac_stats'
+                            ),
+                            html.Br(),
+
                             dash_table.DataTable(
                                 id="frame-table",
                                 columns=[

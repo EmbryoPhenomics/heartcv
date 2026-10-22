@@ -21,9 +21,10 @@ lineType = 2
 class DataStore:
     """Backend container that holds data from various ui. """
 
-    __slots__ = ["ds_frame", "ss_frame"]
+    __slots__ = ["ds_frame", "ss_frame", "video_fps"]
     ds_frame: list
     ss_frame: list
+    video_fps: int
 
 
 class VideoStore:

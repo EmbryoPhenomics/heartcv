@@ -12,6 +12,50 @@ import signal
 import vuba
 import app_utils, app_layout
 
+# Cardiac statistic functions
+def bpm(peaks, fs):
+    """
+    Calculate beats per minute based on detected peaks.
+
+    Parameters
+    ----------
+    num_peaks : int or float
+        Number of peaks detected.
+    sample_length : int or float
+        Length of time-series data.
+    fs : int or float
+        Sampling frequency of footage.
+
+    Returns
+    -------
+    bpm : int or float
+        Beats per minute.
+
+    """
+    b2b = b2b_intervals(peaks, fs)
+    return 60 / np.nanmean(b2b)
+
+
+def b2b_intervals(peaks, fs):
+    """
+    Calculate beat to beat intervals based on peaks detected.
+
+    Parameters
+    ----------
+    peaks : ndarray
+        Detected peaks.
+    fs : int or float
+        Sampling frequency of footage.
+
+    Returns
+    -------
+    intervals : ndarray
+        Beat to beat intervals.
+
+    """
+    peaks = np.asarray(peaks)
+    return (peaks[1:] - peaks[:-1]) / fs
+
 
 external_stylesheets = ["./assets/app.css"]  # courtesy of dadamson
 app = dash.Dash("heartcv_validation_app", external_stylesheets=external_stylesheets)
@@ -20,7 +64,7 @@ app.layout = app_layout.app_layout()
 
 
 # Python session containers used instead of passing around data through html divs
-dstore = app_utils.DataStore([0], [0])
+dstore = app_utils.DataStore([0], [0], 0)
 vstore = app_utils.VideoStore()
 
 
@@ -41,7 +85,10 @@ def check_raw_path(path):
 
 
 @app.callback(
-    output=Output("recorded-data", "children"),
+    output=[
+        Output("recorded-data", "children"),
+        Output("cardiac_stats", "children"),
+    ],
     inputs=[Input("cardiac-frame-recorder", "n_clicks")],
     state=[
         State("filename-input", "value"),
@@ -70,7 +117,18 @@ def init_frame_recorder(n_clicks, filename, check, switch):
             dstore.ds_frame = dsfr
             dstore.ss_frame = ssfr
 
-            return trigger
+            video = vuba.Video(filename)
+            fps = video.fps
+            video.close()
+
+            dstore.video_fps = fps
+
+            hr = bpm(dsfr, fps)
+            b2b = b2b_intervals(dsfr, fps)
+
+            stats = f'HR (bpm): {round(hr, 1)}, Mean beat-to-beat (sec): {round(np.nanmean(b2b), 1)}'                
+
+            return trigger, stats
 
 
 @app.callback(
@@ -96,6 +154,9 @@ def load_data(n_clicks, filename):
 def save_data(n_clicks, filename):
     if n_clicks:
         if filename:
+            if not filename.endswith('.csv'):
+                return "Filename must be .csv format."
+
             df = pd.DataFrame(
                 data=dict(
                     end_diastole_frame=dstore.ds_frame,
@@ -103,6 +164,30 @@ def save_data(n_clicks, filename):
                 )
             )
             df.to_csv(filename)
+
+            stats = []
+            b2b = b2b_intervals(dstore.ds_frame, dstore.video_fps)
+            stats.append([
+                        bpm(dstore.ds_frame, dstore.video_fps),
+                        b2b.min(),
+                        b2b.mean(),
+                        np.median(b2b),
+                        b2b.max(),
+                        np.std(b2b),
+                        b2b.max() - b2b.min(),
+                        np.sqrt(np.nanmean((b2b[1:] - b2b[:-1]) ** 2))
+                    ]
+                )
+
+            keys = ['bpm', 'min_b2b', 'mean_b2b', 'median_b2b', 'max_b2b', 'sd_b2b', 'range_b2b', 'rmssd']
+            avg_stats = {}
+            for key, stat in zip(keys, zip(*stats)):
+                avg_stats[key] = [np.nanmean(np.asarray(stat), axis=0)]
+
+
+            df_stats = pd.DataFrame(avg_stats)
+            df_stats.to_csv(filename.replace('.csv', '_stats.csv'))
+
             return "Finished."
 
 
