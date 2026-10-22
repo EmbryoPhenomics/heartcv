@@ -37,6 +37,7 @@ setup(
     python_requires=">=3.5, <4",
     install_requires=[
         "vuba",
+        "importlib_resources>=1.3; python_version < '3.9'",
         "numpy",
         "scipy",
         "more_itertools",
