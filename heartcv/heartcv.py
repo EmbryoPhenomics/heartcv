@@ -502,7 +502,7 @@ def minmax_scale(vals):
     return (vals - m) / (M - m)
 
 
-def bpm(num_peaks, sample_length, fs):
+def bpm(peaks, fs):
     """
     Calculate beats per minute based on detected peaks.
 
@@ -521,7 +521,8 @@ def bpm(num_peaks, sample_length, fs):
         Beats per minute.
 
     """
-    return (num_peaks / (sample_length / fs)) * 60
+    b2b = b2b_intervals(peaks, fs)
+    return 60 / np.nanmean(b2b)
 
 
 def b2b_intervals(peaks, fs):
@@ -589,7 +590,7 @@ def stats(peaks, sample_length, fs, windows=1):
 
         b2b = b2b_intervals(peaks_in_window, fs)
         stats.append([
-                    bpm(len(peaks_in_window), steps, fs),
+                    bpm(peaks_in_window, fs),
                     b2b.min(),
                     b2b.mean(),
                     np.median(b2b),
