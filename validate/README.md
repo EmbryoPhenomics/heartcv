@@ -75,7 +75,7 @@ To use the app, the first step you should take is to type in the full file path 
 
 ![Alt Text](https://github.com/EmbryoPhenomics/heartcv/blob/main/validate/validation_app/assets/interface.png)
 
-Details on how to operate this interface are presented under the `Frame recorder usage` section in the WebApp. You can use the keys on your keyboard scan through the video and record Diastole or Systole events. The data table presented at the bottom will only be updated after you have exited the video interface via pressing the `Esc` key. 
+Details on how to operate this interface are presented under the `Frame recorder usage` section in the WebApp. You can use the keys on your keyboard scan through the video and record Diastole or Systole events. The data table and associated cardiac statistics presented at the bottom will only be updated after you have exited the video interface via pressing the `Esc` key. 
 
-To save these cardiac event data, simply type in a file path to where you would like these saved, and press the `Save` button. If you wanted to reload data for the same video and pick up where you left off, you can press the `Load` button. Note that in this case, you should set the overwrite check to `No` before clicking `Record Cardiac Cycle` button otherwise the data that you have loaded in the table will be lost.
+To save these cardiac event data, simply type in a file path to where you would like these saved, and press the `Save` button. You will have two files saved, one containes the times of individual beats recorded and the second contains the cardiac statistics. If you wanted to reload data for the same video and pick up where you left off, you can press the `Load` button. Note that in this case, you should set the overwrite check to `No` before clicking `Record Cardiac Cycle` button otherwise the data that you have loaded in the table will be lost.
 

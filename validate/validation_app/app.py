@@ -126,7 +126,7 @@ def init_frame_recorder(n_clicks, filename, check, switch):
             hr = bpm(dsfr, fps)
             b2b = b2b_intervals(dsfr, fps)
 
-            stats = f'HR (bpm): {round(hr, 1)}, Mean beat-to-beat (sec): {round(np.nanmean(b2b), 1)}'                
+            stats = f'**HR (bpm)**: {round(hr, 1)}, **Mean beat-to-beat (sec)**: {round(np.nanmean(b2b), 1)}'                
 
             return trigger, stats
 
