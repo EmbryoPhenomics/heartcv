@@ -41,12 +41,8 @@ roi, freq, _ = hcv.identify_frequencies(video, ept)  # Supervision of localisati
 segmented_frames = np.asarray(list(hcv.segment(frames, vuba.fit_rectangles(roi))))
 v = segmented_frames.mean(axis=(1, 2))  # Compute MPV signal
 
-# # Peak detection
-# v = np.interp(
-#     [i / 3 for i in range(len(v) * 3)], np.arange(0, len(v)), v
-# )  # upsample by a factor of 3 to improve peak detection
-
-peaks = hcv.find_peaks(v, plot=True)  # Find peaks using AMPD
+# Peak detection
+peaks = hcv.find_peaks(v, plot=False)  # Find peaks using AMPD
 
 # Plot the results
 time = np.asarray([i / video.fps for i in range(len(v))])
@@ -59,7 +55,7 @@ plt.ylabel("Mean pixel value (px)")
 plt.show()
 
 # Data output ---------------------------------
-cardiac_measures = hcv.stats(peaks, len(video) * 3, video.fps * 3) # Length and fps multiplied by 3 to match upsampling of the MPV signal
+cardiac_measures = hcv.stats(peaks, len(video), video.fps) 
 
 df = pd.DataFrame(data=cardiac_measures)
 df.to_csv(output_filename)
